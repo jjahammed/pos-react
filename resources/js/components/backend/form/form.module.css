@@ -1,0 +1,15 @@
+.imageStyle {
+    height: 250px;
+    width: 100%;
+    border: none;
+    /* background-image: url('/images/upload.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto; */
+}
+
+.imgUpload {
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+}
