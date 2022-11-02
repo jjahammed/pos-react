@@ -15,7 +15,7 @@ import '../assets/css/responsive.css'
 // import '../assets/js/bootstrap/bootstrap.bundle.min.js'
 import '../assets/js/sidebar-menu.js'
 import '../assets/js/script.js'
-import '../assets/js/theme-customizer/customizer.js'
+// import '../assets/js/theme-customizer/customizer.js'
 import Sidebar from './Sidebar'
 import Sample from '../pages/Sample/Sample'
 import Footer from './Footer'
@@ -24,11 +24,11 @@ import Footer from './Footer'
 
 const Master = () => {
 
-  // useEffect(() => {
-  //   loadjs(['/resources/backend/assets/js/sidebar-menu.js','/resources/backend/assets/js/script.js', '/resources/backend/assets/js/theme-customizer/customizer.js'], function() {
-  //     /* foo.js and bar.js loaded */
-  //   });
-  // }, [])
+  useEffect(() => {
+    loadjs(['/resources/backend/assets/js/theme-customizer/customizer.js'], function() {
+      /* foo.js and bar.js loaded */
+    });
+  }, [])
 
     const [sidebarClose, setSidebarClose] = useState('')
     const menuSidebar = (e) => {

@@ -1,10 +1,11 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState,Fragment} from 'react'
 import {Link} from 'react-router-dom'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2'
 import Loading from '../extra/Loading';
+import parse from 'html-react-parser';
 
 const List = () => {
   const [search, setSearch] = useState('')
@@ -83,6 +84,8 @@ const List = () => {
       return <Loading />
   }
 
+  var thisIsMyCopy = '<p>copy copy copy <strong>strong copy</strong></p>';
+
   return (
     <div className="container-fluid" style={{marginTop: '100px'}}>
 
@@ -90,7 +93,7 @@ const List = () => {
       <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="card">
           <div className="card-header">
-            <h5 className='d-inline'>location List </h5>
+            <h5 className='d-inline'>Location List </h5>
             <span className='d-inline badge btn-primary text-light'>{searchData().length}</span>
             <Link to='/admin/location/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
           </div>
@@ -106,8 +109,7 @@ const List = () => {
                 <thead>
                 <tr className='text-center'>
                   <th scope="col">#</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Slug</th>
+                  <th scope="col">Location</th>
                   <th scope="col">action</th>
                 </tr>
                 </thead>
@@ -117,8 +119,7 @@ const List = () => {
                   return (
                       <tr key={item.id}>
                         <td scope="col">{item.id}</td>
-                        <td scope="col">{item.name}</td>
-                        <td scope="col">{item.slug}</td>
+                        <td scope="col">{parse(item.name)}</td>
                         <td scope="col" className='text-center'>
                             <Link to={`/admin/location/${item.slug}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
                             <button className='btn btn-outline-danger' onClick={(e) => deletelocation(e,item.slug)}><i className="fa-solid fa-trash"></i></button>

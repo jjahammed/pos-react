@@ -1,6 +1,8 @@
 import React,{useState,useEffect} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
-import Input from '../../form/Input'
+
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
 const New = () => {
@@ -9,12 +11,20 @@ const New = () => {
         name : '',
         error_log : []
       })
-      const handleInput = (e) => {
+      const handleInput = ( e, editor ) => {
+        // const data = editor.getData();
+        // console.log(e,editor.name);
         setInputValue( {
-          ...inputValue,
-          [e.target.name] : e.target.value
-        })
-      }
+              ...inputValue,
+              [editor.name] : editor.getData()
+            })
+    }
+      // const handleInput = (e) => {
+      //   setInputValue( {
+      //     ...inputValue,
+      //     [e.target.name] : e.target.value
+      //   })
+      // }
       useEffect(() => {
         document.title = 'Add location'
       }, [])
@@ -51,8 +61,15 @@ const New = () => {
                                     </div>
                                     <div className="card-body">
 
-                                            <Input type='text' name='name' lblText='location Name' value={inputValue.name} error={inputValue.error_log.name} onChange={handleInput} placeholder='location Name' className='form-control' />
-                                        
+                                            <CKEditor  
+                                            name = 'one'
+                                            editor={ ClassicEditor } onReady={ editor => { editor.name = 'name'} }
+                                                onChange={ handleInput } />
+{/* 
+                                            <CKEditor  
+                                            name='two'
+                                            editor={ ClassicEditor } onReady={ editor => { editor.name = 'two' } }
+                                                onChange={ handleInput } /> */}
                                     </div>
                                     <div className="card-footer">
                                         <button type='submit' className="d-inline px-4 btn btn-primary mr-2">Add</button>

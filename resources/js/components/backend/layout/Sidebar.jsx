@@ -23,6 +23,11 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
+          <Link to="/admin/test" className="sidebar-header">
+            <i className="fa-solid fa-gauge" /><span>Test</span>
+          </Link>
+        </li>
+        <li>
           <Link to="/admin/product" className="sidebar-header">
             <i className="fa-solid fa-gauge" /><span>Product</span>
           </Link>

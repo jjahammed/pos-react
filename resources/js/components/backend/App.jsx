@@ -6,7 +6,11 @@ import Register from '../auth/Register'
 
 import Fontend from '../fontend/layout/Master'
 import Backend from './layout/Master'
-import List from './pages/product/List'
+
+import ProductList from './pages/product/List'
+import ProductNew from './pages/product/New'
+import ProductEdit from './pages/product/Edit'
+
 import CategoryList from './pages/category/List'
 import CategoryNew from './pages/category/New'
 import CategoryEdit from './pages/category/Edit'
@@ -27,6 +31,10 @@ import Error from './pages/error/Error404'
 
 import Home from '../fontend/pages/home/Home'
 import Contact from '../fontend/pages/contact/contact'
+import List1 from './pages/product/List1'
+
+import Test from './pages/Sample/Test'
+
 
 
 
@@ -49,7 +57,7 @@ const App = () => {
                 <Route path='/admin/*' element={<Backend/>}>
                   <Route path='*' element={<Error/>} />
                   <Route path='sample' element={<Sample/>} />
-                  <Route path='product' element={<List/>} />
+                  <Route path='product' element={<ProductNew/>} />
                   <Route path='category' element={<CategoryList/>} />
                   <Route path='category/new' element={<CategoryNew/>} />
                   <Route path='category/:slug/edit' element={<CategoryEdit/>} />
@@ -65,8 +73,8 @@ const App = () => {
                   <Route path='location' element={<LocationList/>} />
                   <Route path='location/new' element={<LocationNew/>} />
                   <Route path='location/:slug/edit' element={<LocationEdit/>} />
-                  <Route path='supplier' element={<List/>} />
-                  <Route path='location' element={<List/>} />
+                  <Route path='supplier' element={<List1/>} />
+                  <Route path='test' element={<Test/>} />
                 </Route> 
             </Routes>
         </Router>

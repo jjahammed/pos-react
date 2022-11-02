@@ -2310,8 +2310,8 @@ table tbody .border-bottom-warning td {
      04. Loader CSS Start
 ==========================**/
 .loader-wrapper {
-  height: 100%;
-  width: 100%;
+  height: 50%;
+  width: 50%;
   display: block;
   -webkit-box-align: center;
       -ms-flex-align: center;
@@ -2322,7 +2322,8 @@ table tbody .border-bottom-warning td {
   position: fixed;
   background-color: #fff;
   z-index: 11;
-  top: 0; }
+  top: 20%;
+left : 30% }
   .loader-wrapper .loader {
     position: absolute;
     top: 50%;
