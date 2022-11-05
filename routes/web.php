@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\informationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,5 +17,5 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
+Route::get('test',[informationController::Class,'test']);
 Route::view('{path}', 'welcome')->where('path', '([A-z\d\-\/_.]+)?');

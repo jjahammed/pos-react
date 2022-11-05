@@ -50,6 +50,9 @@ const Header = ({menuSidebar}) => {
                       </div>
                     </li>
                     <li className="nav-item">
+                      <Link className="nav-link" to="/shop">Shop</Link>
+                    </li>
+                    <li className="nav-item">
                       <Link className="nav-link" to="about.html">About</Link>
                     </li>
                     <li className="nav-item">
@@ -184,6 +187,9 @@ const Header = ({menuSidebar}) => {
                           </Link>
                         </div>
                       </div>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/shop">Shop</Link>
                     </li>
                     <li className="nav-item">
                       <Link className="nav-link" to="about.html">About</Link>

@@ -31,6 +31,7 @@ import Error from './pages/error/Error404'
 
 import Home from '../fontend/pages/home/Home'
 import Contact from '../fontend/pages/contact/contact'
+import Shop from '../fontend/pages/shop/Shop'
 import List1 from './pages/product/List1'
 
 import Test from './pages/Sample/Test'
@@ -51,13 +52,16 @@ const App = () => {
 
                 <Route path='/' element={<Fontend/>}>
                   <Route path='/' element={<Home/>} />
+                  <Route path='/shop' element={<Shop/>} />
                   <Route path='contact' element={<Contact/>} />
                 </Route> 
 
                 <Route path='/admin/*' element={<Backend/>}>
                   <Route path='*' element={<Error/>} />
                   <Route path='sample' element={<Sample/>} />
-                  <Route path='product' element={<ProductNew/>} />
+                  <Route path='product' element={<ProductList/>} />
+                  <Route path='product/new' element={<ProductNew/>} />
+                  <Route path='product/:slug/edit' element={<ProductEdit/>} />
                   <Route path='category' element={<CategoryList/>} />
                   <Route path='category/new' element={<CategoryNew/>} />
                   <Route path='category/:slug/edit' element={<CategoryEdit/>} />

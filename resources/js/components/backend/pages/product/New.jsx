@@ -7,6 +7,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import Select from '../../form/Select'
 import Input from '../../form/Input'
+import Variation from './Variation';
 
 import Classes from '../../form/form.module.css'
 
@@ -19,6 +20,31 @@ const New = () => {
     const [location, setLocation] = useState([])
     const [category, setCategory] = useState([])
     const [subcategory, setSubCategory] = useState([])
+    const [rowsData, setRowsData] = useState([]);
+
+    const addTableRows = ()=>{
+      const rowsInput={
+          color:'',
+          size:'',
+          img:'',  
+          pprice:'',  
+          sprice:'', 
+          dis:''  
+      } 
+      setRowsData([...rowsData, rowsInput])
+    }
+      const deleteTableRows = (index)=>{
+            const rows = [...rowsData];
+            rows.splice(index, 1);
+            setRowsData(rows);
+      }
+
+      const handleChange = (index, evnt)=>{
+        const { name, value } = evnt.target;
+        const rowsInput = [...rowsData];
+        rowsInput[index][name] = value;
+        setRowsData(rowsInput);
+      }
 
     const [inputValue, setInputValue] = useState({
         pid : '',
@@ -31,19 +57,58 @@ const New = () => {
         summery : '',
         description : '',
         note : '',
-        buyPrice : '',
-        salePrice : '',
-        discount : '',
-        tax : '',
+        buyPrice : 0,
+        setPrice : 0,
+        discount : 0,
+        tax : 0,
+        salePrice : 0,
         alertQty : '',
+        color : '#df0707',
+        size : '',
         error_log : []
       })
       const handleInput = (e) => {
-        setInputValue( {
-          ...inputValue,
-          [e.target.name] : e.target.value
-        })
+        if(e.target.name == 'discount'){
+          let dis = inputValue.setPrice * e.target.value / 100;
+          let taxx = inputValue.setPrice * inputValue.tax / 100;
+          let sprice = parseFloat(inputValue.setPrice) + parseFloat(taxx) - parseFloat(dis);
+          setInputValue( {
+            ...inputValue,
+            [e.target.name] : e.target.value,
+            salePrice : sprice
+          })
+        }else if(e.target.name == 'tax'){
+          let taxx = inputValue.setPrice * e.target.value / 100;
+          let dis = inputValue.setPrice * inputValue.discount / 100;
+          let sprice = parseFloat(inputValue.setPrice) + parseFloat(taxx) - parseFloat(dis);
+          setInputValue( {
+            ...inputValue,
+            [e.target.name] : e.target.value,
+            salePrice : sprice
+          })
+        }else if(e.target.name == 'setPrice'){
+          let taxx = e.target.value * inputValue.tax / 100;
+          let dis = e.target.value * inputValue.discount / 100;
+          let sprice = parseFloat(e.target.value) + parseFloat(taxx) - parseFloat(dis);
+          setInputValue( {
+            ...inputValue,
+            [e.target.name] : e.target.value,
+            salePrice : sprice
+          })
+        }else{
+          setInputValue( {
+            ...inputValue,
+            [e.target.name] : e.target.value
+          })
+        }
+        
       }
+      const handleEditorInput = ( e, editor ) => {
+        setInputValue( {
+              ...inputValue,
+              [editor.name] : editor.getData()
+            })
+    }
       const [images, setImages] = useState([]);
       const maxNumber = 69;
 
@@ -54,7 +119,7 @@ const New = () => {
       };
 
       useEffect(() => {
-        document.title = 'Add Sub Category'
+        document.title = 'Add Product'
 
         axios.get('/api/category').then(res => 
           setCategory(res.data.data));
@@ -74,15 +139,29 @@ const New = () => {
 
       const handleCategoryInput = (e) => {
         const cid = e.target.value;
-        axios.get(`/api/subCategory/${cid}`).then(res => 
-          setSubCategory(res.data.data));
-          setInputValue( {
-            ...inputValue,
-            [e.target.name] : e.target.value
-          })
+          if(cid){
+            axios.get(`/api/subCategory/${cid}`).then(res => 
+              setSubCategory(res.data.data));
+              setInputValue( {
+                ...inputValue,
+                [e.target.name] : e.target.value
+              })
+          }else{
+            setInputValue( {
+              ...inputValue,
+              [e.target.name] : e.target.value
+            })
+          }
+      }
+
+      const generateUniqueNumber = () => {
+        let uniqueNumber = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;
+        setInputValue( {
+          ...inputValue,
+          pid : uniqueNumber
+        })
       }
       
-     
       
 
 
@@ -90,14 +169,31 @@ const New = () => {
         e.preventDefault();
         let formData = new FormData();
         formData.append('image',images[0]?.file);
-        formData.append('name',inputValue.name);
+        formData.append('pid',inputValue.pid);
+        formData.append('title',inputValue.title);
         formData.append('category_id',inputValue.category_id);
-        axios.post('/api/sub-category',formData).then(res => {
+        formData.append('subcategory_id',inputValue.subcategory_id);
+        formData.append('brand_id',inputValue.brand_id);
+        formData.append('unit_id',inputValue.unit_id);
+        formData.append('location_id',inputValue.location_id);
+        formData.append('summery',inputValue.summery);
+        formData.append('description',inputValue.description);
+        formData.append('note',inputValue.note);
+        formData.append('buyPrice',inputValue.buyPrice);
+        formData.append('setPrice',inputValue.setPrice);
+        formData.append('salePrice',inputValue.salePrice);
+        formData.append('discount',inputValue.discount);
+        formData.append('tax',inputValue.tax);
+        formData.append('alertQty',inputValue.alertQty);
+        formData.append('color',inputValue.color);
+        formData.append('size',inputValue.size);
+
+        axios.post('/api/product',formData).then(res => {
             // console.log(res.data);
           if(res.data.status === 200){
             // console.log(res.data.data)
             localStorage.setItem('success',res.data.message)
-            navigate('/admin/sub-category');
+            navigate('/admin/product');
           }else{
             setInputValue( {
               ...inputValue,
@@ -109,6 +205,16 @@ const New = () => {
     
   return (
     <div className="container-fluid" style={{marginTop: '100px',marginBottom: '500px'}}>
+        <form encType='multipart/form-data' onSubmit={submitForm}>
+        <div className="row">
+        <div className="col-sm-12 col-xl-12">
+          <div className="card">
+            <div className="card-header btn-primary text-center">
+                <h5>Product Info</h5>
+            </div>
+          </div>
+        </div>
+        </div>
             <div className="row">
                 <div className="col-sm-12 col-xl-6">
                     <div className="row">
@@ -119,7 +225,7 @@ const New = () => {
                                     </div>
                                     <div className="card-body">
 
-                                            <Input type='text' name='pid' lblText='Product Id' value={inputValue.pid} error={inputValue.error_log.pid} onChange={handleInput} placeholder='Product Id' className='form-control' />
+                                            <Input type='text' name='pid' lblText='Product Id' value={inputValue.pid} error={inputValue.error_log.pid} onChange={handleInput} placeholder='Product Id' className='form-control' onClick={generateUniqueNumber}/>
 
 
                                             <Select name='category_id' value={inputValue.category_id} opValue='' opText='Select Category' lblText='Select A Category' error={inputValue.error_log.category_id} onChange={handleCategoryInput} className='form-control'>
@@ -140,11 +246,11 @@ const New = () => {
                                               })}
                                             </Select>
 
-                                            <Select name='unit_id' value={inputValue.unit_id} opValue='' opText='Select A Unit' lblText='Select A Unit' error={inputValue.error_log.unit_id} onChange={handleInput} className='form-control'>
-                                              {unit.map( (item) => {
-                                                return <option value={item.id} key={item.id}> {item.name} </option>
-                                              })}
-                                            </Select>
+                                            <Input type='color' name='color' lblText='Product color' value={inputValue.color} error={inputValue.error_log.color} onChange={handleInput} placeholder='Product color' className='form-control' />
+
+                                            <Input type='text' name='size' lblText='Product size' value={inputValue.size} error={inputValue.error_log.size} onChange={handleInput} placeholder='Product size' className='form-control' />
+
+                                            
 
                                     </div>
                                    
@@ -160,14 +266,24 @@ const New = () => {
                                         <h5>Pricing Info</h5>
                                     </div>
                                     <div className="card-body">
+                                              
+                                          <Select name='unit_id' value={inputValue.unit_id} opValue='' opText='Select A Unit' lblText='Select A Unit' error={inputValue.error_log.unit_id} onChange={handleInput} className='form-control'>
+                                              {unit.map( (item) => {
+                                                return <option value={item.id} key={item.id}> {item.name} </option>
+                                              })}
+                                            </Select>
                                             
                                             <Input type='text' name='buyPrice' lblText='Purcheased Price' value={inputValue.buyPrice} error={inputValue.error_log.buyPrice} onChange={handleInput} placeholder='Purcheased Price' className='form-control' />
 
-                                            <Input type='text' name='salePrice' lblText='Selling Price' value={inputValue.salePrice} error={inputValue.error_log.salePrice} onChange={handleInput} placeholder='Selling Price' className='form-control' />
+                                            <Input type='text' name='setPrice' lblText='Setting Price' value={inputValue.setPrice} error={inputValue.error_log.setPrice} onChange={handleInput} placeholder='Setting Price' className='form-control' />
 
-                                            <Input type='text' name='discount' lblText='discount' value={inputValue.discount} error={inputValue.error_log.discount} onChange={handleInput} placeholder='discount' className='form-control' />
+                                            
+                                            <Input type='text' name='discount' lblText='discount(%)' value={inputValue.discount} error={inputValue.error_log.discount} onChange={handleInput} placeholder='discount' className='form-control' />
 
-                                            <Input type='text' name='tax' lblText='tax' value={inputValue.tax} error={inputValue.error_log.tax} onChange={handleInput} placeholder='tax' className='form-control' />
+                                            <Input type='text' name='tax' lblText='tax(%)' value={inputValue.tax} error={inputValue.error_log.tax} onChange={handleInput} placeholder='tax' className='form-control' />
+
+                                            <Input type='text' name='salePrice' lblText='Selling Price' value={inputValue.salePrice} error={inputValue.error_log.salePrice} onChange={handleInput} placeholder='Selling Price' className='form-control' readOnly/>
+
 
                                             <Select name='location_id' value={inputValue.location_id} opValue='' opText='Select A Location' lblText='Select A Location' error={inputValue.error_log.location_id} onChange={handleInput} className='form-control'>
                                               {location.map( (item) => {
@@ -197,7 +313,7 @@ const New = () => {
                                       <div className="row">
                                         <div className="col-sm-12">
                                         <label className="col-sm-4 col-form-label">Summery</label>
-                                          <CKEditor editor={ ClassicEditor } onReady={ editor => { editor.name = 'summery'} } onChange={ handleInput } />
+                                          <CKEditor editor={ ClassicEditor } onReady={ editor => { editor.name = 'summery'} } onChange={ handleEditorInput } />
                                         </div>
                                       </div>
 
@@ -205,7 +321,7 @@ const New = () => {
                                         <div className="col-sm-12">
                                         <label className="col-sm-4 col-form-label">Description</label>
 
-                                          <CKEditor editor={ ClassicEditor } onReady={ editor => { editor.name = 'description'} } onChange={ handleInput } />
+                                          <CKEditor editor={ ClassicEditor } onReady={ editor => { editor.name = 'description'} } onChange={ handleEditorInput } />
                                         </div>
                                       </div>
 
@@ -213,7 +329,7 @@ const New = () => {
                                         <div className="col-sm-12">
                                         <label className="col-sm-4 col-form-label">Note</label>
 
-                                          <CKEditor editor={ ClassicEditor } onReady={ editor => { editor.name = 'note'} } onChange={ handleInput } />
+                                          <CKEditor editor={ ClassicEditor } onReady={ editor => { editor.name = 'note'} } onChange={ handleEditorInput } />
                                         </div>
                                       </div>
                                             
@@ -289,10 +405,28 @@ const New = () => {
                         <div className="col-sm-12">
                                 <div className="card">
                                     <div className="card-header">
-                                        <h5>Product Variation</h5>
+                                        <h5 className='d-inline'>Product Variation</h5>
+                                      <button type='button' className='btn btn-primary pull-right d-inline' onClick={addTableRows}><i className="fa-regular fa-plus text-bold text-light"></i></button>
                                     </div>
                                     <div className="card-body">
-                                        
+                                      <div className="table-responsive text-center user-status">
+                                        <table className="table ">
+                                          <thead>
+                                            <tr className='text-center'>
+                                              <th scope="col">Color</th>
+                                              <th scope="col">Size</th>
+                                              <th scope="col">Purcheased Price</th>
+                                              <th scope="col">Selling Price</th>
+                                              <th scope="col">Discount</th>
+                                              <th scope="col">Image</th>
+                                              <th scope="col">Action</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <Variation rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleChange} />
+                                          </tbody>
+                                        </table>
+                                      </div>
                                     </div>
                                 </div>
                         </div>
@@ -309,14 +443,15 @@ const New = () => {
                                     </div>
                                     <div className="card-body">
                                         <button type='submit' className="d-inline px-4 btn btn-primary mr-2">Add</button>
-                                        <Link to='/admin/location' className="d-inline p-2 btn btn-secondary">Cancel</Link>
+                                        <Link to='/admin/product' className="d-inline p-2 btn btn-secondary">Cancel</Link>
                                     </div>
                                 </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
+    </div>
   )
 }
 

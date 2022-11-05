@@ -19,7 +19,9 @@ return new class extends Migration
             $table->integer('category_id');
             $table->integer('subcategory_id')->nullable();
             $table->string('title');
+            $table->string('slug');
             $table->integer('unit_id')->nullable();
+            $table->integer('brand_id')->nullable();
             $table->integer('stock')->default(0);
             $table->integer('alertQty')->default(0);
             $table->double('tax')->default(0);
@@ -28,13 +30,14 @@ return new class extends Migration
             $table->integer('location_id')->nullable();
             $table->longText('summery')->nullable();
             $table->longText('description')->nullable();
-            $table->longText('notes')->nullable();
+            $table->longText('note')->nullable();
             $table->double('size')->nullable();
             $table->string('color')->nullable();
             $table->string('image')->nullable();
             $table->double('buyPrice');
-            $table->double('salePrice');
             $table->double('discount');
+            $table->double('setPrice');
+            $table->double('salePrice');
             $table->timestamps();
         });
     }
