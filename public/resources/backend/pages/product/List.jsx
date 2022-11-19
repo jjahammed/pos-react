@@ -1,5 +1,7 @@
-import React,{useEffect,useState} from 'react'
-import {Link} from 'react-router-dom'
+import React,{useEffect,useState,useMemo} from 'react'
+import {Link,useNavigate } from 'react-router-dom'
+import Table from './Table';
+
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,6 +9,7 @@ import Swal from 'sweetalert2'
 import Loading from '../extra/Loading';
 
 const List = () => {
+  const navigate = useNavigate();
   const [list, setList] = useState([])
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('')
@@ -14,6 +17,8 @@ const List = () => {
   const [loading, setLoading] = useState(true)
   const [amountSort, setAmountSort] = useState('amountAsc')
   const [titleSort, setTitleSort] = useState('titleAsc')
+
+    
   useEffect(() => {
       document.title = 'Product List'
       localStorage.getItem('success') ? toast.success(localStorage.getItem('success'), {theme: "colored"}) : ''
@@ -23,6 +28,39 @@ const List = () => {
       localStorage.removeItem('success')
       localStorage.removeItem('update')
   }, [])
+
+  const sortData = (e) => {
+    if(e.target.id == 'amountAsc'){
+      setSort(3);
+      setAmountSort('amountDesc')
+    }else if(e.target.id == 'amountDesc'){
+      setSort(4);
+      setAmountSort('amountAsc')
+    }else if(e.target.id == 'titleAsc'){
+      setSort(1);
+      setTitleSort('titleDesc')
+      console.log('titleAsc')
+    }else if(e.target.id == 'titleDesc'){
+      setSort(2);
+      setTitleSort('titleAsc')
+      console.log('titleDesc')
+    }
+}
+let jon = location.pathname.replace(/\//g, "-")
+useEffect(() => {
+  axios.get(`/api/category/${jon}`).then(res =>
+      {
+        if(res.data.status === 403){
+          Swal.fire('error',res.data.message,'error')
+          navigate('/admin/sample')
+      }else{
+        console.log(res.data.data)
+      }
+    }
+    );
+}, [])
+
+  
 
   const deleteProduct = (e,slug) => {
     const thisClicked = e.currentTarget;
@@ -76,10 +114,12 @@ const List = () => {
   const serchHandle = (e) => {
       setSearch(e.target.value);
   }
-  const keys = ['title'];
+  const keys = ['title','pid'];
 
   const filterData = () => {
     let updatedData = list;
+
+    // updatedData = updatedData.slice(firstPageIndex, lastPageIndex);
 
     updatedData = updatedData.filter( (item) => 
               keys.some((key) => item[key].toLowerCase().includes(search.toLowerCase())) ||
@@ -116,25 +156,7 @@ const List = () => {
   useEffect(() => {
     filterData();
   }, [search,sort])
-  
-
-  const sortData = (e) => {
-      if(e.target.id == 'amountAsc'){
-        setSort(3);
-        setAmountSort('amountDesc')
-      }else if(e.target.id == 'amountDesc'){
-        setSort(4);
-        setAmountSort('amountAsc')
-      }else if(e.target.id == 'titleAsc'){
-        setSort(1);
-        setTitleSort('titleDesc')
-        console.log('titleAsc')
-      }else if(e.target.id == 'titleDesc'){
-        setSort(2);
-        setTitleSort('titleAsc')
-        console.log('titleDesc')
-      }
-  }
+ 
 
   if(loading){
       return <Loading />
@@ -149,59 +171,13 @@ const List = () => {
           <div className="card-header">
             <h5 className='d-inline'>Product List </h5>
             <span className='d-inline badge btn-primary text-light'>{product.length}</span>
-            
-            
-
-            <Link to='/admin/product/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
-            
+              <Link to='/admin/product/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
           </div>
           <div className="card-body">
-          <div className="mb-3 m-form__group pull-right">
-                <div className="input-group">
-                    <span className="input-group-text"><i className="fa-solid fa-magnifying-glass"></i></span>
-                    <input id='search' type="text" className="form-control" plactholder='search...' value={search} onChange={serchHandle}/>
-                </div>
-            </div>
-            <div className="table-responsive text-center user-status">
-              <table className="table ">
-                <thead>
-                <tr className='text-center'>
-                  <th scope="col">#</th>
-                  <th scope="col" id={titleSort} style={{cursor:'pointer'}} onClick={sortData}>Title  <span className='pull-right'><i className= {titleSort == 'titleAsc' ? "fa-solid fa-arrow-down" : "fa-solid fa-arrow-up"  } ></i></span></th>
-                  <th scope="col">Category</th>
-                  <th scope="col">Brand</th>
-                  <th scope="col">image</th>
-                  <th scope="col">Purcheased Price</th>
-                  <th scope="col">Discount</th>
-                  <th scope="col" id={amountSort} style={{cursor:'pointer'}} onClick={sortData}>sell Price <span className='pull-right'><i className= {amountSort == 'amountAsc' ? "fa-solid fa-arrow-down" : "fa-solid fa-arrow-up"  } ></i></span></th>
-                  <th scope="col">action</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                { product.map((item) => {
-                  return (
-                      <tr key={item.id}>
-                        <td scope="col">{item.id}</td>
-                        <td scope="col">{item.title}</td>
-                        <td scope="col">{item.category?.name}</td>
-                        <td scope="col">{item.brand?.name}</td>
-                        <td className="border-bottom-0" scope="row"><img src={'/' + item.image} style={{ width: '50px',height:'50px',borderRadius:'50%'}}/> </td>
-                        <td scope="col">{item.buyPrice}</td>
-                        <td scope="col">{item.discount}%</td>
-                        <td scope="col">{item.salePrice}</td>
-                        <td scope="col" className='text-center'>
-                            <Link to={`/admin/product/${item.slug}`} className='btn btn-outline-info mr-2'><i className="fa-solid fa-eye"></i></Link>
-                            <Link to={`/admin/product/${item.slug}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
-                            <button className='btn btn-outline-danger' onClick={(e) => deleteProduct(e,item.slug)}><i className="fa-solid fa-trash"></i></button>
-                        </td>
-                      </tr>
-                  )
-                })}
-                  
-                </tbody>
-              </table>
-            </div>
+            {
+            product.length>0 ?
+            <Table product={product} deleteProduct={deleteProduct} amountSort={amountSort} titleSort={titleSort} sortData={sortData} search={search} serchHandle={serchHandle} />:<Loading />
+            }
             <ToastContainer />
           </div>
         </div>

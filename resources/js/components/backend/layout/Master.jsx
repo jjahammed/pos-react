@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import {Outlet} from 'react-router-dom'
+import {Outlet,Navigate} from 'react-router-dom'
 import loadjs from 'loadjs';
 
 import Header from './Header'
@@ -19,11 +19,11 @@ import '../assets/js/script.js'
 import Sidebar from './Sidebar'
 import Sample from '../pages/Sample/Sample'
 import Footer from './Footer'
-
+import useAuth from '../../hooks/useAuth'
 
 
 const Master = () => {
-
+  const auth = useAuth();
   useEffect(() => {
     loadjs(['/resources/backend/assets/js/theme-customizer/customizer.js'], function() {
       /* foo.js and bar.js loaded */
@@ -35,7 +35,7 @@ const Master = () => {
         sidebarClose == '' ? setSidebarClose('sidebar-close') : setSidebarClose('')
     }
 
-  return (
+  return ( auth ?
     <div className="page-wrapper">
       <Header menuSidebar={menuSidebar}/>
         <div className={`page-body-wrapper ${sidebarClose}`}>
@@ -48,6 +48,8 @@ const Master = () => {
             </div>
         </div>
     </div>
+    :
+    <Navigate to='/login' />
   )
 }
 

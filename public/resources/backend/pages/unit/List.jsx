@@ -113,10 +113,10 @@ const List = () => {
                 </thead>
                 <tbody>
 
-                { searchData().map((item) => {
+                { searchData().map((item,index) => {
                   return (
                       <tr key={item.id}>
-                        <td scope="col">{item.id}</td>
+                        <td scope="col">{index+1}</td>
                         <td scope="col">{item.name}</td>
                         <td scope="col">{item.slug}</td>
                         <td scope="col" className='text-center'>

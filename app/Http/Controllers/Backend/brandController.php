@@ -20,7 +20,7 @@ class brandController extends ApiController
     {
         return response()->json([
             'status' => 200,
-            'data' => Brand::all()
+            'data' => Brand::with('product')->get()
         ]);
     }
 

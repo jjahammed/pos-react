@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
-import {Link} from 'react-router-dom'
+import {Link,useNavigate} from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 import '../assets/css/themify.css'
 import '../assets/css/bootstrap.css'
@@ -14,6 +15,23 @@ import '../assets/js/script.js'
 import '../assets/js/theme-customizer/customizer.js'
 
 const Header = ({menuSidebar}) => {
+  const navigate = useNavigate();
+  const logout = () => {
+    axios.post(`/api/logout`).then(res => {
+      if(res.data.status === 200){
+         localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+        Swal.fire(
+          'See u soon!',
+          res.data.message,
+          'success'
+        )
+        navigate('/')
+      }
+    });
+  }
+
+ 
 
   return (
     <div className="page-main-header">
@@ -113,10 +131,10 @@ const Header = ({menuSidebar}) => {
           </li>
           <li className="onhover-dropdown">
             <div className="d-flex align-items-center">
-              <img className="align-self-center pull-right flex-shrink-0 me-2" src="/resources/backend/assets/images/dashboard/user.png" alt="header-user" />
+              <img className="align-self-center pull-right flex-shrink-0 me-2" src={"/"+ JSON.parse(localStorage.getItem('user')).image} alt="header-user" style={{height:'35px',width:'35px',borderRadius:'50%'}} />
               <div>
                 <h6 className="m-0 txt-dark f-16">
-                  My Account
+                  {JSON.parse(localStorage.getItem('user')).name}
                   <i className="fa fa-angle-down pull-right ms-2" />
                 </h6>
               </div>
@@ -147,7 +165,7 @@ const Header = ({menuSidebar}) => {
                 </Link>
               </li>
               <li>
-                <Link to="#">
+                <Link to="#" onClick={logout}>
                   <i className="fa-solid fa-right-from-bracket" />
                   Logout
                 </Link>

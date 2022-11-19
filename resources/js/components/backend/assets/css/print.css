@@ -4,13 +4,25 @@
 @media print {
   .page-sidebar {
     display: none; }
+  .actionButton {
+    display: none; }
+  .footer-fix {
+    display: none; }
   .page-wrapper .page-main-header {
     display: none; }
   .page-wrapper .page-body-wrapper .page-header {
     display: none; }
   .page-wrapper .page-body-wrapper .page-sidebar ~ .page-body {
     margin-left: 0;
-    padding: 0; } }
+    padding: 0; } 
+    html,body {
+      height: auto;    
+  }
+  }
+
+  /* .print:last-child {
+    page-break-after: auto;
+} */
 
 .invoice-table {
   margin-top: 16px;
@@ -18,6 +30,10 @@
 
 .invoice .text-right input {
   margin-top: 6px; }
+
+  .card {
+    border: none;
+  }
 
 /**=====================
     61. Print CSS Start

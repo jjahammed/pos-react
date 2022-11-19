@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Product;
+use App\Models\Stock;
 use Validator;
 
 class productController extends ApiController
@@ -94,6 +95,14 @@ class productController extends ApiController
                 'description' => $request->description,
                 'image' => $request->hasFile('image') ? 'resources/backend/images/product/'.$fileName : 'not Found',
             ]);
+
+                  $stock = new Stock();
+                  $stock->pid=$product->pid;
+                  $stock->product_id=$product->id;
+                  $stock->product_title=$product->title;
+                  $stock->quantity = 0;
+                  $stock->save();
+
             return $this->success(200,null,$product,'Product added successfully');
         }
         

@@ -115,10 +115,10 @@ const List = () => {
                 </thead>
                 <tbody>
 
-                { searchData().map((item) => {
+                { searchData().map((item,index) => {
                   return (
                       <tr key={item.id}>
-                        <td scope="col">{item.id}</td>
+                        <td scope="col">{index+1}</td>
                         <td scope="col">{parse(item.name)}</td>
                         <td scope="col" className='text-center'>
                             <Link to={`/admin/location/${item.slug}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>

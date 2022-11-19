@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\ApiController;
 use App\Models\Category;
+use App\Models\Permission;
 use Validator;
 
 class categoryController extends ApiController
@@ -20,7 +21,7 @@ class categoryController extends ApiController
     {
         return response()->json([
             'status' => 200,
-            'data' => Category::all()
+            'data' => Category::with('product')->get()
         ]);
     }
 
@@ -74,7 +75,20 @@ class categoryController extends ApiController
      */
     public function show($id)
     {
-        //
+        $permissions = Permission::all();
+        foreach($permissions as $permission){
+        if($permission->uniId === auth('sanctum')->user()->uid && $permission->slug === $id){
+            return response()->json([
+                'data' => $id
+            ]);
+        }
+    }
+            return response()->json([
+                'status' => 403,
+                'message' => 'Forbidden',
+                'data' => auth('sanctum')->user()->uid
+            ]); 
+        
     }
 
     /**
@@ -129,4 +143,13 @@ class categoryController extends ApiController
             return $this->error(500,'Something Went Wrong','Something Went Wrong');
         }
     }
+
+    // public function permission($slug){
+    //     $permissions = Permission::all();
+    //         foreach($permissions as $permission){
+    //             if($permission->uniId == auth()->user()->uid && $permission->slug == $slug){
+
+    //             }
+    //         }
+    // }
 }

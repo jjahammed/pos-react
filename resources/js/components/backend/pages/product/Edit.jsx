@@ -124,7 +124,7 @@ const Edit = () => {
       };
 
       useEffect(() => {
-        document.title = 'Add Product'
+        document.title = 'Update Product'
 
         axios.get('/api/category').then(res => 
           setCategory(res.data.data));
@@ -149,15 +149,15 @@ const Edit = () => {
                 subcategory_id : res.data.data.subcategory_id,
                 brand_id : res.data.data.brand_id,
                 unit_id : res.data.data.unit_id,
-                location_id : res.data.data.location_id,
+                location_id : res.data.data.location_id == null ? '' : res.data.data.location_id,
                 buyPrice : res.data.data.buyPrice,
                 setPrice : res.data.data.setPrice,
                 salePrice : res.data.data.salePrice,
                 discount : res.data.data.discount,
                 tax : res.data.data.tax,
                 alertQty : res.data.data.alertQty,
-                color : res.data.data.color,
-                size : res.data.data.size,
+                color : res.data.data.color == null ? '' : res.data.data.color,
+                size : res.data.data.size == null ? '' : res.data.data.size,
                 summery : res.data.data.summery,
                 description : res.data.data.description,
                 note : res.data.data.note,
@@ -475,7 +475,7 @@ const Edit = () => {
                                         <h5>Action</h5>
                                     </div>
                                     <div className="card-body">
-                                        <button type='submit' className="d-inline px-4 btn btn-primary mr-2">Add</button>
+                                        <button type='submit' className="d-inline px-4 btn btn-primary mr-2">Update</button>
                                         <Link to='/admin/product' className="d-inline p-2 btn btn-secondary">Cancel</Link>
                                     </div>
                                 </div>

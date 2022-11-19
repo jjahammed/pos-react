@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import {Link} from 'react-router-dom'
+import {Link,useNavigate,useLocation } from 'react-router-dom'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,9 +7,13 @@ import Swal from 'sweetalert2'
 import Loading from '../extra/Loading';
 
 const List = () => {
+  const navigate = useNavigate();
   const [search, setSearch] = useState('')
   const [product, setProduct] = useState([])
   const [loading, setLoading] = useState(true)
+  const location = useLocation();
+  let jon = location.pathname.replace(/\//g, "-")
+  // console.log(jon);
   useEffect(() => {
       document.title = 'Category List'
       localStorage.getItem('success') ? toast.success(localStorage.getItem('success'), {theme: "colored"}) : ''
@@ -18,6 +22,15 @@ const List = () => {
       setLoading(false);
       localStorage.removeItem('success')
       localStorage.removeItem('update')
+  }, [])
+  useEffect(() => {
+      axios.get(`/api/category/${jon}`).then(res =>
+          {
+            if(res.data.status === 403){
+              navigate('/admin/sample')
+          }
+        }
+        );
   }, [])
 
   const deleteCategory = (e,slug) => {
@@ -113,18 +126,20 @@ const List = () => {
                   <th scope="col">Name</th>
                   <th scope="col">Slug</th>
                   <th scope="col">image</th>
+                  <th scope="col">Product</th>
                   <th scope="col">action</th>
                 </tr>
                 </thead>
                 <tbody>
 
-                { searchData().map((item) => {
+                { searchData().map((item,index) => {
                   return (
                       <tr key={item.id}>
-                        <td scope="col">{item.id}</td>
+                        <td scope="col">{index+1}</td>
                         <td scope="col">{item.name}</td>
                         <td scope="col">{item.slug}</td>
                         <td className="border-bottom-0" scope="row"><img src={'/' + item.image} style={{ width: '50px',height:'50px',borderRadius:'50%'}}/> </td>
+                        <td scope="col"><span className='badge btn btn-primary '>{item.product.length}</span></td>
                         <td scope="col" className='text-center'>
                             <Link to={`/admin/category/${item.slug}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
                             <button className='btn btn-outline-danger' onClick={(e) => deleteCategory(e,item.slug)}><i className="fa-solid fa-trash"></i></button>

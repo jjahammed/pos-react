@@ -1,34 +1,9 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 
-import '../backend/assets/css/themify.css'
-import '../backend/assets/css/bootstrap.css'
-import '../backend/assets/css/style.css'
-import '../backend/assets/css/responsive.css'
-
-
-import '../backend/assets/js/jquery-3.2.1.min.js'
-import '../backend/assets/js/bootstrap/bootstrap.bundle.min.js'
-import '../backend/assets/js/script.js'
-
 const ForgetPassword = () => {
   return (
-    <div className="page-wrapper">
-  <div className="container-fluid">
-    <div className="authentication-main">
-      <div className="row">
-        <div className="col-md-4 p-0">
-          <div className="auth-innerleft">
-            <div className="text-center">
-              <Link to='/'>
-              <img src="/resources/backend/assets/images/key.png" className="img-fluid security-icon" />
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-8 p-0">
-          <div className="auth-innerright">
-            <div className="reset-password-box">
+    <div className="reset-password-box">
               <h3>RESET YOUR PASSWORD</h3>
               <div className="card mt-4  mb-0">
                 <form className="theme-form">
@@ -86,14 +61,6 @@ const ForgetPassword = () => {
                 </form>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {/*Reset Password page end*/}
-  </div>
-</div>
-
   )
 }
 

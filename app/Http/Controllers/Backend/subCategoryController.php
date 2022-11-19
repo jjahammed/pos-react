@@ -21,7 +21,7 @@ class subCategoryController extends ApiController
     {
         return response()->json([
             'status' => 200,
-            'data' => Subcategory::all()
+            'data' => Subcategory::with('product')->get()
         ]);
     }
 

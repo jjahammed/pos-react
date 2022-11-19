@@ -4,12 +4,6 @@ import {Link} from 'react-router-dom'
 const Sidebar = () => {
   return (
     <div className="page-sidebar custom-scrollbar">
-      <div className="sidebar-user text-center">
-        <div>
-          <img className="img-50 rounded-circle" src="/resources/backend/assets/images/user/1.jpg" alt="#" />
-        </div>
-        <h6 className="mt-3 f-12">Johan Deo</h6>
-      </div>
       <ul className="sidebar-menu">
         <li>
           <div className="sidebar-title">General</div>
@@ -30,6 +24,16 @@ const Sidebar = () => {
         <li>
           <Link to="/admin/product" className="sidebar-header">
             <i className="fa-solid fa-gauge" /><span>Product</span>
+          </Link>
+        </li>
+        <li>
+          <Link to="/admin/stock" className="sidebar-header">
+            <i className="fa-solid fa-gauge" /><span>Stock</span>
+          </Link>
+        </li>
+        <li>
+          <Link to="/admin/sell-product" className="sidebar-header">
+            <i className="fa-solid fa-gauge" /><span>Sell product</span>
           </Link>
         </li>
         <li>
