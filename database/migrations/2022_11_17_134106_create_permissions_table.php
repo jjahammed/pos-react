@@ -15,15 +15,15 @@ return new class extends Migration
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('submodule_id');
+            // $table->unsignedBigInteger('submodule_id');
             $table->string('uniId');
-            $table->string('name');
-            $table->string('slug');
-            $table->foreign('submodule_id')
-                  ->references('id')
-                  ->on('submodules')
-                  ->onUpdate('cascade')
-                  ->onDelete('cascade');
+            $table->longText('value');
+            // $table->string('slug');
+            // $table->foreign('submodule_id')
+            //       ->references('id')
+            //       ->on('submodules')
+            //       ->onUpdate('cascade')
+            //       ->onDelete('cascade');
             $table->timestamps();
         });
     }

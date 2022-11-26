@@ -30,9 +30,23 @@ import SellShow from './pages/sell/Show'
 import CategoryList from './pages/category/List'
 import CategoryNew from './pages/category/New'
 import CategoryEdit from './pages/category/Edit'
+
+import ModuleList from './pages/module/List'
+import ModuleNew from './pages/module/New'
+import ModuleEdit from './pages/module/Edit'
+
+import SubmoduleList from './pages/subModule/List'
+import SubmoduleNew from './pages/subModule/New'
+import SubmoduleEdit from './pages/subModule/Edit'
+
+import PermissionList from './pages/permission/List'
+import PermissionNew from './pages/permission/New'
+import PermissionEdit from './pages/permission/Edit'
+
 import SubCategoryList from './pages/subcategory/List'
 import SubCategoryNew from './pages/subcategory/New'
 import SubCategoryEdit from './pages/subcategory/Edit'
+
 import BrandList from './pages/brand/List'
 import BrandNew from './pages/brand/New'
 import BrandEdit from './pages/brand/Edit'
@@ -93,11 +107,11 @@ const App = () => {
 
                 <Route path='admin/*' element={<Backend/>}>
                   <Route path='*' element={<Error/>} />
-                  <Route path='sample' element={<Sample/>} />
+                  <Route state={{ name: "Kyle" }} path='sample' element={<Sample/>} />
                   <Route path='product' element={<ProductList/>} />
                   <Route path='product/new' element={<ProductNew/>} />
                   <Route path='product/:slug/edit' element={<ProductEdit/>} />
-                  <Route path='stock' element={<StockList/>} />
+                  <Route name='stock' path='stock' element={<StockList/>} />
                   <Route path='stock/new' element={<StockNew/>} />
                   <Route path='stock/:slug/edit' element={<StockEdit/>} />
                   <Route path='stock/:slug' element={<StockShow/>} />
@@ -107,6 +121,18 @@ const App = () => {
                   <Route path='sub-category' element={<SubCategoryList/>} />
                   <Route path='sub-category/new' element={<SubCategoryNew/>} />
                   <Route path='sub-category/:slug/edit' element={<SubCategoryEdit/>} />
+                  <Route path='module' element={<ModuleList/>} />
+                  <Route path='module/new' element={<ModuleNew/>} />
+                  <Route path='module/:slug/edit' element={<ModuleEdit/>} />
+
+                  <Route path='sub-module' element={<SubmoduleList/>} />
+                  <Route path='sub-module/new' element={<SubmoduleNew/>} />
+                  <Route path='sub-module/:slug/edit' element={<SubmoduleEdit/>} />
+
+                  <Route path='permission' element={<PermissionList/>} />
+                  <Route path='permission/new' element={<PermissionNew/>} />
+                  <Route path='permission/:uniId/edit' element={<PermissionEdit/>} />
+
                   <Route path='brand' element={<BrandList/>} />
                   <Route path='brand/new' element={<BrandNew/>} />
                   <Route path='brand/:slug/edit' element={<BrandEdit/>} />
@@ -132,4 +158,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;

@@ -1,5 +1,5 @@
 import React,{useEffect,useState,useMemo} from 'react'
-import {useParams,Link} from 'react-router-dom'
+import {useParams,Link,useLocation} from 'react-router-dom'
 import Table from './Table1';
 
 
@@ -10,6 +10,7 @@ import Loading from '../extra/Loading';
 
 const List = () => {
   const {slug} = useParams();
+  const location = useLocation();
   const [list, setList] = useState([])
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('')
@@ -18,7 +19,7 @@ const List = () => {
   const [amountSort, setAmountSort] = useState('amountAsc')
   const [titleSort, setTitleSort] = useState('titleAsc')
 
-    
+   
   useEffect(() => {
       document.title = 'Stock List'
       axios.get(`/api/stock/${slug}`).then(res => {

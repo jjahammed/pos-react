@@ -63,6 +63,23 @@ const Sidebar = () => {
           </ul>
         </li>
         <li>
+          <Link to="#" className="sidebar-header">
+            <i className="icon-blackboard" /><span>Admin Roles</span>
+            <i className="fa fa-angle-right pull-right" />
+          </Link>
+          <ul className="sidebar-submenu">
+            <li>
+              <Link to="/admin/module"><i className="fa fa-angle-right" />module</Link>
+            </li>
+            <li>
+              <Link to="/admin/sub-module"><i className="fa fa-angle-right" />Sub Module</Link>
+            </li>
+            <li>
+              <Link to="/admin/permission"><i className="fa fa-angle-right" />Permission</Link>
+            </li>
+          </ul>
+        </li>
+        <li>
           <Link to="http://admin.pixelstrap.com/universal/starter-kit/layout-light.html" className="sidebar-header">
             <i className="icon-anchor" /><span> Starter kit</span>
           </Link>

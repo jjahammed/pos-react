@@ -79,6 +79,7 @@ class categoryController extends ApiController
         foreach($permissions as $permission){
         if($permission->uniId === auth('sanctum')->user()->uid && $permission->slug === $id){
             return response()->json([
+                'status' => 200,
                 'data' => $id
             ]);
         }

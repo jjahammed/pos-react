@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import {Link,useNavigate,useLocation } from 'react-router-dom'
+import {Link } from 'react-router-dom'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,13 +7,9 @@ import Swal from 'sweetalert2'
 import Loading from '../extra/Loading';
 
 const List = () => {
-  const navigate = useNavigate();
   const [search, setSearch] = useState('')
   const [product, setProduct] = useState([])
   const [loading, setLoading] = useState(true)
-  const location = useLocation();
-  let jon = location.pathname.replace(/\//g, "-")
-  // console.log(jon);
   useEffect(() => {
       document.title = 'Category List'
       localStorage.getItem('success') ? toast.success(localStorage.getItem('success'), {theme: "colored"}) : ''
@@ -22,15 +18,6 @@ const List = () => {
       setLoading(false);
       localStorage.removeItem('success')
       localStorage.removeItem('update')
-  }, [])
-  useEffect(() => {
-      axios.get(`/api/category/${jon}`).then(res =>
-          {
-            if(res.data.status === 403){
-              navigate('/admin/sample')
-          }
-        }
-        );
   }, [])
 
   const deleteCategory = (e,slug) => {
@@ -133,6 +120,7 @@ const List = () => {
                 <tbody>
 
                 { searchData().map((item,index) => {
+                  console.log(item.product)
                   return (
                       <tr key={item.id}>
                         <td scope="col">{index+1}</td>

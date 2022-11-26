@@ -1,14 +1,16 @@
 import React,{useEffect} from 'react'
-import {Link} from 'react-router-dom'
+import {Link,useLocation} from 'react-router-dom'
 import loadjs from 'loadjs';
 import Breadcrumb from '../../layout/Breadcrumb'
 
 
 const Sample = () => {
- 
+  
+  const outlet = useLocation();
+  console.log(outlet);
   
   return (
-    
+
     <div>
         <div className="container-fluid">
         <div className="page-header">

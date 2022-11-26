@@ -46,19 +46,19 @@ const List = () => {
       console.log('titleDesc')
     }
 }
-let jon = location.pathname.replace(/\//g, "-")
-useEffect(() => {
-  axios.get(`/api/category/${jon}`).then(res =>
-      {
-        if(res.data.status === 403){
-          Swal.fire('error',res.data.message,'error')
-          navigate('/admin/sample')
-      }else{
-        console.log(res.data.data)
-      }
-    }
-    );
-}, [])
+// let jon = location.pathname.replace(/\//g, "-")
+// useEffect(() => {
+//   axios.get(`/api/category/${jon}`).then(res =>
+//       {
+//         if(res.data.status === 403){
+//           Swal.fire('error',res.data.message,'error')
+//           navigate('/admin/sample')
+//       }else{
+//         console.log(res.data.data)
+//       }
+//     }
+//     );
+// }, [])
 
   
 

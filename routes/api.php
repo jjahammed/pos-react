@@ -7,6 +7,9 @@ use App\Http\Controllers\auth\authController;
 use App\Http\Controllers\Backend\categoryController;
 use App\Http\Controllers\Backend\subCategoryController;
 use App\Http\Controllers\Backend\brandController;
+use App\Http\Controllers\Backend\moduleController;
+use App\Http\Controllers\Backend\subModuleController;
+use App\Http\Controllers\Backend\permissionController;
 use App\Http\Controllers\Backend\unitController;
 use App\Http\Controllers\Backend\locationController;
 use App\Http\Controllers\Backend\productController;
@@ -24,11 +27,14 @@ use App\Http\Controllers\Backend\userController;
 
 Route::post('register',[authController::Class, 'register']);
 Route::post('login',[authController::Class,'login']);
-Route::resource('category',categoryController::Class);
 
 Route::middleware('auth:sanctum','admin')->group(function () {
     Route::get('checkingAuthenticate',[authController::Class,'checkingAuthenticate']);
+    Route::resource('category',categoryController::Class);
     Route::resource('sub-category',subCategoryController::Class);
+    Route::resource('module',moduleController::Class);
+    Route::resource('sub-module',subModuleController::Class);
+    Route::resource('permission',permissionController::Class);
     Route::resource('brand',brandController::Class);
     Route::resource('unit',unitController::Class);
     Route::resource('location',locationController::Class);

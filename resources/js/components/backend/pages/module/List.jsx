@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import {Link } from 'react-router-dom'
+import {Link,useNavigate,useLocation } from 'react-router-dom'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,20 +7,21 @@ import Swal from 'sweetalert2'
 import Loading from '../extra/Loading';
 
 const List = () => {
+  const navigate = useNavigate();
   const [search, setSearch] = useState('')
   const [product, setProduct] = useState([])
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-      document.title = 'Category List'
+      document.title = 'Module List'
       localStorage.getItem('success') ? toast.success(localStorage.getItem('success'), {theme: "colored"}) : ''
       localStorage.getItem('update') ? Swal.fire('success',localStorage.getItem('update'),'success') : ''
-      axios.get('/api/category').then(res => setProduct(res.data.data));
+      axios.get('/api/module').then(res => setProduct(res.data.data));
       setLoading(false);
       localStorage.removeItem('success')
       localStorage.removeItem('update')
   }, [])
 
-  const deleteCategory = (e,slug) => {
+  const deleteModule = (e,slug) => {
     const thisClicked = e.currentTarget;
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -40,7 +41,7 @@ const List = () => {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`/api/category/${slug}`).then(res => {
+        axios.delete(`/api/module/${slug}`).then(res => {
           if(res.data.status === 200){
             swalWithBootstrapButtons.fire(
               'Deleted!',
@@ -90,12 +91,12 @@ const List = () => {
       <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="card">
           <div className="card-header">
-            <h5 className='d-inline'>Categories </h5>
+            <h5 className='d-inline'>Module </h5>
             <span className='d-inline badge btn-primary text-light'>{searchData().length}</span>
             
             
 
-            <Link to='/admin/category/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
+            <Link to='/admin/module/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
             
           </div>
           <div className="card-body">
@@ -112,27 +113,24 @@ const List = () => {
                   <th scope="col">#</th>
                   <th scope="col">Name</th>
                   <th scope="col">Slug</th>
-                  <th scope="col">image</th>
-                  <th scope="col">Product</th>
                   <th scope="col">action</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 { searchData().map((item,index) => {
-                  console.log(item.product)
                   return (
+                    
                       <tr key={item.id}>
                         <td scope="col">{index+1}</td>
                         <td scope="col">{item.name}</td>
                         <td scope="col">{item.slug}</td>
-                        <td className="border-bottom-0" scope="row"><img src={'/' + item.image} style={{ width: '50px',height:'50px',borderRadius:'50%'}}/> </td>
-                        <td scope="col"><span className='badge btn btn-primary '>{item.product.length}</span></td>
                         <td scope="col" className='text-center'>
-                            <Link to={`/admin/category/${item.slug}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
-                            <button className='btn btn-outline-danger' onClick={(e) => deleteCategory(e,item.slug)}><i className="fa-solid fa-trash"></i></button>
+                            <Link to={`/admin/module/${item.slug}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
+                            <button className='btn btn-outline-danger' onClick={(e) => deleteModule(e,item.slug)}><i className="fa-solid fa-trash"></i></button>
                         </td>
                       </tr>
+                   
                   )
                 })}
                   
