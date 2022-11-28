@@ -69,6 +69,7 @@ const Table = ({stock,amountSort,titleSort,sortData,search,serchHandle}) => {
                         <td scope="col">{item.due}</td>
                         <td scope="col" className='text-center'>
                             <Link to={`/admin/sell-product/${item.invoice}`} className='btn btn-outline-info mr-2'><i className="fa-solid fa-eye"></i></Link>
+                            <Link to={`/admin/sell-product/${item.invoice}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
                         </td>
                       </tr>
                   )

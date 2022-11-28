@@ -25,6 +25,7 @@ import SupplierEdit from './pages/supplier/Edit'
 
 import Sell from './pages/sell/Sell'
 import SellList from './pages/sell/List'
+import SellEdit from './pages/sell/Edit'
 import SellShow from './pages/sell/Show'
 
 import CategoryList from './pages/category/List'
@@ -149,6 +150,7 @@ const App = () => {
 
                   <Route path='sell-product' element={<SellList/>} />
                   <Route path='sell-product/new' element={<Sell/>} />
+                  <Route path='sell-product/:invoice/edit' element={<SellEdit/>} />
                   <Route path='sell-product/:invoice' element={<SellShow/>} />
                 </Route> 
             </Routes>

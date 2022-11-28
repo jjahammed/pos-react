@@ -53,7 +53,7 @@ class permissionController extends ApiController
         }else{
             $permission = new Permission();
             $permission->uniId = $request->uid;
-            $permission->route = $request->permission;
+            $permission->route = $request->route;
             $permission->value = $request->permission;
             $permission->save();
             return $this->success(200,null,$permission,'permission added successfully');
@@ -84,10 +84,6 @@ class permissionController extends ApiController
      */
     public function edit($id)
     {
-        // return response()->json([
-        //     'status' => 200,
-        //     'data' => $id,
-        // ]);
         $permission = Permission::where('uniId',$id)->first();
         if($permission){
             return $this->success(200,null,$permission,'permission found successfully');
@@ -103,9 +99,24 @@ class permissionController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $uniId)
     {
-        //
+        // return response()->json([
+        //     'status' => 200,
+        //     'data' => $request->all(),
+        // ]);
+      
+        $permission = Permission::where('uniId',$uniId)->first();
+
+        if(!$permission){
+            return $this->error(500,$validation->messages(),'Something Went Wrong');
+        }else{
+            $permission->uniId = $uniId;
+            $permission->route = $request->route;
+            $permission->value = $request->permission;
+            $permission->save();
+            return $this->success(200,null,$permission,'permission added successfully');
+        }
     }
 
     /**

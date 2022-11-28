@@ -42,7 +42,11 @@ class User extends Authenticatable
 
 
     // protected $with = ['sell'];
-    // public function sell(){
-    //     return $this->hasMany(Sell::Class,'uid','uid');
-    // }
+    public function sell(){
+        return $this->hasMany(Sell::Class,'uid','uid');
+    }
+
+    public function permission(){
+        return $this->hasOne(Permission::Class,'uniId','uid');
+    }
 }

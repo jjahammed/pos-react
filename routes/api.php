@@ -27,6 +27,7 @@ use App\Http\Controllers\Backend\userController;
 
 Route::post('register',[authController::Class, 'register']);
 Route::post('login',[authController::Class,'login']);
+Route::resource('sell-product',sellController::Class);
 
 Route::middleware('auth:sanctum','admin')->group(function () {
     Route::get('checkingAuthenticate',[authController::Class,'checkingAuthenticate']);
@@ -41,7 +42,6 @@ Route::middleware('auth:sanctum','admin')->group(function () {
     Route::resource('product',productController::Class);
     Route::resource('stock',stockController::Class);
     Route::resource('supplier',supplierController::Class);
-    Route::resource('sell-product',sellController::Class);
     Route::resource('user',userController::Class);
 
     // extra 

@@ -47,7 +47,15 @@ const Table = ({permission}) => {
                       <tr key={item.id}>
                         <td scope="col">{index+1}</td>
                         <td scope="col">{item.uniId}</td>
-                        <td scope="col">{item.value}</td>
+                        <td scope="col">
+                          {
+                            JSON.parse(item.route).map((item2,index) => {
+                              return (
+                                <span className='badge btn-primary m-1' key={index}>{item2}</span>
+                              )
+                            })
+                          }
+                          </td>
                         <td scope="col" className='text-center'>
                             <Link to={`/admin/permission/${item.uniId}/edit`} className='btn btn-outline-info mr-2'><i className="fa-solid fa-eye"></i></Link>
                         </td>

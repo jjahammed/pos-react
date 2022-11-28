@@ -11,5 +11,9 @@ class Permission extends Model
     public function submodule(){
         return $this->belongsTo(Submodule::Class);
     }
+
+    public function user(){
+        return $this->hasOne(User::Class,'uid','uniId');
+    }
     use HasFactory;
 }

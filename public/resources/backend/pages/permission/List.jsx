@@ -38,7 +38,7 @@ const List = () => {
           </div>
           <div className="card-body">
             {
-            permission.length>0 ?
+            permission.length > 0 ?
             <Table permission={permission} />:<Loading />
             }
             <ToastContainer />

@@ -70,7 +70,7 @@ const New = () => {
                                                 return <option value={item.id} key={item.id}> {item.name} </option>
                                               })}
                                             </Select>
-                                            <Input type='text' name='name' lblText='module Name' value={inputValue.name} error={inputValue.error_log.name} onChange={handleInput} placeholder='module Name' className='form-control' />
+                                            <Input type='text' name='name' lblText='Route Name' value={inputValue.name} error={inputValue.error_log.name} onChange={handleInput} placeholder='Route Name (/admin/product)' className='form-control' />
                                         
                                     </div>
                                     <div className="card-footer">

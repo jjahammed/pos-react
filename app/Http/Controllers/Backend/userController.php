@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 use App\Models\User;
 
-class userController extends Controller
+class userController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -48,9 +49,14 @@ class userController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($uid)
     {
-        //
+        $user = User::with('permission')->where('uid',$uid)->first();
+        if($user){
+            return $this->success(200,null,$user,'permission found successfully');
+        }else{
+            return $this->error(500,'Something Went Wrong','Something Went Wrong');
+        }
     }
 
     /**

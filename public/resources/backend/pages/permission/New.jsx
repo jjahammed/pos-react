@@ -8,6 +8,7 @@ const New = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState([])
   const [permission, setPermission] = useState([])
+  const [route, setRoute] = useState([])
   const [user, setUser] = useState([])
   const [inputValue, setInputValue] = useState({
     uid : '',
@@ -28,8 +29,10 @@ const New = () => {
         if(target.type == 'checkbox'){
             if(target.checked == true){
               setPermission([...permission,target.value ])
+              setRoute([...route,target.title ])
             }else{
               setPermission(permission.filter((item) => item !== target.value))
+              setRoute(route.filter((item) => item !== target.title))
             }
         }else{
           setInputValue({
@@ -46,6 +49,7 @@ const New = () => {
       let formData = new FormData();
       formData.append('uid',inputValue.uid);
       formData.append('permission',JSON.stringify(permission));
+      formData.append('route',JSON.stringify(route));
       axios.post('/api/permission',formData).then(res=>
         {if(res.data.status === 200){
           localStorage.setItem('success',res.data.message)
@@ -105,7 +109,9 @@ const New = () => {
                                         item.submodule.map(item2 => {
                                           return (
                                             <div className="form-check checkbox checkbox-primary mb-0 col-md-3" key={item2.id}>
-                                                 <input className="form-check-input bg-primary" title={item2.name} type="checkbox" name="permission" id={item2.id} value={item2.slug} onChange={inputHandle} />
+
+                                                 <input className="form-check-input" type="checkbox" title={item2.name} name="permission" id={item2.id} value={item2.slug} onChange={inputHandle}/>
+
                                           <label className="form-check-label" htmlFor={item2.id}>{item2.name}</label>
                                             </div>
                                           )

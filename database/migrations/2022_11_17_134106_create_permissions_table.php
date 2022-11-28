@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             // $table->unsignedBigInteger('submodule_id');
             $table->string('uniId');
+            $table->longText('route');
             $table->longText('value');
             // $table->string('slug');
             // $table->foreign('submodule_id')

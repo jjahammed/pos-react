@@ -111,7 +111,7 @@ const List = () => {
                 <thead>
                 <tr className='text-center'>
                   <th scope="col">#</th>
-                  <th scope="col">Name</th>
+                  <th scope="col">Route</th>
                   <th scope="col">Slug</th>
                   <th scope="col">module</th>
                   <th scope="col">action</th>

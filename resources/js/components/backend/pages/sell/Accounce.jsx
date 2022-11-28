@@ -17,7 +17,7 @@ const Accounce = ({inputHandle,inputValue}) => {
           </div>
           <div className="col-xl-12 col-12 mt-3">
               <button type='submit' className="d-inline px-4 btn btn-primary mr-2">Add</button>
-              <Link to='/admin/stock' className="d-inline p-2 btn btn-secondary">Cancel</Link>
+              <Link to='/admin/sell-product' className="d-inline p-2 btn btn-secondary">Cancel</Link>
           </div>
       </div>
   )

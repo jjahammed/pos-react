@@ -9,7 +9,7 @@ class Sell extends Model
 {
     use HasFactory;
 
-    protected $with = ['user','sellproduct'];
+    // protected $with = ['user','sellproduct'];
     // protected $with = ['category'];
 
     public function sellproduct(){
