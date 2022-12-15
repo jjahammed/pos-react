@@ -59,7 +59,7 @@ const Table = ({stock,amountSort,titleSort,sortData,search,serchHandle}) => {
                       <tr key={item.id}>
                         <td scope="col">{index+1}</td>
                         <td scope="col">{item.invoice}</td>
-                        <td scope="col">{new Date(item.created_at).toISOString().split("T")[0]}</td>
+                        <td scope="col">{new Date(item.created_at).toLocaleDateString('en-CA')}</td>
                         <td scope="col">{item?.user?.uid}</td>
                         <td scope="col">{item?.user?.name}</td>
                         <td scope="col">{item.sub_total}</td>

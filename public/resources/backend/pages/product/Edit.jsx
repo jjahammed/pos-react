@@ -171,7 +171,6 @@ const Edit = () => {
           }
           );
           setLoading(false);
-       
       }, [])
 
      
@@ -432,7 +431,7 @@ const Edit = () => {
                     </div>
                 </div>
             </div>
-            <div className="row">
+            {/* <div className="row">
                 <div className="col-sm-12 col-xl-12">
                     <div className="row">
                         <div className="col-sm-12">
@@ -465,7 +464,7 @@ const Edit = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
             <div className="row">
                 <div className="col-sm-12 col-xl-12">
                     <div className="row">

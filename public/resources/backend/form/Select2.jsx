@@ -1,8 +1,9 @@
 import React from 'react'
 import Select from 'react-select';
 
-const Select2 = ({name,value,lblText,error,option,userChoice,placeholder,...rest}) => {
+const Select2 = ({name,selectedItem,lblText,error,option,userChoice,placeholder,...rest}) => {
 
+  console.log(selectedItem)
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -18,12 +19,12 @@ const Select2 = ({name,value,lblText,error,option,userChoice,placeholder,...rest
             <div className="col-sm-8">
                 <Select
                     className="basic-single"
-                    classNamePrefix="select"
-                    defaultValue={value}
+                    // classNamePrefix="select"
+                    // defaultValue={{value: inputValue.supplier, label:inputValue.invoice}}
                     // isDisabled={isDisabled}
                     // isLoading={isLoading}
                     // isRtl={isRtl}
-                    // value = {value}
+                    value = {selectedItem}
                     onChange={userChoice}
                     // isClearable={true}
                     isSearchable={true}

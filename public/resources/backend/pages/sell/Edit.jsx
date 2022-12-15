@@ -16,6 +16,7 @@ const Sell = () => {
     const [product, setProduct] = useState([])
     const [search, setSearch] = useState('')
     const [loading, setLoading] = useState(true)
+    const [date, setDate] = useState('2022-08-18T21:11:54')
     const [cat, setCat] = useState('')
     const navigate = useNavigate();
     const {invoice} = useParams();
@@ -58,6 +59,10 @@ const Sell = () => {
       setRowsData(rowsInput);
       localStorage.setItem('updateSales',JSON.stringify(rowsInput))
       // console.log(rowsInput[index]['product_price']);
+    }
+
+    const setDateFunction = (newValue) => {
+      setDate(newValue)
     }
 
     const addTableRows = async (item) => {
@@ -285,7 +290,7 @@ const Sell = () => {
     formData.append('name',inputValue.name);
     formData.append('address',inputValue.address);
     formData.append('phone',inputValue.phone);
-    formData.append('purcheased_date',inputValue.purcheased_date);
+    formData.append('purcheased_date',new Date(date).toLocaleDateString('en-CA'));
     formData.append('note',inputValue.note);
     formData.append('sub_total',inputValue.sub_total);
     formData.append('total',inputValue.total);
@@ -409,7 +414,7 @@ const Sell = () => {
                     <div className="row">
 
                       <div className="col-xl-6 col-12">
-                          <Userinfo inputHandle={inputHandle} inputValue={inputValue} />
+                          <Userinfo inputHandle={inputHandle} inputValue={inputValue} date={date} setDateFunction={setDateFunction} />
                       </div>
 
                       <div className="col-xl-6 col-12 mt-3">

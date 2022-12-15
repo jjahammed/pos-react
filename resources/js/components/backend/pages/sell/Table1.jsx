@@ -23,20 +23,20 @@ const Table = ({product,sell}) => {
             product.map((item,index) => {
               return <tr key={item.id} className='text-center'>
                 <td>{index+1}</td>
-                <td>{item?.product?.pid}</td>
+                <td>{item.pid}</td>
                 <td>{item?.product?.title}</td>
-                <td>{item?.product?.salePrice}</td>
+                <td>{item.unit_price}</td>
                 <td>{item.quantity}</td>
-                <td>{item?.product?.salePrice * item.quantity}</td>
+                <td>{item.total_price}</td>
               </tr>
             })
           }
 
           <tr className='text-center'>
-            <td colSpan={3} className='text-right'><h4>Total</h4></td>
-            <td><h4>{sell.sub_total}</h4></td>
+            <td colSpan={4} className='text-right'><h4>Total</h4></td>
+          
             <td><h4>{product.reduce((a,b) => {return a+b.quantity},0)}</h4></td>
-            <td><h4>{sell.total}</h4></td>
+            <td><h4>{product.reduce((a,b) => {return a+b.total_price},0)}</h4></td>
           </tr>
           
         </tbody>

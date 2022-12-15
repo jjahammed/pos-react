@@ -54,7 +54,7 @@ const List = () => {
   const serchHandle = (e) => {
       setSearch(e.target.value);
   }
-  const keys = ['product_title','pid'];
+  const keys = ['trxId','created_at'];
 
   const filterData = () => {
     let updatedData = list;
@@ -112,7 +112,7 @@ const List = () => {
           <div className="card-body">
             {
             stock.length>0 ?
-            <Table stock={stock} amountSort={amountSort} titleSort={titleSort} sortData={sortData} search={search} serchHandle={serchHandle} />:<Loading />
+            <Table stock={stock} amountSort={amountSort} sortData={sortData} search={search} serchHandle={serchHandle} />:<Loading />
             }
             <ToastContainer />
           </div>

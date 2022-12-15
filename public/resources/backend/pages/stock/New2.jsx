@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 
-import Select2 from '../../form/Select2'
-import Input from '../../form/Input'
 import Variation from './Variation2';
-import Textarea from '../../form/Textarea';
 import Calculation from './Calculation'
-import Loading from '../extra/Loading'
+import Generalinfo from './Generalinfo'
+import Action from './Action';
 
 const New = () => {
 
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [date, setDate] = useState('2022-08-18T21:11:54')
   const [product, setProduct] = useState([])
   const [supplier, setSupplier] = useState([])
-
-  let myData = []
+  const [selectedSupplier, setSelectedSupplier] = useState()
+  const [selectedProduct, setSelectedProduct] = useState()
 
   const [inputValue, setInputValue] = useState({
     invoice: '',
@@ -47,7 +47,7 @@ const New = () => {
     rowsInput[index][name] = value;
     rowsInput[index]['total_price'] = rowsInput[index]['product_price'] * value
     setRowsData(rowsInput);
-    myData = localStorage.setItem('datas',JSON.stringify(rowsInput))
+    localStorage.setItem('datas',JSON.stringify(rowsInput))
     // console.log(rowsInput[index]['product_price']);
   }
 
@@ -59,7 +59,7 @@ const New = () => {
     }else{
       
       setRowsData([...rowsData, rowsInput]),
-      myData = localStorage.setItem('datas',JSON.stringify([...rowsData, rowsInput]))
+      localStorage.setItem('datas',JSON.stringify([...rowsData, rowsInput]))
 
       setRowsInput({
         product_id: '',
@@ -70,24 +70,52 @@ const New = () => {
         product_qty: '',
         total_price: '',
       })
+
+      setSelectedProduct({
+        value : 0,
+        label : 'Select  a Product'
+      })
       
     }
     console.log(rowsData);
   }
 
   const userChoice = (choice) => {
-    console.log(choice)
-    setRowsInput({
-      ...rowsInput,
-      product_id: choice?.value,
-      product_title: choice?.label,
-      product_pid: choice?.product_pid,
-      product_image: choice?.product_image,
-      product_price: choice?.product_price,
-    })
+    if(localStorage.getItem('datas')){
+      const upData = JSON.parse(localStorage.getItem('datas')).filter(item => item.product_id === choice.value)
+    if(upData.length > 0){
+      setSelectedProduct({
+        value : 0,
+        label : 'Select  a Product'
+      })
+      Swal.fire('Decline', choice.label + ' already been added.','error')
+    }else{
+      setSelectedProduct(choice)
+      setRowsInput({
+        ...rowsInput,
+        product_id: choice?.value,
+        product_title: choice?.label,
+        product_pid: choice?.product_pid,
+        product_image: choice?.product_image,
+        product_price: choice?.product_price,
+      })
+    }
+    }else{
+      setSelectedProduct(choice)
+      setRowsInput({
+        ...rowsInput,
+        product_id: choice?.value,
+        product_title: choice?.label,
+        product_pid: choice?.product_pid,
+        product_image: choice?.product_image,
+        product_price: choice?.product_price,
+      })
+    }
+    
   }
   const userSupplierChoice = (choice) => {
     console.log(choice)
+    setSelectedSupplier(choice)
       setInputValue({
       ...inputValue,
       supplier: choice?.value,
@@ -120,7 +148,7 @@ const New = () => {
     const rows = [...rowsData];
     rows.splice(index, 1);
     setRowsData(rows);
-    myData = localStorage.setItem('datas',JSON.stringify(rows))
+    localStorage.setItem('datas',JSON.stringify(rows))
     if(rowsData.length == 1){
       setInputValue({
         ...inputValue,
@@ -165,7 +193,7 @@ const New = () => {
 
 
   useEffect(() => {
-    document.title = 'Add Stock'
+    document.title = location.pathname == '/admin/purcheased-product/return/new' ? 'Return Product' : 'Add purcheased'
 
     const getSupplier = async () => {
       const arr = [];
@@ -196,7 +224,9 @@ const New = () => {
   }, [rowsData])
   
 
-
+  const setDateFunction = (newValue) => {
+    setDate(newValue)
+  }
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -204,7 +234,7 @@ const New = () => {
     formData.append('products',JSON.stringify(rowsData));
     formData.append('invoice',inputValue.invoice);
     formData.append('supplier',inputValue.supplier);
-    formData.append('purcheased_date',inputValue.purcheased_date);
+    formData.append('purcheased_date',new Date(date).toLocaleDateString('en-CA'));
     formData.append('note',inputValue.note);
     formData.append('sub_total',inputValue.sub_total);
     formData.append('total',inputValue.total);
@@ -215,9 +245,12 @@ const New = () => {
     axios.post('/api/stock', formData).then(res => {
       if (res.data.status === 200) {
         console.log(res.data.data)
+        localStorage.removeItem('datas')
         localStorage.setItem('success', res.data.message)
-        navigate('/admin/stock');
-      } else {
+        location.pathname == '/admin/purcheased-product/return/new' ? navigate(`/admin/purcheased-product/return`) : navigate(`/admin/purcheased-product`)
+      } else if(res.data.status === 500){
+        Swal.fire('decline',res.data.message,'error')
+      }else {
         setInputValue({
           ...inputValue,
           error_log: res.data.error
@@ -234,25 +267,9 @@ const New = () => {
           <div className="col-sm-12 col-xl-12">
             <div className="card">
               <div className="card-header">
-                <h5>Add Stock</h5>
+                <h5>{location.pathname == '/admin/purcheased-product/return/new' ? 'Return Product' : 'Add purcheased'}</h5>
               </div>
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-sm-12 col-xl-6">
-
-                    <Input type='text' name='invoice' lblText='Invoice No' value={inputValue.invoice} error={inputValue.error_log.invoice} onChange={inputHandle} placeholder='invoice no' className='form-control' />
-
-                    <Select2 name='supplier' value={inputValue.supplier} opValue='' opText='Select suplier' lblText='Select suplier' error={inputValue.error_log.supplier} onChange={userChoice} className='form-control basic-single' option={supplier} userChoice ={userSupplierChoice} />
-                  </div>
-                  <div className="col-sm-12 col-xl-6">
-
-                    <Input type='date' name='purcheased_date' lblText='Purcheased date' value={inputValue.purcheased_date} error={inputValue.error_log.purcheased_date} onChange={inputHandle} placeholder='Purcheased date' className='form-control' />
-
-                    <Textarea name='note' lblText='Note (optional)' value={inputValue.note} error={inputValue.error_log.note} onChange={inputHandle} placeholder='Note' className='form-control' />
-
-                  </div>
-                </div>
-              </div>
+              <Generalinfo selectedSupplier = {selectedSupplier} inputValue={inputValue} date={date} setDateFunction={setDateFunction} inputHandle={inputHandle} supplier={supplier} userSupplierChoice={userSupplierChoice} userChoice={userChoice} />
             </div>
           </div>
         </div>
@@ -264,35 +281,15 @@ const New = () => {
                 <div className="card">
                   <div className="card-header">
 
-                    <Calculation variationHandle={variationHandle} rowsInput={rowsInput} calculation={calculation} addTableRows={addTableRows} product={product} userChoice={userChoice}/>
+                    <Calculation selectedProduct={selectedProduct} variationHandle={variationHandle} rowsInput={rowsInput} calculation={calculation} addTableRows={addTableRows} product={product} userChoice={userChoice}/>
 
                   </div>
-                  <div className="card-body">
-                    <div className="table-responsive text-center user-status">
-                      <table className="table ">
-                        <thead>
-                          <tr className='text-center'>
-                            <th scope="col">#</th>
-                            <th scope="col">id</th>
-                            <th scope="col">name</th>
-                            <th scope="col">Image</th>
-                            <th scope="col">price</th>
-                            <th scope="col">quantity</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {localStorage.getItem('datas') ? 
+                  {
+                          localStorage.getItem('datas') ? 
                           <Variation rowsData={JSON.parse(localStorage.getItem('datas'))} deleteTableRows={deleteTableRows} handleChange={handleChange} />
                           :
                           []
                         }
-                        {/* <Variation rowsData={JSON.parse(localStorage.getItem('datas'))} deleteTableRows={deleteTableRows} handleChange={handleChange} /> */}
-                          </tbody>
-                      </table>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -307,21 +304,7 @@ const New = () => {
                     <h5>Action</h5>
                   </div>
                   <div className="card-body">
-                    <div className="row">
-                      
-                      <div className="col-xl-6 col-12">
-                      <Input type='text' name='sub_total' lblText='Sub Total' value={inputValue.sub_total} error={inputValue.error_log.sub_total} onChange={inputHandle} placeholder='sub Total' className='form-control' />
-                      <Input type='text' name='discount' lblText='Discount(%)' value={inputValue.discount} error={inputValue.error_log.discount} onChange={inputHandle} placeholder='Discount(%)' className='form-control' />
-                      <Input type='text' name='total' lblText='Total' value={inputValue.total} error={inputValue.error_log.total} onChange={inputHandle} placeholder='Total' className='form-control' />
-                      <Input type='text' name='paid' lblText='Paid Amount' value={inputValue.paid} error={inputValue.error_log.paid} onChange={inputHandle} placeholder='Paid Amount' className='form-control' />
-                      <Input type='text' name='due' lblText='Due Amount' value={inputValue.due} error={inputValue.error_log.due} onChange={inputHandle} placeholder='Due Amount' className='form-control' />
-                        
-                      </div>
-                      <div className="col-xl-6 col-12 mt-3">
-                          <button type='submit' className="d-inline px-4 btn btn-primary mr-2">Add</button>
-                          <Link to='/admin/stock' className="d-inline p-2 btn btn-secondary">Cancel</Link>
-                      </div>
-                    </div>
+                    <Action inputValue={inputValue} inputHandle={inputHandle}/>
                   </div>
                 </div>
               </div>

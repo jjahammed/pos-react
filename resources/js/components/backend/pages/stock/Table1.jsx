@@ -4,7 +4,7 @@ import Pagination from '@mui/material/Pagination';
 import {usePagination} from '../../../hooks/usePagination'
 
 
-const Table = ({stock,amountSort,titleSort,sortData,search,serchHandle}) => {
+const Table = ({stock,amountSort,sortData,search,serchHandle}) => {
 
   const [pageSize, setPageSize] = useState(10)
   
@@ -47,7 +47,7 @@ const Table = ({stock,amountSort,titleSort,sortData,search,serchHandle}) => {
                 <tr className='text-center'>
                   <th scope="col">#</th>
                   <th scope="col">product Id</th>
-                  <th scope="col" id={titleSort} style={{cursor:'pointer'}} onClick={sortData}>Title  <span className='pull-right'><i className= {titleSort == 'titleAsc' ? "fa-solid fa-arrow-down" : "fa-solid fa-arrow-up"  } ></i></span></th>
+                  <th scope="col">Title</th>
                   <th scope="col">image</th>
                   <th scope="col" id={amountSort} style={{cursor:'pointer'}} onClick={sortData}>Quantity<span className='pull-right'><i className= {amountSort == 'amountAsc' ? "fa-solid fa-arrow-down" : "fa-solid fa-arrow-up"  } ></i></span></th>
                   <th scope="col">status</th>

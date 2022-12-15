@@ -63,7 +63,8 @@ class authController extends ApiController
            
             $user = User::where(function($result) use ($request){
                 $result->where('email',$request->name)
-                        ->orWhere('phone',$request->name);
+                        ->orWhere('phone',$request->name)
+                        ->orWhere('uid',$request->name);
             })->first();
 
                 if (! $user || ! Hash::check($request->password, $user->password)) {

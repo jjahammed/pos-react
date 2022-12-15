@@ -14,6 +14,7 @@ const Sell = () => {
     const [product, setProduct] = useState([])
     const [search, setSearch] = useState('')
     const [cat, setCat] = useState('')
+    const [date,setDate] = useState('2022-08-18T21:11:54')
     const navigate = useNavigate();
 
     const [inputValue, setInputValue] = useState({
@@ -107,7 +108,16 @@ const Sell = () => {
       }
     }
 
+    // const setDateFunction = (val) => {
+    //     setDate(val);
+    // }
+
+    const setDateFunction = (newValue) => {
+      setDate(newValue);
+    };
+
     const inputHandle = (e) => {
+      console.log(e.target)
       if(e.target.name == 'discount'){
           let tmpTotal = inputValue.sub_total - (inputValue.sub_total * e.target.value/100)
           let tmpDue = tmpTotal - inputValue.paid
@@ -135,7 +145,7 @@ const Sell = () => {
             name : activeUser.name,
             address : activeUser.address,
             phone : activeUser.phone,
-            user_id : activeUser.user_id,
+            user_id : activeUser.id,
           })
       }else{
         setInputValue({
@@ -144,10 +154,12 @@ const Sell = () => {
           name : '',
           address : '',
           phone : '',
+          user_id : '',
         })
       }
     }else{
         setInputValue({
+          
           ...inputValue,
           [e.target.name] : e.target.value
         })
@@ -187,6 +199,14 @@ const Sell = () => {
       calculation()
     }, [rowsData])
     
+    const generateUniqueNumber = () => {
+      let uniqueNumber = Math.floor(Math.random() * (99999999 - 10000000 + 1)) + 10000000;
+      setInputValue( {
+        ...inputValue,
+        invoice : uniqueNumber
+      })
+    }
+
     // const findUser = (e) => {
     //   let activeUser = ''
     //    user.filter(item => {item.uid == e.target.value ?  activeUser = item : ''});
@@ -272,7 +292,7 @@ const Sell = () => {
     formData.append('name',inputValue.name);
     formData.append('address',inputValue.address);
     formData.append('phone',inputValue.phone);
-    formData.append('purcheased_date',inputValue.purcheased_date);
+    formData.append('purcheased_date',new Date(date).toLocaleDateString('en-CA'));
     formData.append('note',inputValue.note);
     formData.append('sub_total',inputValue.sub_total);
     formData.append('total',inputValue.total);
@@ -389,7 +409,7 @@ const Sell = () => {
                     <div className="row">
 
                       <div className="col-xl-6 col-12">
-                          <Userinfo inputHandle={inputHandle} inputValue={inputValue} />
+                          <Userinfo date={date} setDateFunction={setDateFunction} inputHandle={inputHandle} inputValue={inputValue} generateUniqueNumber={generateUniqueNumber} />
                       </div>
 
                       <div className="col-xl-6 col-12 mt-3">

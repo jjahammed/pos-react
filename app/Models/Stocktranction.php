@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Stocktranction extends Model
 {
     use HasFactory;
-    protected $with=['product'];
+    // protected $with=['product'];
     public function product(){
         return $this->belongsTo(Product::Class,'product_id','id');
     }

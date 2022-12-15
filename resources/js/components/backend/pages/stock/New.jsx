@@ -12,6 +12,7 @@ const New = () => {
     const navigate = useNavigate();
     const [product, setProduct] = useState([])
     const [inputValue, setInputValue] = useState({
+        reason : '',
         product_id : '',
         product_title : '',
         pid : '',
@@ -36,6 +37,14 @@ const New = () => {
         })
       }
 
+      const userChoice2 = (choice) => {
+        console.log(choice);
+        setInputValue( {
+          ...inputValue,
+          reason : choice?.value,
+        })
+      }
+
 
       useEffect(() => {
         document.title = 'Add Stock'
@@ -55,7 +64,11 @@ const New = () => {
       }, [])
       
      
-      
+      const stOption = [
+        {value: 'Damage', label: 'Damage Product'},
+        {value: 'Lost', label: 'Lost Product'},
+        {value: 'Others', label: 'Other Reason'},
+      ]
 
 
       const submitForm = (e) => {
@@ -64,15 +77,17 @@ const New = () => {
         let formData = new FormData();
         formData.append('product_title',inputValue.product_title);
         formData.append('product_id',inputValue.product_id);
+        formData.append('reason',inputValue.reason);
         formData.append('pid',inputValue.pid);
         formData.append('qty',inputValue.qty);
         formData.append('note',inputValue.note);
-        axios.post('/api/stock',formData).then(res => {
+        formData.append("_method", "get");
+        axios.post('/api/stock/create',formData).then(res => {
             // console.log(res.data.data);
           if(res.data.status === 200){
             console.log(res.data.data)
-            // localStorage.setItem('success',res.data.message)
-            // navigate('/admin/stock');
+            localStorage.setItem('success',res.data.message)
+            navigate('/admin/stock');
           }else{
             setInputValue( {
               ...inputValue,
@@ -100,6 +115,8 @@ const New = () => {
 
                                             
                                             <Select2 name='product_id' value={inputValue.product_id} opValue='' opText='Select A Product' lblText='Select A Product' error={inputValue.error_log.product_id} onChange={handleInput} className='form-control basic-single' option={product} userChoice={userChoice} />
+
+                                            <Select2 name='reason' value={inputValue.reason} opValue='' opText='Select A Reason' lblText='Select A Reason' error={inputValue.error_log.reason} onChange={handleInput} className='form-control basic-single' option={stOption} userChoice={userChoice2} />
                                               
 
                                             <Input type='number' name='qty' lblText='Quantity' value={inputValue.qty} error={inputValue.error_log.qty} onChange={handleInput} placeholder='Quantity' className='form-control' />
@@ -109,7 +126,7 @@ const New = () => {
                                     </div>
                                     <div className="card-footer">
                                         <button type='submit' className="d-inline px-4 btn btn-primary mr-2">Add</button>
-                                        <Link to='/admin/category' className="d-inline p-2 btn btn-secondary">Cancel</Link>
+                                        <Link to='/admin/stock' className="d-inline p-2 btn btn-secondary">Cancel</Link>
                                     </div>
                                 </div>
                             </form>

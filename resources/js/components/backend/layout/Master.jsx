@@ -24,7 +24,7 @@ const Master = () => {
   // const permission = usePermission()
   const permission = 'true'
   const navigate = useNavigate()
-  console.log(permission);
+  // console.log(permission);
   useEffect(() => {
     loadjs(['/resources/backend/assets/js/theme-customizer/customizer.js'], function() {
       /* foo.js and bar.js loaded */

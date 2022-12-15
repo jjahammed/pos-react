@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 import {Link,useNavigate} from 'react-router-dom'
 import Swal from 'sweetalert2'
 
@@ -14,8 +14,14 @@ import '../assets/js/sidebar-menu.js'
 import '../assets/js/script.js'
 import '../assets/js/theme-customizer/customizer.js'
 
+import { systemContext } from '../App'
+
 const Header = ({menuSidebar}) => {
+
   const navigate = useNavigate();
+  const mySystem = useContext(systemContext)
+  const {system} = mySystem
+
   const logout = () => {
     axios.post(`/api/logout`).then(res => {
       if(res.data.status === 200){
@@ -31,16 +37,22 @@ const Header = ({menuSidebar}) => {
     });
   }
 
- 
+  const logoLight = system.find(item => {
+    return item.slug == 'company-logo-dark'
+  })
+  const logoDark = system.find(item => {
+    return item.slug == 'company-logo-light'
+  })
 
   return (
     <div className="page-main-header">
         <div className="main-header-left">
       <div className="logo-wrapper">
         <Link to="index.html">
-          <img src="/resources/backend/assets/images/logo-light.png" className="image-dark" />
-          <img src="/resources/backend/assets/images/logo-light-dark-layout.png" className="image-light" />
+          <img src={'/' + logoDark.value} className="image-dark" />
+          <img src={'/' + logoLight.value} className="image-light" />
         </Link>
+        
       </div>
     </div>
     <div className="main-header-right row">

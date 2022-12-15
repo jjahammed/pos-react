@@ -1,12 +1,29 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState,useContext} from 'react'
 import {useParams,Link} from 'react-router-dom'
 import Loading from '../extra/Loading';
 import Swal from 'sweetalert2'
 import Table from './Table1'
+import {systemContext} from '../../App'
 
 import '../../assets/css/print.css'
 
 const Show = () => {
+    const mySystem = useContext(systemContext)
+    const {system} = mySystem
+
+    const logoPrint = system.find(item => {
+        return item.slug == 'company-print-logo'
+      })
+    const companyName = system.find(item => {
+        return item.slug == 'company-full-name'
+      })
+    const companyPhone = system.find(item => {
+        return item.slug == 'company-phone-number'
+      })
+    const companyEmail = system.find(item => {
+        return item.slug == 'company-email-address'
+      })
+
     const {invoice} = useParams();
     const [loading, setLoading] = useState(true)
     const [product, setProduct] = useState([])
@@ -40,13 +57,12 @@ const Show = () => {
                     <div className="row">
                         <div className="col-lg-6">
                         <h3>Invoice
-                            <small>Universal Admin panel</small>
+                            <small>{companyName.value}</small>
                         </h3>
                         </div>
                         <div className="col-lg-6">
                         <ol className="breadcrumb pull-right">
                             <li className="breadcrumb-item"><a href="#"><i className="fa fa-home" /></a></li>
-                            <li className="breadcrumb-item">ECommerce</li>
                             <li className="breadcrumb-item active">Invoice</li>
                         </ol>
                         </div>
@@ -65,12 +81,12 @@ const Show = () => {
                                     <div className="col-sm-6">
                                     <div className="media">
                                         <div className="media-left">
-                                        <img src="/resources/backend/assets/images/logo-login.png" className="media-object img-60" />
+                                        <img src={"/" + logoPrint.value} className="media-object img-60" />
                                         </div>
                                         <div className="media-body m-l-20">
-                                        <h4 className="media-heading">Universal</h4>
-                                        <p> hello@universal.in<br />
-                                            <span className="digits">289-335-6503</span>
+                                        <h4 className="media-heading">{companyName.value}</h4>
+                                        <p> {companyEmail.value}<br />
+                                            <span className="digits">{companyPhone.value}</span>
                                         </p>
                                         </div>
                                     </div>
@@ -103,7 +119,12 @@ const Show = () => {
                                 <div className="col-md-6">
                                     <div id="project" className="text-md-end">
                                     <h3>Total BDT :  <span className="digits">{sell.total}tk</span></h3>
-                                        <p>paid : BDT : <span className="digits">{sell.paid}tk</span>
+                                        <p>
+                                            Sub Total : <span className="digits">{sell.sub_total}tk</span>
+                                        <br />
+                                            Discount : <span className="digits">{sell.discount}%</span>
+                                        <br />
+                                            paid : <span className="digits">{sell.paid}tk</span>
                                         <br />
                                         Due : <span className="digits">{sell.due}tk</span>
                                         </p>
@@ -113,13 +134,13 @@ const Show = () => {
                                 {/*End Invoice Mid*/}
                                 <div>
                                 {product.length > 0 ? <Table product={product} sell={sell} /> : <Loading />}
-                                <div className="row">
+                                {/* <div className="row">
                                     <div className="col-md-12">
                                     <div>
                                         <p className="legal"><strong>Thank you for your business!</strong>&nbsp; Payment is expected within 31 days; please process this invoice within</p>
                                     </div>
                                     </div>
-                                </div>
+                                </div> */}
                                 </div>
                                 {/*End InvoiceBot*/}
                             </div>

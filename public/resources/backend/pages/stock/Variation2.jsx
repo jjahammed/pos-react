@@ -2,8 +2,24 @@ import React from 'react'
 
 const Variation = ({rowsData, deleteTableRows, handleChange}) => {
     return(
-        
-        rowsData.map((data, index)=>{
+
+        <div className="card-body">
+                    <div className="table-responsive text-center user-status">
+                      <table className="table ">
+                        <thead>
+                          <tr className='text-center'>
+                            <th scope="col">#</th>
+                            <th scope="col">id</th>
+                            <th scope="col">name</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">price</th>
+                            <th scope="col">quantity</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                       { rowsData.map((data, index)=>{
             const {product_id,product_pid,product_title,product_price,product_image,product_qty,total_price}= data;
             return(
                 
@@ -35,7 +51,16 @@ const Variation = ({rowsData, deleteTableRows, handleChange}) => {
                 
             </tr>
             )
-        })
+        })}
+                          
+                          </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+
+        
+       
    
     )
 }

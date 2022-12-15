@@ -31,17 +31,79 @@ class sellController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $validation = Validator::make($request->all(),[
+            'invoice' => 'required',
+        ]);
+
+        if($validation->fails()){
+            return $this->error(500,$validation->messages(),'Something Went Wrong');
+        }else{
+            $sell = Sell::where('invoice',$request->invoice)->first();
+            if($sell){
+                return $this->success(200,null,$request->all(),'Invoice found successfully');
+            }else{
+                return $this->success(404,null,$request->all(),'Invoice Not Found');
+            }
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function return($invoice){
+        $sell = Sell::where('invoice',$invoice)->first();
+        if($sell){
+            $products = Saleproduct::with('product')->where('invoice',$invoice)->where('status',1)->get();
+            return response()->json([
+                'status' => 200,
+                'sell' => $sell,
+                'product' => $products,
+                'message' => 'Selleing product found'
+            ]);
+        }else{
+            return response()->json([
+                'status' => 404,
+                'message' => 'Selleing product Not found'
+            ]);
+        }
+    }
+
+    public function returnStore(Request $request){
+        $products = json_decode($request->products);
+        // return response()->json([
+        //     'status' => 200,
+        //     'data' => $request->all()
+        // ]);
+        foreach($products as $prd){
+            $product = new Saleproduct();
+            $product->sell_id= $prd->sell_id;
+            $product->invoice= $request->invoice;
+            $product->product_id=$prd->product_id;
+            $product->pid=$prd->product_pid;
+            $product->unit_price='-'.$prd->unit_price;
+            $product->quantity='-'.$prd->quantity;
+            $product->total_price='-'.$prd->total_price;
+            $product->status=0;
+            $product->save();
+
+            $stock = Stock::where('product_id',$prd->product_id)->first();
+            if($stock){
+                $stock->quantity = $stock->quantity + $prd->product_qty;
+                $stock->save();
+
+                $stocktranction = new Stocktranction();
+                $stocktranction->trxId= $request->invoice;
+                $stocktranction->product_id=$prd->product_id;
+                $stocktranction->pid=$prd->product_pid;
+                $stocktranction->quantity=$prd->quantity;
+                $stocktranction->status='Return';
+                $stocktranction->save();
+            }
+        }
+
+
+        return $this->success(200,null,$request->all(),'Product Return successfully');
+    }
+
     public function store(Request $request)
     {
         
@@ -101,7 +163,9 @@ class sellController extends ApiController
                 $product->invoice= $request->invoice;
                 $product->product_id=$prd->product_id;
                 $product->pid=$prd->product_pid;
+                $product->unit_price=$prd->product_price;
                 $product->quantity=$prd->product_qty;
+                $product->total_price=$prd->total_price;
                 $product->save();
 
                 $stock = Stock::where('product_id',$prd->product_id)->first();
@@ -114,7 +178,7 @@ class sellController extends ApiController
                     $stocktranction->product_id=$prd->product_id;
                     $stocktranction->pid=$prd->product_pid;
                     $stocktranction->quantity=$prd->product_qty;
-                    $stocktranction->status='sell';
+                    $stocktranction->status='Sell';
                     $stocktranction->note=$request->note;
                     $stocktranction->save();
 
@@ -125,7 +189,7 @@ class sellController extends ApiController
 
             
           
-            return $this->success(200,null,$request->all(),'Stock added successfully');
+            return $this->success(200,null,$request->all(),'Sell added successfully');
     }
 }
 
@@ -261,7 +325,9 @@ class sellController extends ApiController
                 $product->invoice= $request->invoice;
                 $product->product_id=$prd->product_id;
                 $product->pid=$prd->product_pid;
+                $product->unit_price=$prd->product_price;
                 $product->quantity=$prd->product_qty;
+                $product->total_price=$prd->total_price;
                 $product->save();
 
                 $stock = Stock::where('product_id',$prd->product_id)->first();
@@ -274,13 +340,13 @@ class sellController extends ApiController
                     $stocktranction->product_id=$prd->product_id;
                     $stocktranction->pid=$prd->product_pid;
                     $stocktranction->quantity=$prd->product_qty;
-                    $stocktranction->status='sell';
+                    $stocktranction->status='Sell';
                     $stocktranction->note=$request->note;
                     $stocktranction->save();
 
                 }
             }
-            return $this->success(200,null,$request->all(),'Stock added successfully');
+            return $this->success(200,null,$request->all(),'Sell Updated successfully');
     }
 
     }
@@ -295,4 +361,6 @@ class sellController extends ApiController
     {
         //
     }
+
+    
 }

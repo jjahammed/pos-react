@@ -32,7 +32,7 @@ const Table = ({stock,amountSort,titleSort,sortData,search,serchHandle}) => {
     //   return stock.slice(firstPageIndex, lastPageIndex);
     // }, [currentPage,pageSize,search]);
 
-
+    let qsell = 0
   return (
     <div>
       <div className="mb-3 m-form__group pull-right">
@@ -50,6 +50,12 @@ const Table = ({stock,amountSort,titleSort,sortData,search,serchHandle}) => {
                   <th scope="col" id={titleSort} style={{cursor:'pointer'}} onClick={sortData}>Title  <span className='pull-right'><i className= {titleSort == 'titleAsc' ? "fa-solid fa-arrow-down" : "fa-solid fa-arrow-up"  } ></i></span></th>
                   <th scope="col">image</th>
                   <th scope="col" id={amountSort} style={{cursor:'pointer'}} onClick={sortData}>Quantity<span className='pull-right'><i className= {amountSort == 'amountAsc' ? "fa-solid fa-arrow-down" : "fa-solid fa-arrow-up"  } ></i></span></th>
+                  <th scope="col">Add</th>
+                  <th scope="col">Return</th>
+                  <th scope="col">Sell</th>
+                  <th scope="col">Lost</th>
+                  <th scope="col">Damage</th>
+                  <th scope="col">Others</th>
                   <th scope="col">action</th>
                 </tr>
                 </thead>
@@ -63,6 +69,24 @@ const Table = ({stock,amountSort,titleSort,sortData,search,serchHandle}) => {
                         <td scope="col">{item.product_title}</td>
                         <td className="border-bottom-0" scope="row"><img src={'/' + item?.product?.image} style={{ width: '50px',height:'50px',borderRadius:'50%'}}/> </td>
                         <td scope="col">{item.quantity}</td>
+                        <td scope="col">
+                          {item.stocktransection.filter(sell => sell.status == 'Buy').reduce((acc,cv) => {return acc + cv.quantity},0)}
+                          </td>
+                        <td scope="col">
+                          {item.stocktransection.filter(sell => sell.status == 'Return').reduce((acc,cv) => {return acc + cv.quantity},0)}
+                          </td>
+                        <td scope="col">
+                          {item.stocktransection.filter(sell => sell.status == 'Sell').reduce((acc,cv) => {return acc + cv.quantity},0)}
+                          </td>
+                        <td scope="col">
+                          {item.stocktransection.filter(sell => sell.status == 'Lost').reduce((acc,cv) => {return acc + cv.quantity},0)}
+                          </td>
+                        <td scope="col">
+                          {item.stocktransection.filter(sell => sell.status == 'Damage').reduce((acc,cv) => {return acc + cv.quantity},0)}
+                          </td>
+                        <td scope="col">
+                          {item.stocktransection.filter(sell => sell.status == 'Others').reduce((acc,cv) => {return acc + cv.quantity},0)}
+                          </td>
                         <td scope="col" className='text-center'>
                             <Link to={`/admin/stock/${item?.product?.slug}`} className='btn btn-outline-info mr-2'><i className="fa-solid fa-eye"></i></Link>
                         </td>

@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
 
         // \App\Models\Category::factory(5)->create();
         // \App\Models\Subcategory::factory(25)->create();
-        \App\Models\Supplier::factory(8)->create();
+        // \App\Models\Supplier::factory(8)->create();
         // \App\Models\Product::factory(100)->create();
         // \App\Models\Product::factory(10)->create();
 
@@ -26,5 +26,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $this->call(systemSeeder::Class);
     }
 }
