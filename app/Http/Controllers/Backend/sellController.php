@@ -50,7 +50,7 @@ class sellController extends ApiController
     }
 
     public function return($invoice){
-        $sell = Sell::where('invoice',$invoice)->first();
+        $sell = Sell::with('user')->where('invoice',$invoice)->first();
         if($sell){
             $products = Saleproduct::with('product')->where('invoice',$invoice)->where('status',1)->get();
             return response()->json([
@@ -87,7 +87,7 @@ class sellController extends ApiController
 
             $stock = Stock::where('product_id',$prd->product_id)->first();
             if($stock){
-                $stock->quantity = $stock->quantity + $prd->product_qty;
+                $stock->quantity = $stock->quantity + $prd->quantity;
                 $stock->save();
 
                 $stocktranction = new Stocktranction();
@@ -106,8 +106,24 @@ class sellController extends ApiController
 
     public function store(Request $request)
     {
-        
         $products = json_decode($request->products);
+
+        if(count($products) == 0){
+            return response()->json([
+            'status' => 403,
+            'data' => $request->all(),
+            'message' => 'You did not add any product'
+        ]);
+        }
+
+        if($request->paid > $request->total){
+            return response()->json([
+            'status' => 403,
+            'data' => $request->all(),
+            'message' => 'Paid amount can not grater than total amount'
+        ]);
+        }
+
         
         $validation = Validator::make($request->all(),[
             'invoice' => 'required | unique:sells',
@@ -116,6 +132,7 @@ class sellController extends ApiController
             'address' => 'required',
             'phone' => 'required',
             'purcheased_date' => 'required',
+            'paymentOption' => 'required',
         ],[
             'uid.required' => 'The User Id field is required.',
         ]);
@@ -155,12 +172,14 @@ class sellController extends ApiController
             $sell->total = $request->total;
             $sell->paid = $request->paid;
             $sell->due = $request->due;
+            $sell->paymentOption = $request->paymentOption;
             $sell->save();
 
             foreach($products as $prd){
                 $product = new Saleproduct();
                 $product->sell_id= Sell::orderBy('id','desc')->first()->id;
                 $product->invoice= $request->invoice;
+                $product->paymentOption= $request->paymentOption;
                 $product->product_id=$prd->product_id;
                 $product->pid=$prd->product_pid;
                 $product->unit_price=$prd->product_price;
@@ -201,7 +220,7 @@ class sellController extends ApiController
      */
     public function show($invoice)
     {
-        $sell = Sell::where('invoice',$invoice)->first();
+        $sell = Sell::with('user')->where('invoice',$invoice)->first();
         if($sell){
             $products = Saleproduct::with('product')->where('invoice',$invoice)->get();
             return response()->json([
@@ -257,6 +276,14 @@ class sellController extends ApiController
         //     'data' => $request->all()
         // ]);
 
+        if($request->paid > $request->total){
+            return response()->json([
+            'status' => 403,
+            'data' => $request->all(),
+            'message' => 'Paid amount can not grater than total amount'
+        ]);
+        }
+
         $products = json_decode($request->products);
         
         $validation = Validator::make($request->all(),[
@@ -264,6 +291,7 @@ class sellController extends ApiController
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
+            'paymentOption' => 'required',
             'purcheased_date' => 'required',
         ],[
             'uid.required' => 'The User Id field is required.',
@@ -286,6 +314,7 @@ class sellController extends ApiController
                 $userNew->total = $request->total;
                 $userNew->paid = $request->paid;
                 $userNew->due = $request->due;
+                $userNew->paymentOption = $request->paymentOption;
                 $userNew->save();
             }else{
                 $user->total = $user->total + $request->total;
@@ -328,6 +357,7 @@ class sellController extends ApiController
                 $product->unit_price=$prd->product_price;
                 $product->quantity=$prd->product_qty;
                 $product->total_price=$prd->total_price;
+                $product->paymentOption=$request->paymentOption;
                 $product->save();
 
                 $stock = Stock::where('product_id',$prd->product_id)->first();

@@ -72,7 +72,7 @@ const New = () => {
   const styleColumn = {height:'35px', width:'100%' , backgroundColor:'#f1edf9' , lineHeight:'35px', fontSize:'16px' , fontWeight:'300',marginBottom: '5px'}
 
   return (
-    <div className="container-fluid" style={{marginTop: '100px'}}>
+    <div className="container-fluid page-header">
     <div className="row">
         <div className="col-sm-12 col-xl-12">
             <div className="row">

@@ -12,7 +12,7 @@ const Show = () => {
     const {system} = mySystem
 
     const logoPrint = system.find(item => {
-        return item.slug == 'company-print-logo'
+        return item.slug == 'company-logo-dark'
       })
     const companyName = system.find(item => {
         return item.slug == 'company-full-name'
@@ -30,7 +30,7 @@ const Show = () => {
     const [sell, setSell] = useState([])
     var options = { year: 'numeric', month: 'long', day: 'numeric' };
     useEffect(() => {
-        document.title = 'Stock List'
+        document.title = 'Sale Report'
         axios.get(`/api/sell-product/${invoice}`).then(res => {
             if(res.data.status == 200){
                 setSell(res.data.sell), setProduct(res.data.product)
@@ -106,7 +106,7 @@ const Show = () => {
                                 <div className="col-md-6">
                                     <div className="media">
                                     <div className="media-left">
-                                        <img src="/resources/backend/assets/images/user/1.jpg" className="media-object rounded-circle img-60" />
+                                        <img src="/resources/backend/images/profile/profile.png" className="media-object rounded-circle img-60" />
                                     </div>
                                     <div className="media-body m-l-20">
                                         <h4 className="media-heading">{sell?.user?.name}</h4>

@@ -7,8 +7,8 @@ import Swal from 'sweetalert2'
 const Login = () => {
     const navigate = useNavigate();
     const [inputValue,setInputValue] = useState({
-        name : '',
-        password : '',
+        name : '01798596317',
+        password : 'password',
         error_log : []
     })
     useEffect(() => {

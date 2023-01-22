@@ -44,6 +44,11 @@ const Header = ({menuSidebar}) => {
     return item.slug == 'company-logo-light'
   })
 
+  const [menuOpen,setMenuOpen] = useState('')
+  const menuOpenOption = () => {
+    menuOpen == '' ? setMenuOpen('open') : setMenuOpen('')
+  }
+
   return (
     <div className="page-main-header">
         <div className="main-header-left">
@@ -65,7 +70,7 @@ const Header = ({menuSidebar}) => {
         </div>
       </div>
       <div className="nav-right col">
-        <ul className="nav-menus">
+        <ul className={`nav-menus ${menuOpen}`}>
           <li>
             <form className="form-inline search-form">
               <div className="form-group">
@@ -186,7 +191,7 @@ const Header = ({menuSidebar}) => {
           </li>
         </ul>
         <div className="d-lg-none mobile-toggle">
-          <i className="icon-more" />
+          <i className="fa-solid fa-sun" onClick={menuOpenOption}/>
         </div>
       </div>
     </div>

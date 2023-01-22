@@ -17,9 +17,24 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        // return [
+        //     'name' => fake()->name(),
+        //     'uid' => uniqid(),
+        //     'role_id' => 2,
+        //     'address' => fake()->address(),
+        //     'phone' => rand(11111111111,9999999999),
+        //     'email' => fake()->unique()->safeEmail(),
+        //     'email_verified_at' => now(),
+        //     'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        //     'remember_token' => Str::random(10),
+        // ];
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => 'Imtiaj ahammed joney',
+            'uid' => 'jjahammed',
+            'role_id' => 1,
+            'address' => 'Al-amin road,konapara,demra,Dhaka',
+            'phone' => '01798596317',
+            'email' => 'jjahammed@gmail.com',
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),

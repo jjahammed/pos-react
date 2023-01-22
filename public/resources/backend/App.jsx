@@ -81,7 +81,7 @@ import SystemEdit from './pages/system/Edit'
 
 import Test from './pages/Sample/Test'
 import Loading from './pages/extra/Loading'
-import Dashboard from './pages/extra/Dashboard2'
+import Dashboard from './pages/dashboard/Dashboard'
 
 
 // axios.defaults.baseURL = 'http://127.0.0.1:8000/';
@@ -121,13 +121,13 @@ const App = () => {
                 <Route path='/login' element={<Login />}/>
                 <Route path='/register' element={<Register />}/>
                 <Route path='/forget-password' element={<ForgetPassword />}/> */}
-
+        
 
                 <Route path='/' element= {localStorage.getItem('auth_token') ? <Navigate to='/admin/dashboard' /> : <Auth />}>
                   <Route path='/' element={<Login/>} />
                   <Route path='/register'  element= {localStorage.getItem('auth_token') ? <Navigate to='/admin/dashboard' /> : <Register />}   />
                   <Route path='/login' element= {localStorage.getItem('auth_token') ? <Navigate to='/admin/dashboard' /> : <Login />} />
-                  <Route path='forget-password' element={<ForgetPassword/>} />
+                  <Route path='/forget-password' element={<ForgetPassword/>} />
                 </Route> 
 
                 {/* <Route path='/' element={<Fontend/>}>
@@ -135,6 +135,8 @@ const App = () => {
                   <Route path='/shop' element={<Shop/>} />
                   <Route path='contact' element={<Contact/>} />
                 </Route>  */}
+
+
 
                 <Route path='admin/*' element={
                   <systemContext.Provider value={{system : system}}>

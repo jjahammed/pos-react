@@ -1,7 +1,14 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useLocation} from 'react-router-dom'
 
-const Sidebar = () => {
+const Sidebar = ({mobileMenuSidebar}) => {
+
+  const location = useLocation()
+  const styled = {
+    color : '#ff1a1a'
+  }
+  let routeName = location.pathname
+  console.log(routeName);
   return (
     <div className="page-sidebar custom-scrollbar">
       <ul className="sidebar-menu">
@@ -11,13 +18,13 @@ const Sidebar = () => {
             <i className="fa fa-angle-right" /><span>Dashboard</span>
           </Link>
         </li>
-        <li>
+        {/* <li>
           <Link to="/admin/test" className="sidebar-header">
             <i className="fa fa-angle-right" /><span>Test</span>
           </Link>
-        </li>
+        </li> */}
         <li>
-          <Link to="/admin/product" className="sidebar-header">
+          <Link to="/admin/product" className="sidebar-header" onClick={() => mobileMenuSidebar()}>
             <i className="fa fa-angle-right" /><span>Product</span>
           </Link>
         </li>
@@ -27,7 +34,8 @@ const Sidebar = () => {
             <i className="fa fa-angle-right" /><span>purcheased List</span>
           </Link>
           <Link to="/admin/purcheased-product/new" className="sidebar-header">
-            <i className="fa fa-angle-right" /><span>Add purcheased</span>
+            <i className="fa fa-angle-right" />
+            {routeName == '/admin/purcheased-product/new' ? <span style={styled}>Add purcheased</span>  : <span>Add purcheased</span>}
           </Link>
           <Link to="/admin/purcheased-product/return" className="sidebar-header">
             <i className="fa fa-angle-right" /><span>Return Product</span>
@@ -87,16 +95,16 @@ const Sidebar = () => {
               <Link to="/admin/permission" className="sidebar-header"><i className="fa fa-angle-right" />Permission</Link>
             </li>
         <div className="sidebar-title">Reports</div>
-            <li>
+            {/* <li>
               <Link to="/admin/permission" className="sidebar-header"><i className="fa fa-angle-right" />Customer List</Link>
             </li>
         <li>
           <div className="sidebar-title">Layout</div>
-          <Link to="#" className="sidebar-header">
+          <a to="#" className="sidebar-header">
             <i className="icon-palette" /> <span>Color Version</span>
             <i className="fa fa-angle-right pull-right" />
-          </Link>
-          <ul className="sidebar-submenu">
+          </a>
+          <ul className="sidebar-submenu menu-open">
             <li>
               <Link to="layout-light.html"><i className="fa fa-angle-right" />Layout Light</Link>
             </li>
@@ -104,7 +112,7 @@ const Sidebar = () => {
               <Link to="layout-dark.html"><i className="fa fa-angle-right" />Layout Dark</Link>
             </li>
           </ul>
-        </li>
+        </li> */}
         
       </ul>
       {/* <div className="sidebar-widget text-center">

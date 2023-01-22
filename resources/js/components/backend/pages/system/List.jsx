@@ -35,14 +35,14 @@ const List = () => {
   }
 
   return (
-    <div className="container-fluid" style={{marginTop: '100px'}}>
+    <div className="container-fluid page-header">
 
 <div className="row">
       <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="card">
           <div className="card-header">
-            <h5 className='d-inline'>Categories </h5>
-            <span className='d-inline badge btn-primary text-light'>{searchData().length}</span>
+            <h5 className='d-inline'>System Info </h5>
+            {/* <span className='d-inline badge btn-primary text-light'>{searchData().length}</span> */}
 
             <Link to='/admin/system/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
             

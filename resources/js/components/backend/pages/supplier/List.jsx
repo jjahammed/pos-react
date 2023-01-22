@@ -84,9 +84,9 @@ const List = () => {
   }
 
   return (
-    <div className="container-fluid" >
+    <div className="container-fluid page-header" >
 
-<div className="row" style={{marginTop: '100px'}}>
+<div className="row">
       <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="card">
           <div className="card-header">

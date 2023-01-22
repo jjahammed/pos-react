@@ -16,9 +16,9 @@ class SupplierFactory extends Factory
     {
         $name = $this->faker->name;
         $imageName = 'supplier_'.rand(100000,999999);
-        // $contents = file_get_contents('https://source.unsplash.com/random/960x960?sig=1');
-        // $file = resource_path('/js/components/backend/images/category/') . $imageName .'.webp';
-        // file_put_contents($file, $contents);
+        $contents = file_get_contents('https://source.unsplash.com/random/960x960?sig=1');
+        $file = resource_path('/js/components/backend/images/supplier/') . $imageName .'.webp';
+        file_put_contents($file, $contents);
 
         return [
             'sid' => uniqid(),

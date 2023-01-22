@@ -11,7 +11,7 @@ const New = () => {
 
   const location = useLocation()
   const navigate = useNavigate()
-  const [date, setDate] = useState('2022-08-18T21:11:54')
+  const [date, setDate] = useState(new Date())
   const [product, setProduct] = useState([])
   const [supplier, setSupplier] = useState([])
   const [selectedSupplier, setSelectedSupplier] = useState()

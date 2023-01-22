@@ -12,7 +12,7 @@ const Edit = () => {
 
   const location = useLocation()
   const navigate = useNavigate()
-  const [date, setDate] = useState('2022-08-18T21:11:54')
+  const [date, setDate] = useState(new Date())
   const [loading, setLoading] = useState(false)
   const [product, setProduct] = useState([])
   const [supplier, setSupplier] = useState([])
@@ -203,7 +203,7 @@ const Edit = () => {
       await axios.get('/api/product').then((res) => {
         let result = res.data.data;
         result.map((item) => {
-          return arr.push({ value: item.id, label: item.title, product_pid: item.pid, product_image : item.image, product_price : item.salePrice });
+          return arr.push({ value: item.id, label: item.title, product_pid: item.pid, product_image : item.image, product_price : item.buyPrice });
         });
         setProduct(arr)
       });
@@ -220,9 +220,9 @@ const Edit = () => {
                 product_pid: item.product.pid,
                 product_title: item.product.title,
                 product_image: item.product.image,
-                product_price: item.product.salePrice,
+                product_price: item.product.buyPrice,
                 product_qty: item.quantity,
-                total_price: item.product.salePrice * item.quantity,
+                total_price: item.product.buyPrice * item.quantity,
               });
             });
             setRowsData(arr)
@@ -291,7 +291,7 @@ const Edit = () => {
         localStorage.removeItem('updateDatas')
         localStorage.setItem('success', res.data.message)
         location.pathname == '/admin/stock/new' ? navigate(`/admin/stock`) : navigate(`/admin/purcheased-product`)
-      } else if(res.data.status === 500){
+      } else if(res.data.status === 403){
         Swal.fire('decline',res.data.message,'error')
       } else {
         setInputValue({
@@ -307,7 +307,7 @@ const Edit = () => {
   }
 
   return (
-    <div className="container-fluid" style={{ marginTop: '100px', marginBottom: '500px' }}>
+    <div className="container-fluid page-header" style={{ marginBottom: '500px' }}>
       <form encType='multipart/form-data' onSubmit={submitForm}>
 
         <div className="row">

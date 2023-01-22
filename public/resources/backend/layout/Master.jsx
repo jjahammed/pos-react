@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import {Outlet,Navigate, useNavigate} from 'react-router-dom'
+import {Outlet,Navigate, useNavigate, useLocation} from 'react-router-dom'
 import loadjs from 'loadjs';
 import Swal from 'sweetalert2'
 
@@ -24,23 +24,34 @@ const Master = () => {
   // const permission = usePermission()
   const permission = 'true'
   const navigate = useNavigate()
-  // console.log(permission);
+  const location = useLocation()
+  // console.log();
   useEffect(() => {
-    loadjs(['/resources/backend/assets/js/theme-customizer/customizer.js'], function() {
+    loadjs(['/resources/backend/assets/js/script.js','/resources/backend/assets/js/theme-customizer/customizer.js'], function() {
       /* foo.js and bar.js loaded */
     });
   }, [])
 
-    const [sidebarClose, setSidebarClose] = useState('')
+    const [sidebarClose, setSidebarClose] = useState('page-sidebar-open')
     const menuSidebar = (e) => {
-        sidebarClose == '' ? setSidebarClose('sidebar-close') : setSidebarClose('')
+      sidebarClose == 'page-sidebar-open' ? setSidebarClose('sidebar-close') : setSidebarClose('page-sidebar-open')
+      console.log(sidebarClose);
     }
+    const mobileMenuSidebar = (e) => {
+      if(window.screen.width < 991){
+        sidebarClose == 'page-sidebar-open' ? setSidebarClose('sidebar-close') : setSidebarClose('page-sidebar-open')
+        console.log(sidebarClose);
+      }
+    }
+
+    // page-sidebar-open
 
   return ( auth ?
     <div className="page-wrapper">
       <Header menuSidebar={menuSidebar}/>
         <div className={`page-body-wrapper ${sidebarClose}`}>
-            <Sidebar/>
+        {/* <div className='page-body-wrapper sidebar-close'> */}
+            <Sidebar mobileMenuSidebar={mobileMenuSidebar}/>
             <div className="page-body">
            { permission 
             ? 

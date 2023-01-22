@@ -16,7 +16,7 @@ const Sell = () => {
     const [product, setProduct] = useState([])
     const [search, setSearch] = useState('')
     const [loading, setLoading] = useState(true)
-    const [date, setDate] = useState('2022-08-18T21:11:54')
+    const [date, setDate] = useState(new Date())
     const [cat, setCat] = useState('')
     const navigate = useNavigate();
     const {invoice} = useParams();
@@ -305,6 +305,8 @@ const Sell = () => {
         localStorage.setItem('success', res.data.message)
         localStorage.removeItem('updateSales')
         navigate('/admin/sell-product');
+      }else if(res.data.status === 403){
+        Swal.fire('decline',res.data.message,'error')
       } else {
         setInputValue({
           ...inputValue,
@@ -319,7 +321,7 @@ const Sell = () => {
   }
 
   return (
-    <div className="container-fluid" style={{ marginTop: '100px', marginBottom: '500px' }}>
+    <div className="container-fluid page-header" style={{ marginBottom: '500px' }}>
       <form encType='multipart/form-data' onSubmit={submitForm}>
 
 

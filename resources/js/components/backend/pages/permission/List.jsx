@@ -26,7 +26,7 @@ const List = () => {
   }
 
   return (
-    <div className="container-fluid" style={{marginTop: '100px'}}>
+    <div className="container-fluid page-header">
 
 <div className="row">
       <div className="col-xl-12 col-md-12 col-sm-12">

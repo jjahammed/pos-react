@@ -14,10 +14,11 @@ const Sell = () => {
     const [product, setProduct] = useState([])
     const [search, setSearch] = useState('')
     const [cat, setCat] = useState('')
-    const [date,setDate] = useState('2022-08-18T21:11:54')
+    const [date,setDate] = useState(new Date())
     const navigate = useNavigate();
 
     const [inputValue, setInputValue] = useState({
+      paymentOption: '',
       invoice: '',
       note: '',
       uid: '',
@@ -91,11 +92,11 @@ const Sell = () => {
       })
     }
   
-    const deleteTableRows = (index) => {
+    const deleteTableRows = async (index) => {
       const rows = [...rowsData];
       rows.splice(index, 1);
       setRowsData(rows);
-      localStorage.setItem('sales',JSON.stringify(rows))
+      await localStorage.setItem('sales',JSON.stringify(rows))
       if(rowsData.length == 1){
         setInputValue({
           ...inputValue,
@@ -117,7 +118,7 @@ const Sell = () => {
     };
 
     const inputHandle = (e) => {
-      console.log(e.target)
+      console.log(e.target.value);
       if(e.target.name == 'discount'){
           let tmpTotal = inputValue.sub_total - (inputValue.sub_total * e.target.value/100)
           let tmpDue = tmpTotal - inputValue.paid
@@ -134,9 +135,10 @@ const Sell = () => {
           [e.target.name] : e.target.value,
           due : tmpDue
         })
-      }else if(e.target.name == 'uid'){
+      }else if(e.target.name == 'uid' ){
+        console.log(e.target.value)
         let activeUser = ''
-       user.filter(item => {item.uid == e.target.value ?  activeUser = item : ''});
+       user.filter(item => {item.uid == e.target.value  ?  activeUser = item : ''});
       if(activeUser) {
         console.log(activeUser.name);
           setInputValue({
@@ -157,7 +159,31 @@ const Sell = () => {
           user_id : '',
         })
       }
+    }else if(e.target.name == 'phone' ){
+      console.log(e.target.value)
+      let activeUser = ''
+     user.filter(item => {item.phone == e.target.value ?  activeUser = item : ''});
+    if(activeUser) {
+      console.log(activeUser.name);
+        setInputValue({
+          ...inputValue,
+          [e.target.name] : e.target.value,
+          name : activeUser.name,
+          address : activeUser.address,
+          uid : activeUser.uid,
+          user_id : activeUser.id,
+        })
     }else{
+      setInputValue({
+        ...inputValue,
+        [e.target.name] : e.target.value,
+        name : '',
+        address : '',
+        uid : '',
+        user_id : '',
+      })
+    }
+  }else{
         setInputValue({
           
           ...inputValue,
@@ -184,11 +210,23 @@ const Sell = () => {
     };
 
     const getProduct = async () => {
-      await axios.get('/api/product').then((res) => {
+      await axios.get('/api/saleProduct').then((res) => {
         setProduct(res.data.data)
         setList(res.data.data)
       });
+
+      // const arr = [];
+      // await axios.get('/api/saleProduct').then((res) => {
+      //   let result = res.data.data;
+      //   result = result.map((item) => {
+      //      item.stockk.quantity > 0
+      //   });
+      //   setProduct(result)
+      //   setList(result)
+      // });
+
     };
+
     getUser();
     getProduct();
     getCategory();
@@ -240,9 +278,9 @@ const Sell = () => {
 
     updatedData = updatedData.filter( (item) => 
               keys.some((key) => item[key].toLowerCase().includes(search.toLowerCase())) ||
-              item.category.name.toLowerCase().includes(search.toLowerCase())
+              item.category.name.toLowerCase().includes(search.toLowerCase()) ||
+              item.brand.name.toLowerCase().includes(search.toLowerCase()) 
           );
-          
           if(cat == 'all'){
             setProduct(list);
           }else {
@@ -287,6 +325,7 @@ const Sell = () => {
     let formData = new FormData();
     formData.append('products',JSON.stringify(rowsData));
     formData.append('invoice',inputValue.invoice);
+    formData.append('paymentOption',inputValue.paymentOption);
     formData.append('uid',inputValue.uid);
     formData.append('user_id',inputValue.user_id);
     formData.append('name',inputValue.name);
@@ -306,6 +345,8 @@ const Sell = () => {
         localStorage.setItem('success', res.data.message)
         localStorage.removeItem('sales')
         navigate('/admin/sell-product');
+      }else if(res.data.status === 403){
+        Swal.fire('decline',res.data.message,'error')
       } else {
         setInputValue({
           ...inputValue,
@@ -316,19 +357,20 @@ const Sell = () => {
   }
 
   return (
-    <div className="container-fluid" style={{ marginTop: '100px', marginBottom: '500px' }}>
+    <div className="container-fluid" style={{  marginBottom: '500px',paddingTop: '30px',
+    paddingBottom: '30px' }}>
       <form encType='multipart/form-data' onSubmit={submitForm}>
 
 
         <div className="card" >
-          <div className="row mt-1 ml-1" >
-          <div className="col-sm-6 col-md-3 col-xl-1 text-center" style={{cursor:'pointer'}}>
-                  <img src='/resources/backend/asset/images/avtar/3.jpg' style={{ height: '100px', width: '100px' }} alt="" onClick={catHandle} title='all' />
+          <div className="row mt-1 ml-1" style={{ textAlign:'center' }}>
+          <div className="col-sm-6 col-md-3 col-xl-1" style={{cursor:'pointer'}}>
+                  <img src='/resources/backend/images/profile/all.png' style={{ height: '100px', width: '50px' }} alt="" onClick={catHandle} title='all' />
                 </div>
             {
             category.map( item => {
               return (
-                <div className="col-sm-6 col-md-3 col-xl-1 text-center " key={item.id} style={{cursor:'pointer'}}>
+                <div className="col-sm-6 col-md-3 col-xl-1 m-1" key={item.id} style={{cursor:'pointer'}}>
                   <img src={'/'+item.image} style={{ height: '100px', width: '100px' }} alt="" onClick={catHandle} title={item.name} />
                 </div>
               )
@@ -367,7 +409,7 @@ const Sell = () => {
                         <Products product={product} calculation={calculation} addTableRows={addTableRows} />
 
                       </div>
-                      <div className="col-xl-4 col-12 mt-3">
+                      <div className="col-xl-4 col-12 mt-3" style={{height:'500px',overflow:'scroll'}}>
                         <div className="table-responsive text-center user-status">
                           <table className="table ">
                             <thead>

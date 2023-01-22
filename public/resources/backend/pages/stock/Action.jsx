@@ -1,6 +1,7 @@
 import React from 'react'
 import Input from '../../form/Input'
 import { Link,useLocation } from 'react-router-dom'
+import Radio from '../../form/Radio'
 
 
 const Action = ({inputValue,inputHandle}) => {
@@ -16,9 +17,30 @@ const Action = ({inputValue,inputHandle}) => {
         
         </div>
         <div className="col-xl-6 col-12 mt-3">
+        <div>
+            <h4 className='text-center'>Select Payment Option</h4>
+        </div>
+        <div className='row my-3'>
+                
+                <div className="col-lg-4 col-12 text-center">
+                    <Radio name="paymentOption" id="radioinline1" lbl="Cash" defaultValue="1" handleInput={inputHandle}   />
+                </div>
+                <div className="col-lg-4 col-12 text-center">
+                    <Radio name="paymentOption" id="radioinline2" lbl="Card / Bank" defaultValue="2" handleInput={inputHandle}  />
+                </div>
+                <div className="col-lg-4 col-12 text-center">
+                    <Radio name="paymentOption" id="radioinline3" lbl="Cheque" defaultValue="3" handleInput={inputHandle}  />
+                </div>
+                
+            </div>
+            <small className="form-text text-danger text-center">{inputValue.error_log.paymentOption}</small>
+
+            <div className='text-center mt-4'>
+
             <button type='submit' className="d-inline px-4 btn btn-primary mr-2">Add</button>
             
             <Link to={location.pathname == '/admin/stock/new' ? '/admin/stock' : '/admin/purcheased-product'} className="d-inline p-2 btn btn-secondary">Cancel</Link>
+            </div>
         </div>
     </div>
   )

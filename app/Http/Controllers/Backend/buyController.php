@@ -48,19 +48,26 @@ class buyController extends ApiController
     public function store(Request $request)
     {
         
+        $products = json_decode($request->products);
+
+        return response()->json([
+            'status' => 403,
+            'data' => $products->count(),
+            'message' => 'Paid amount can not grater than total amount'
+        ]);
 
         if($request->paid > $request->total){
             return response()->json([
-            'status' => 500,
+            'status' => 403,
             'data' => $request->all(),
             'message' => 'Paid amount can not grater than total amount'
         ]);
         }
 
-        $products = json_decode($request->products);
         
         $validation = Validator::make($request->all(),[
             'invoice' => 'required |unique:buys',
+            'paymentOption' => 'required',
             'supplier' => 'required',
             'purcheased_date' => 'required',
         ],[
@@ -81,6 +88,7 @@ class buyController extends ApiController
             $buy->total = $request->total;
             $buy->paid = $request->paid;
             $buy->due = $request->due;
+            $buy->paymentOption = $request->paymentOption;
             $buy->status = 'Return';
             $buy->save();
 

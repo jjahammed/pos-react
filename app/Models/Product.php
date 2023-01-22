@@ -27,4 +27,7 @@ class Product extends Model
     public function location(){
         return $this->belongsTo(Location::Class);
     }
+    public function stockk(){
+        return $this->hasOne(Stock::Class);
+    }
 }

@@ -97,19 +97,19 @@ const List = () => {
   }
 
   return (
-    <div className="container-fluid" style={{marginTop: '100px'}}>
+    <div className="container-fluid page-header">
 
 <div className="row">
       <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="card">
           <div className="card-header">
-            <h5 className='d-inline'>stock List </h5>
+            <h5 className='d-inline'>Selling List</h5>
             <span className='d-inline badge btn-primary text-light'>{stock.length}</span>
               <Link to='/admin/sell-product/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
           </div>
           <div className="card-body">
             {
-            stock.length>0 ?
+            stock.length == 0 || stock.length > 0 ?
             <Table stock={stock} amountSort={amountSort} titleSort={titleSort} sortData={sortData} search={search} serchHandle={serchHandle} />:<Loading />
             }
             <ToastContainer />

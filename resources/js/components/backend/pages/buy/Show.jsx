@@ -12,7 +12,7 @@ const Show = () => {
     const {system} = mySystem
 
     const logoPrint = system.find(item => {
-        return item.slug == 'company-print-logo'
+        return item.slug == 'company-logo-dark'
       })
     const companyName = system.find(item => {
         return item.slug == 'company-full-name'
@@ -107,7 +107,7 @@ const Show = () => {
                                 <div className="col-md-6">
                                     <div className="media">
                                     <div className="media-left">
-                                        <img src="/resources/backend/assets/images/user/1.jpg" className="media-object rounded-circle img-60" />
+                                        <img src={"/" + sell?.supplier?.image} className="media-object rounded-circle img-60" />
                                     </div>
                                     <div className="media-body m-l-20">
                                         <h4 className="media-heading">{sell?.supplier?.name}</h4>

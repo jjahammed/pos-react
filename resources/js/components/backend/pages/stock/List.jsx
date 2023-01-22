@@ -95,7 +95,7 @@ const List = () => {
   }
 
   return (
-    <div className="container-fluid" style={{marginTop: '100px'}}>
+    <div className="container-fluid page-header">
 
 <div className="row">
       <div className="col-xl-12 col-md-12 col-sm-12">
@@ -107,7 +107,7 @@ const List = () => {
           </div>
           <div className="card-body">
             {
-            stock.length>0 ?
+            stock.length == 0 || stock.length>0 ?
             <Table stock={stock} amountSort={amountSort} titleSort={titleSort} sortData={sortData} search={search} serchHandle={serchHandle} />:<Loading />
             }
             <ToastContainer />

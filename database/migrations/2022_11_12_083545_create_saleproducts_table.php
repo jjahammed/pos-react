@@ -19,9 +19,10 @@ return new class extends Migration
             $table->string('invoice');
             $table->unsignedBigInteger('product_id');
             $table->string('pid');
-            $table->string('unit_price');
+            $table->double('unit_price');
             $table->double('quantity');
-            $table->string('total_price');
+            $table->double('total_price');
+            $table->integer('paymentOption');
             $table->boolean('status')->default(1);
             $table->timestamps();
         });

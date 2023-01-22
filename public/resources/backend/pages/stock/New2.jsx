@@ -11,13 +11,14 @@ const New = () => {
 
   const location = useLocation()
   const navigate = useNavigate()
-  const [date, setDate] = useState('2022-08-18T21:11:54')
+  const [date, setDate] = useState(new Date())
   const [product, setProduct] = useState([])
   const [supplier, setSupplier] = useState([])
   const [selectedSupplier, setSelectedSupplier] = useState()
   const [selectedProduct, setSelectedProduct] = useState()
 
   const [inputValue, setInputValue] = useState({
+    paymentOption: '',
     invoice: '',
     supplier: '',
     purcheased_date: '',
@@ -210,7 +211,7 @@ const New = () => {
       await axios.get('/api/product').then((res) => {
         let result = res.data.data;
         result.map((item) => {
-          return arr.push({ value: item.id, label: item.title, product_pid: item.pid, product_image : item.image, product_price : item.salePrice });
+          return arr.push({ value: item.id, label: item.title, product_pid: item.pid, product_image : item.image, product_price : item.buyPrice });
         });
         setProduct(arr)
       });
@@ -233,6 +234,7 @@ const New = () => {
     let formData = new FormData();
     formData.append('products',JSON.stringify(rowsData));
     formData.append('invoice',inputValue.invoice);
+    formData.append('paymentOption',inputValue.paymentOption);
     formData.append('supplier',inputValue.supplier);
     formData.append('purcheased_date',new Date(date).toLocaleDateString('en-CA'));
     formData.append('note',inputValue.note);
@@ -243,12 +245,13 @@ const New = () => {
     formData.append('due',inputValue.due);
 
     axios.post('/api/stock', formData).then(res => {
+      console.log(res.data.data);
       if (res.data.status === 200) {
         console.log(res.data.data)
         localStorage.removeItem('datas')
         localStorage.setItem('success', res.data.message)
         location.pathname == '/admin/purcheased-product/return/new' ? navigate(`/admin/purcheased-product/return`) : navigate(`/admin/purcheased-product`)
-      } else if(res.data.status === 500){
+      } else if(res.data.status === 403){
         Swal.fire('decline',res.data.message,'error')
       }else {
         setInputValue({
@@ -260,7 +263,7 @@ const New = () => {
   }
 
   return (
-    <div className="container-fluid" style={{ marginTop: '100px', marginBottom: '500px' }}>
+    <div className="container-fluid page-header" style={{ marginBottom: '500px' }}>
       <form encType='multipart/form-data' onSubmit={submitForm}>
 
         <div className="row">

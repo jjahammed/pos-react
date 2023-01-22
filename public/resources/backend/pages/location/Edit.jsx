@@ -55,7 +55,7 @@ const Edit = () => {
     }
 
     return (
-        <div className="container-fluid" style={{marginTop: '100px'}}>
+        <div className="container-fluid page-header">
             <div className="row">
                 <div className="col-sm-12 col-xl-2"></div>
                 <div className="col-sm-12 col-xl-8">

@@ -25,6 +25,14 @@ class productController extends ApiController
         ]);
     }
 
+    public function saleProduct()
+    {
+        return response()->json([
+            'status' => 200,
+            'data' => Product::with('stockk')->where('status',1)->get()
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -115,7 +115,7 @@ const ReturnProduct = () => {
                                     <div className="col-sm-6">
                                     <div className="media">
                                         <div className="media-left">
-                                        <img src="/resources/backend/assets/images/logo-login.png" className="media-object img-60" />
+                                        <img src="/resources/backend/images/profile/profile.png" className="media-object img-60" />
                                         </div>
                                         <div className="media-body m-l-20">
                                         <h4 className="media-heading">Universal</h4>

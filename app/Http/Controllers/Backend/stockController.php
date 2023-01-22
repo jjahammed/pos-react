@@ -73,19 +73,31 @@ class stockController extends ApiController
      */
     public function store(Request $request)
     {
+
+        $products = json_decode($request->products);
+
+
+        if(count($products) == 0){
+            return response()->json([
+            'status' => 403,
+            'data' => $request->all(),
+            'message' => 'You did not add any product'
+        ]);
+        }
+
         if($request->paid > $request->total){
             return response()->json([
-            'status' => 500,
+            'status' => 403,
             'data' => $request->all(),
             'message' => 'Paid amount can not grater than total amount'
         ]);
         }
 
-        $products = json_decode($request->products);
         
         $validation = Validator::make($request->all(),[
             'invoice' => 'required |unique:buys',
             'supplier' => 'required',
+            'paymentOption' => 'required',
             'purcheased_date' => 'required',
         ],[
             'supplier.required' => 'You should select a Supplier',
@@ -105,6 +117,7 @@ class stockController extends ApiController
             $buy->total = $request->total;
             $buy->paid = $request->paid;
             $buy->due = $request->due;
+            $buy->paymentOption = $request->paymentOption;
             $buy->status = 'Add';
             $buy->save();
 
@@ -172,7 +185,7 @@ class stockController extends ApiController
     {
         if($request->paid > $request->total){
             return response()->json([
-            'status' => 500,
+            'status' => 403,
             'data' => $request->all(),
             'message' => 'Pain amount can not grater than total amount'
         ]);
@@ -187,6 +200,7 @@ class stockController extends ApiController
         $validation = Validator::make($request->all(),[
             'invoice' => 'required | unique:buys,invoice,'.$buy->id,
             'supplier' => 'required',
+            'paymentOption' => 'required',
             'purcheased_date' => 'required',
         ],[
             'supplier.required' => 'You should select a Supplier',
@@ -204,6 +218,7 @@ class stockController extends ApiController
             $buy->total = $request->total;
             $buy->paid = $request->paid;
             $buy->due = $request->due;
+            $buy->paymentOption = $request->paymentOption;
             $buy->save();
 
             $stockAddeds = Stocktranction::where('trxId',$id)->get();

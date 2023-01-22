@@ -23,6 +23,7 @@ return new class extends Migration
             $table->double('total');
             $table->double('paid');
             $table->double('due');
+            $table->integer('paymentOption');
             $table->longText('note')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
