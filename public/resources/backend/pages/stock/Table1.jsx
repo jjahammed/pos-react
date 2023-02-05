@@ -35,12 +35,17 @@ const Table = ({stock,amountSort,sortData,search,serchHandle}) => {
 
   return (
     <div>
-      <div className="mb-3 m-form__group pull-right">
-                <div className="input-group">
-                    <span className="input-group-text"><i className="fa-solid fa-magnifying-glass"></i></span>
+       <div className='row'>
+            <div className="col-md-4"></div>
+            <div className="col-md-4"></div>
+            <div className="col-md-4">
+              <div className="input-group mb-5">
+              <span className="input-group-text"><i className="fa-solid fa-magnifying-glass"></i></span>
                     <input id='search' type="text" className="form-control" plactholder='search...' value={search} onChange={(e) => { dispSearchPage(); serchHandle(e); }}/>
                 </div>
+              </div>
             </div>
+     
             <div className="table-responsive text-center user-status">
               <table className="table ">
                 <thead>

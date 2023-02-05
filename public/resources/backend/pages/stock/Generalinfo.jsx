@@ -10,10 +10,10 @@ const Generalinfo = ({inputValue,selectedSupplier,inputHandle,date,setDateFuncti
                 <div className="row">
                   <div className="col-sm-12 col-xl-6">
 
-                    <Input type='text' name='invoice' lblText='Invoice No' value={inputValue.invoice} error={inputValue.error_log.invoice} onChange={inputHandle} placeholder='invoice no' className='form-control' />
+                    <Input type='text' name='invoice' lblText='Invoice No' value={inputValue.invoice} error={inputValue.error_log.invoice} onChange={inputHandle} placeholder='invoice no' className='form-control'/>
 
                  
-                    <Date lblText='Date' value={date} setDateFunction={setDateFunction} error={inputValue.error_log.purcheased_date}  placeholder='Purcheased date' className='form-control'/>
+                    <Date lblText='Purcheased Date' value={date} setDateFunction={setDateFunction} error={inputValue.error_log.purcheased_date}  placeholder='' className='form-control'/>
                   </div>
                   <div className="col-sm-12 col-xl-6">
 

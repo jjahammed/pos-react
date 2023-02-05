@@ -7,13 +7,13 @@ import Swal from 'sweetalert2'
 const Login = () => {
     const navigate = useNavigate();
     const [inputValue,setInputValue] = useState({
-        name : '01798596317',
+        name : '10690786275',
         password : 'password',
         error_log : []
     })
-    useEffect(() => {
-        console.log(inputValue.error_log.name);
-    }, [])
+    // useEffect(() => {
+    //     console.log(inputValue.error_log.name);
+    // }, [])
     
 
     const handleInput = (e) => {
@@ -62,10 +62,6 @@ const Login = () => {
                         <Input type='text' name='name' lblText='email/user id/ phone' value={inputValue.name} error={inputValue.error_log.name} onChange={handleInput} placeholder='email/user id/ phone' className='form-control form-control-lg' />
 
                         <Input type='password' name='password' lblText='password' value={inputValue.password} error={inputValue.error_log.password} onChange={handleInput} placeholder='password' className='form-control form-control-lg' />
-
-                       
-
-
                         <div className="row mt-3">
                             <div className="col-md-3">
                             <button type="submit" className="btn btn-secondary">LOGIN</button>

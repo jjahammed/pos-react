@@ -21,10 +21,12 @@ const Table = ({product,sell}) => {
         </tr>
           {
             product.map((item,index) => {
-              return <tr key={item.id} className='text-center'>
+              return <tr key={item.id} className={item.status == 0 ? 'text-center text-danger' : 'text-center'}>
                 <td>{index+1}</td>
                 <td>{item.pid}</td>
-                <td>{item?.product?.title}</td>
+                <td>{item?.product?.title} 
+                <small>   {item.modelNumber != '' ? '( ' + item.modelNumber + ' )' : ''}</small>
+                </td>
                 <td>{item.unit_price}</td>
                 <td>{item.quantity}</td>
                 <td>{item.total_price}</td>

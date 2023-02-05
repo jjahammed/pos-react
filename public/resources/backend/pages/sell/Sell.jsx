@@ -41,8 +41,10 @@ const Sell = () => {
     const [rowsInput, setRowsInput] = useState({
       product_id: '',
       product_pid: '',
+      modelNumber: '',
       product_title: '',
       product_image: '',
+      buy_price: '',
       product_price: '',
       product_qty: '',
       total_price: '',
@@ -50,9 +52,16 @@ const Sell = () => {
 
     const handleChange = (index, evnt) => {
       const { name, value } = evnt.target;
+      console.log(name);
       const rowsInput = [...rowsData];
       rowsInput[index][name] = value;
-      rowsInput[index]['total_price'] = rowsInput[index]['product_price'] * value
+      if(name == 'product_qty'){
+        rowsInput[index]['total_price'] = rowsInput[index]['product_price'] * value
+      }else if((name == 'product_price')){
+        rowsInput[index]['total_price'] = rowsInput[index]['product_qty'] * value
+      }else{
+        rowsInput[index][name] = value;
+      }
       setRowsData(rowsInput);
       localStorage.setItem('sales',JSON.stringify(rowsInput))
       // console.log(rowsInput[index]['product_price']);
@@ -68,16 +77,18 @@ const Sell = () => {
           ...rowsInput,
           product_id: item.id,
           product_pid: item.pid,
+          modelNumber: ``,
           product_title: item.title,
+          buy_price: item.buyPrice,
           product_price: item.salePrice,
           product_qty: 1,
           total_price: item.salePrice
         })
-         await setRowsData([...rowsData, {"product_id":item.id,"product_pid":item.pid,"product_title":item.title,"product_price":item.salePrice,"product_qty":1,"total_price":item.salePrice}]),
-         await localStorage.setItem('sales',JSON.stringify([...rowsData, {"product_id":item.id,"product_pid":item.pid,"product_title":item.title,"product_price":item.salePrice,"product_qty":1,"total_price":item.salePrice}]))
+         await setRowsData([...rowsData, {"product_id":item.id,"product_pid":item.pid,"modelNumber":``,"product_title":item.title,"product_price":item.salePrice,"buy_price" : item.buyPrice,"product_qty":1,"total_price":item.salePrice}]),
+         await localStorage.setItem('sales',JSON.stringify([...rowsData, {"product_id":item.id,"product_pid":item.pid, "modelNumber":``,"product_title":item.title,"product_price":item.salePrice,"buy_price" : item.buyPrice,"product_qty":1,"total_price":item.salePrice}]))
       }
 
-      
+      console.log(rowsData);
     }
   
     const calculation = async () => {
@@ -120,8 +131,8 @@ const Sell = () => {
     const inputHandle = (e) => {
       console.log(e.target.value);
       if(e.target.name == 'discount'){
-          let tmpTotal = inputValue.sub_total - (inputValue.sub_total * e.target.value/100)
-          let tmpDue = tmpTotal - inputValue.paid
+          let tmpTotal = parseFloat(inputValue.sub_total - (inputValue.sub_total * e.target.value/100)).toFixed(2)
+          let tmpDue = parseFloat(tmpTotal - inputValue.paid).toFixed(2)
         setInputValue({
           ...inputValue,
           [e.target.name] : e.target.value,
@@ -129,7 +140,7 @@ const Sell = () => {
           due : tmpDue,
         })
       }else if(e.target.name == 'paid'){
-          let tmpDue = inputValue.total- e.target.value
+          let tmpDue = parseFloat(inputValue.total- e.target.value).toFixed(2)
         setInputValue({
           ...inputValue,
           [e.target.name] : e.target.value,
@@ -153,9 +164,9 @@ const Sell = () => {
         setInputValue({
           ...inputValue,
           [e.target.name] : e.target.value,
-          name : '',
-          address : '',
-          phone : '',
+          // name : '',
+          // address : '',
+          // phone : '',
           user_id : '',
         })
       }
@@ -177,15 +188,15 @@ const Sell = () => {
       setInputValue({
         ...inputValue,
         [e.target.name] : e.target.value,
-        name : '',
-        address : '',
-        uid : '',
+        // name : '',
+        // address : '',
+        // uid : '',
         user_id : '',
       })
     }
   }else{
+    console.log(inputValue);
         setInputValue({
-          
           ...inputValue,
           [e.target.name] : e.target.value
         })
@@ -347,7 +358,9 @@ const Sell = () => {
         navigate('/admin/sell-product');
       }else if(res.data.status === 403){
         Swal.fire('decline',res.data.message,'error')
-      } else {
+      }else if(res.data.status === 405){
+        Swal.fire('decline',res.data.message,'error')
+      }else {
         setInputValue({
           ...inputValue,
           error_log: res.data.error
@@ -404,24 +417,28 @@ const Sell = () => {
                   <div className="card-body">
                     <div className="row">
 
-                      <div className="col-xl-8 col-12" style={{height:'500px',overflow:'scroll'}}>
+                      <div className="col-xl-12 col-12" style={{height:'500px',overflow:'scroll'}}>
 
                         <Products product={product} calculation={calculation} addTableRows={addTableRows} />
 
                       </div>
-                      <div className="col-xl-4 col-12 mt-3" style={{height:'500px',overflow:'scroll'}}>
+                    </div>
+                    <div className="row">
+                      <div className="col-xl-12 col-12 mt-3" style={{height:'500px',overflow:'scroll'}}>
                         <div className="table-responsive text-center user-status">
                           <table className="table ">
                             <thead>
                               <tr className='text-center'>
                                 <th scope="col">#</th>
                                 <th scope="col">name</th>
+                                <th scope="col">IMEI/Model/Seriel</th>
+                                <th scope="col">Unit Price</th>
                                 <th scope="col">quantity</th>
                                 <th scope="col">Total</th>
                                 <th scope="col">Action</th>
                               </tr>
                             </thead>
-                            <tbody style={{fontSize:'10px'}}>
+                            <tbody>
                               {localStorage.getItem('sales') ? 
                               <Variation rowsData={JSON.parse(localStorage.getItem('sales'))} deleteTableRows={deleteTableRows} handleChange={handleChange} />
                               :

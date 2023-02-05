@@ -120,7 +120,12 @@ const Show = () => {
                                 <div className="col-md-6">
                                     <div id="project" className="text-md-end">
                                     <h3>Total BDT :  <span className="digits">{sell.total}tk</span></h3>
-                                        <p>paid : BDT : <span className="digits">{sell.paid}tk</span>
+                                        <p>
+                                            Sub Total : <span className="digits">{sell.sub_total}tk</span>
+                                            <br />
+                                                Discount : <span className="digits">{sell.discount}%</span>
+                                            <br />
+                                            paid : BDT : <span className="digits">{sell.paid}tk</span>
                                         <br />
                                         Due : <span className="digits">{sell.due}tk</span>
                                         </p>

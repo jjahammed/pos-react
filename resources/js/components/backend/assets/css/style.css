@@ -2837,10 +2837,10 @@ ul.notification-dropdown.onhover-show-div {
       font-size: 14px;
       margin-top: 25px; }
     .page-wrapper .page-body-wrapper .page-sidebar .sidebar-menu .sidebar-header {
-      font-size: 13px;
+      font-size: 14px;
       letter-spacing: 1px;
-      padding-bottom: 7px;
-      padding-top: 7px;
+      padding-bottom: 10px;
+      padding-top: 10px;
       text-transform: uppercase;
       font-weight: 500; }
     .page-wrapper .page-body-wrapper .page-sidebar .sidebar-menu > li > a {
@@ -4187,7 +4187,9 @@ ul .submenu {
 
 .btn {
   font-size: 14px;
-  padding: 0.375rem 1.75rem; }
+  padding: 0.375rem 0.75rem;
+  margin: 0.1rem;
+}
 
 .btn-lg {
   font-size: 1.25rem; }

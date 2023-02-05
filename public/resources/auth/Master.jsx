@@ -8,7 +8,7 @@ import '../backend/assets/css/responsive.css'
 
 
 import '../backend/assets/js/jquery-3.2.1.min.js'
-import '../backend/assets/js/bootstrap/bootstrap.bundle.min.js'
+import '../backend/assets/js/bootstrap.bundle.min.js'
 import '../backend/assets/js/script.js'
 
 

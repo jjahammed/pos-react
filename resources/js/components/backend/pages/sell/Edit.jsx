@@ -22,6 +22,7 @@ const Sell = () => {
     const {invoice} = useParams();
 
     const [inputValue, setInputValue] = useState({
+      paymentOption: '',
       invoice: '',
       note: '',
       uid: '',
@@ -44,8 +45,10 @@ const Sell = () => {
     const [rowsInput, setRowsInput] = useState({
       product_id: '',
       product_pid: '',
+      modelNumber: '',
       product_title: '',
       product_image: '',
+      buy_price: '',
       product_price: '',
       product_qty: '',
       total_price: '',
@@ -55,10 +58,15 @@ const Sell = () => {
       const { name, value } = evnt.target;
       const rowsInput = [...rowsData];
       rowsInput[index][name] = value;
-      rowsInput[index]['total_price'] = rowsInput[index]['product_price'] * value
+      if(name == 'product_qty'){
+        rowsInput[index]['total_price'] = rowsInput[index]['product_price'] * value
+      }else if((name == 'product_price')){
+        rowsInput[index]['total_price'] = rowsInput[index]['product_qty'] * value
+      }else{
+        rowsInput[index][name] = value;
+      }
       setRowsData(rowsInput);
       localStorage.setItem('updateSales',JSON.stringify(rowsInput))
-      // console.log(rowsInput[index]['product_price']);
     }
 
     const setDateFunction = (newValue) => {
@@ -75,13 +83,15 @@ const Sell = () => {
           ...rowsInput,
           product_id: item.id,
           product_pid: item.pid,
+          modelNumber: ``,
           product_title: item.title,
+          buy_price: item.buyPrice,
           product_price: item.salePrice,
           product_qty: 1,
           total_price: item.salePrice
         })
-         await setRowsData([...rowsData, {"product_id":item.id,"product_pid":item.pid,"product_title":item.title,"product_price":item.salePrice,"product_qty":1,"total_price":item.salePrice}]),
-         await localStorage.setItem('updateSales',JSON.stringify([...rowsData, {"product_id":item.id,"product_pid":item.pid,"product_title":item.title,"product_price":item.salePrice,"product_qty":1,"total_price":item.salePrice}]))
+         await setRowsData([...rowsData, {"product_id":item.id,"product_pid":item.pid,"modelNumber":``,"product_title":item.title,"buy_price" : item.buyPrice,"product_price":item.salePrice,"product_qty":1,"total_price":item.salePrice}]),
+         await localStorage.setItem('updateSales',JSON.stringify([...rowsData, {"product_id":item.id,"product_pid":item.pid,"modelNumber":``,"product_title":item.title,"buy_price" : item.buyPrice,"product_price":item.salePrice,"product_qty":1,"total_price":item.salePrice}]))
       }
 
       
@@ -89,8 +99,8 @@ const Sell = () => {
   
     const calculation = async () => {
        let tmpPrice = rowsData.reduce((accumulator,currentValue) => {return accumulator + currentValue.total_price},0);
-      let tmpTotal = tmpPrice - (tmpPrice * inputValue.discount/100)
-      let tmpDue = tmpTotal - inputValue.paid
+      let tmpTotal = parseFloat(tmpPrice - (tmpPrice * inputValue.discount/100)).toFixed(2)
+      let tmpDue = parseFloat(tmpTotal - inputValue.paid).toFixed(2)
       setInputValue({
         ...inputValue,
         sub_total : tmpPrice,
@@ -119,7 +129,7 @@ const Sell = () => {
     const inputHandle = (e) => {
       if(e.target.name == 'discount'){
           let tmpTotal = inputValue.sub_total - (inputValue.sub_total * e.target.value/100)
-          let tmpDue = tmpTotal - inputValue.paid
+          let tmpDue = parseFloat(tmpTotal - inputValue.paid).toFixed(2)
         setInputValue({
           ...inputValue,
           [e.target.name] : e.target.value,
@@ -127,7 +137,7 @@ const Sell = () => {
           due : tmpDue,
         })
       }else if(e.target.name == 'paid'){
-          let tmpDue = inputValue.total- e.target.value
+          let tmpDue = parseFloat(inputValue.total- e.target.value).toFixed(2)
         setInputValue({
           ...inputValue,
           [e.target.name] : e.target.value,
@@ -144,18 +154,36 @@ const Sell = () => {
             name : activeUser.name,
             address : activeUser.address,
             phone : activeUser.phone,
-            user_id : activeUser.user_id,
+            user_id : activeUser.id,
           })
       }else{
         setInputValue({
           ...inputValue,
           [e.target.name] : e.target.value,
-          name : '',
-          address : '',
-          phone : '',
+          user_id : '',
         })
       }
+    }else if(e.target.name == 'phone'){
+      let activeUser = ''
+     user.filter(item => {item.phone == e.target.value ?  activeUser = item : ''});
+    if(activeUser) {
+      console.log(activeUser.name);
+        setInputValue({
+          ...inputValue,
+          [e.target.name] : e.target.value,
+          name : activeUser.name,
+          address : activeUser.address,
+          uid : activeUser.uid,
+          user_id : activeUser.id,
+        })
     }else{
+      setInputValue({
+        ...inputValue,
+        [e.target.name] : e.target.value,
+        user_id : '',
+      })
+    }
+  }else{
         setInputValue({
           ...inputValue,
           [e.target.name] : e.target.value
@@ -181,7 +209,7 @@ const Sell = () => {
     };
 
     const getProduct = async () => {
-      await axios.get('/api/product').then((res) => {
+      await axios.get('/api/saleProduct').then((res) => {
         setProduct(res.data.data)
         setList(res.data.data)
       });
@@ -190,6 +218,7 @@ const Sell = () => {
     const getSell = async () => {
       await axios.get(`/api/sell-product/${invoice}/edit`).then((res) => {
         if(res.data.status === 200){
+          console.log(res.data.product);
           const arr = [];
           let result = res.data.product;
             result.map((item) => {
@@ -198,6 +227,8 @@ const Sell = () => {
                 product_pid: item.product.pid,
                 product_title: item.product.title,
                 product_image: item.product.image,
+                buy_price : item.product.buyPrice,
+                modelNumber: item.modelNumber,
                 product_price: item.product.salePrice,
                 product_qty: item.quantity,
                 total_price: item.product.salePrice * item.quantity,
@@ -284,6 +315,7 @@ const Sell = () => {
     e.preventDefault();
     let formData = new FormData();
     formData.append('products',JSON.stringify(rowsData));
+    formData.append('paymentOption',inputValue.paymentOption);
     formData.append('invoice',inputValue.invoice);
     formData.append('uid',inputValue.uid);
     formData.append('user_id',inputValue.user_id);
@@ -367,24 +399,26 @@ const Sell = () => {
                   <div className="card-body">
                     <div className="row">
 
-                      <div className="col-xl-8 col-12" style={{height:'500px',overflow:'scroll'}}>
+                      <div className="col-xl-12 col-12" style={{height:'500px',overflow:'scroll'}}>
 
                         <Products product={product} calculation={calculation} addTableRows={addTableRows} />
 
                       </div>
-                      <div className="col-xl-4 col-12 mt-3">
+                      <div className="col-xl-12 col-12 mt-3">
                         <div className="table-responsive text-center user-status">
                           <table className="table ">
                             <thead>
                               <tr className='text-center'>
-                                <th scope="col">#</th>
+                              <th scope="col">#</th>
                                 <th scope="col">name</th>
+                                <th scope="col">IMEI/Model/Seriel</th>
+                                <th scope="col">Unit Price</th>
                                 <th scope="col">quantity</th>
                                 <th scope="col">Total</th>
                                 <th scope="col">Action</th>
                               </tr>
                             </thead>
-                            <tbody style={{fontSize:'10px'}}>
+                            <tbody>
                               {
                               // console.log(typeof localStorage.getItem('updateSales'))
                               localStorage.getItem('updateSales') ? 

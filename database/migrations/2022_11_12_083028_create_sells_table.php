@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('invoice');
             $table->string('user_id');
+            $table->string('uid');
             $table->dateTime('purcheased_date');
             $table->double('sub_total');
             $table->double('discount');

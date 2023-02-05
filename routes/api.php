@@ -12,12 +12,16 @@ use App\Http\Controllers\Backend\brandController;
 use App\Http\Controllers\Backend\stockController;
 use App\Http\Controllers\Backend\moduleController;
 use App\Http\Controllers\Backend\systemController;
+use App\Http\Controllers\Backend\expenceController;
 use App\Http\Controllers\Backend\productController;
 use App\Http\Controllers\Backend\categoryController;
+use App\Http\Controllers\Backend\customerController;
 use App\Http\Controllers\Backend\locationController;
 use App\Http\Controllers\Backend\supplierController;
+use App\Http\Controllers\Backent\employeeController;
 use App\Http\Controllers\Backend\dashboardController;
 use App\Http\Controllers\Backend\subModuleController;
+use App\Http\Controllers\Backend\investmentController;
 use App\Http\Controllers\Backend\permissionController;
 use App\Http\Controllers\Backend\informationController;
 use App\Http\Controllers\Backend\subCategoryController;
@@ -31,7 +35,6 @@ use App\Http\Controllers\Backend\subCategoryController;
 Route::post('register',[authController::Class, 'register']);
 Route::post('login',[authController::Class,'login']);
 Route::resource('system',systemController::Class);
-Route::get('/headingPart',[dashboardController::Class,'headingPart']);
 
 
 Route::middleware('auth:sanctum','admin')->group(function () {
@@ -46,19 +49,34 @@ Route::middleware('auth:sanctum','admin')->group(function () {
     Route::resource('location',locationController::Class);
     Route::resource('product',productController::Class);
     Route::get('saleProduct',[productController::Class,'saleProduct']);
+    Route::get('disable-product/{slug}',[productController::Class,'disable']);
+    Route::get('enable-product/{slug}',[productController::Class,'enable']);
     Route::resource('stock',stockController::Class);
     Route::resource('supplier',supplierController::Class);
     Route::resource('user',userController::Class);
     Route::resource('sell-product',sellController::Class);
     Route::resource('purcheased-product',buyController::Class);
-
+    Route::resource('investment',investmentController::Class);
+    Route::resource('employee',employeeController::Class);
+    Route::resource('expence',expenceController::Class);
+    
     //dashboard route 
+    Route::get('/headingPart',[dashboardController::Class,'headingPart']);
+
+    //Reports 
+    Route::get('customer-list',[customerController::Class,'customer_list']);
+    Route::get('due-customer-list',[customerController::Class,'due_customer_list']);
+    
 
     // extra 
     Route::get('subCategory/{id}',[informationController::Class,'getSubCategory']);
     Route::get('sell-product-return/{invoice}',[sellController::Class,'return']);
     Route::post('sell-product-return',[sellController::Class,'returnStore']);
 });
+
+Route::get('customer-order/{uid}',[customerController::Class,'customer_order']);
+
+Route::get('stock-alert',[stockController::Class,'stock_alert']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout',[authController::Class,'logout']);

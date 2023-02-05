@@ -16,7 +16,13 @@
   <body>
     <div id="root"></div>
 
+    <script>
+    window.onbeforeunload = function(e) {
+       alert('Dialog text here.');
+    };
+  </script>
+
     <script src="/resources/backend/assets/js/jquery-3.2.1.min.js"> </script>
-    <script src="/resources/backend/assets/js/bootstrap/bootstrap.bundle.min.js"> </script>
+    <script src="/resources/backend/assets/js/bootstrap.bundle.min.js"> </script>
   </body>
 </html>

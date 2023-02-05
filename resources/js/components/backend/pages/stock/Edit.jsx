@@ -21,6 +21,7 @@ const Edit = () => {
   const {invoice} = useParams();
 
   const [inputValue, setInputValue] = useState({
+    paymentOption: '',
     invoice: '',
     supplier: '',
     supplier_name: '',
@@ -274,6 +275,7 @@ const Edit = () => {
  
     let formData = new FormData();
     formData.append('products',JSON.stringify(rowsData));
+    formData.append('paymentOption',inputValue.paymentOption);
     formData.append('invoice',inputValue.invoice);
     formData.append('supplier',inputValue.supplier);
     formData.append('purcheased_date',new Date(date).toLocaleDateString('en-CA'));

@@ -5,20 +5,29 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2'
 import Loading from '../extra/Loading';
+import Table from './Table';
 
 const List = () => {
   const [search, setSearch] = useState('')
-  const [product, setProduct] = useState([])
+  const [supplier, setSupplier] = useState([])
+  const [list, setList] = useState([])
+  const [due, setDue] = useState('')
+  const [top, setTop] = useState('')
   const [loading, setLoading] = useState(true)
+  const [sort, setSort] = useState('')
+  const [amountSort, setAmountSort] = useState('amountAsc')
+  const [titleSort, setTitleSort] = useState('titleAsc')
+
   useEffect(() => {
       document.title = 'Supplier List'
       localStorage.getItem('success') ? toast.success(localStorage.getItem('success'), {theme: "colored"}) : ''
       localStorage.getItem('update') ? Swal.fire('success',localStorage.getItem('update'),'success') : ''
-      axios.get('/api/supplier').then(res => setProduct(res.data.data));
+      axios.get('/api/supplier').then(res => {setSupplier(res.data.data), setList(res.data.data)});
       setLoading(false);
       localStorage.removeItem('success')
       localStorage.removeItem('update')
   }, [])
+
 
   const deleteSubCategory = (e,slug) => {
     const thisClicked = e.currentTarget;
@@ -74,11 +83,98 @@ const List = () => {
   }
   const keys = ['name','phone','sid'];
 
-  const searchData = () => {
-      return product.filter( (item) => 
+  // const searchData = () => {
+  //     return product.filter( (item) => 
+  //             keys.some((key) => item[key].toLowerCase().includes(search.toLowerCase())) 
+  //         );
+  // }
+
+  const sortData = (e) => {
+    if(e.target.id == 'amountAsc'){
+      setSort(3);
+      setAmountSort('amountDesc')
+    }else if(e.target.id == 'amountDesc'){
+      setSort(4);
+      setAmountSort('amountAsc')
+    }else if(e.target.id == 'titleAsc'){
+      setSort(1);
+      setTitleSort('titleDesc')
+      console.log('titleAsc')
+    }else if(e.target.id == 'titleDesc'){
+      setSort(2);
+      setTitleSort('titleAsc')
+      console.log('titleDesc')
+    }
+}
+
+const checkBoxDueHandle = (e) => {
+  if(e.target.type == 'checkbox'){
+    if(e.target.checked == true){
+      setDue(e.target.value);
+    }else{
+      setDue('')
+    }
+}else{
+  setDue('')
+}
+}
+
+const checkBoxTopHandle = (e) => {
+  if(e.target.type == 'checkbox'){
+    if(e.target.checked == true){
+      setTop(e.target.value);
+    }else{
+      setTop('')
+    }
+}else{
+  setTop('')
+}
+}
+
+  const filterData = () => {
+    let updatedData = list;
+
+    updatedData = updatedData.filter( (item) => 
               keys.some((key) => item[key].toLowerCase().includes(search.toLowerCase())) 
           );
+
+    if(sort == 1){
+      // asecendring 
+      updatedData = updatedData.slice(0).sort((a, b) => {
+        if(b.name.toLowerCase() < a.name.toLowerCase()) return 1
+        if(b.name.toLowerCase() > a.name.toLowerCase()) return -1
+        return 0
+      });
+    }else if(sort == 2){
+      // desecendring 
+      updatedData = updatedData.slice(0).sort((a, b) => {
+        if(a.name.toLowerCase() < b.name.toLowerCase()) return 1
+        if(a.name.toLowerCase() > b.name.toLowerCase()) return -1
+        return 0
+      });
+    }else if(sort == 3){
+       // asecendring 
+       updatedData = updatedData.slice(0).sort((a, b) => {return a.total - b.total});
+    }else if(sort == 4){
+       // desecendring 
+       updatedData = updatedData.slice(0).sort((a, b) => {return b.total - a.total});
+    }else {}
+
+    if(due == 'due'){
+      updatedData = updatedData.filter( (item) => 
+      item.due > 0 
+    )
+    }
+    if(top == 'buy'){
+      updatedData = updatedData.slice(0).sort((a, b) => {return b.total - a.total});
+    }
+    setSupplier(updatedData);
   }
+
+  useEffect(() => {
+    filterData();
+  }, [search,sort,due,top])
+
   if(loading){
       return <Loading />
   }
@@ -90,57 +186,18 @@ const List = () => {
       <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="card">
           <div className="card-header">
-            <h5 className='d-inline'>Supplier </h5>
-            <span className='d-inline badge btn-primary text-light'>{searchData().length}</span>
-            
-            
-
+            <h5 className='d-inline'>Supplier List </h5>
+            <span className='d-inline badge btn-primary text-light'>{supplier.length}</span>
             <Link to='/admin/supplier/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
-            
           </div>
-          <div className="card-body">
-          <div className="mb-3 m-form__group pull-right">
-                <div className="input-group">
-                    <span className="input-group-text"><i className="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" className="form-control" plactholder='search...' value={search} onChange={serchHandle}/>
-                </div>
-            </div>
-            <div className="table-responsive text-center user-status">
-              <table className="table ">
-                <thead>
-                <tr className='text-center'>
-                  <th scope="col">#</th>
-                  <th scope="col">Id</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">image</th>
-                  <th scope="col">phone</th>
-                  <th scope="col">address</th>
-                  <th scope="col">action</th>
-                </tr>
-                </thead>
-                <tbody>
 
-                { searchData().map((item,index) => {
-                  return (
-                      <tr key={item.id}>
-                        <td scope="col">{index + 1}</td>
-                        <td scope="col">{item.sid}</td>
-                        <td scope="col">{item.name}</td>
-                        <td className="border-bottom-0" scope="row"><img src={'/' + item.image} style={{ width: '50px',height:'50px',borderRadius:'50%'}}/> </td>
-                        <td scope="col">{item.phone}</td>
-                        <td scope="col">{item.address}</td>
-                        <td scope="col" className='text-center'>
-                            <Link to={`/admin/supplier/${item.sid}`} className='btn btn-outline-info mr-2'><i className="fa-regular fa-eye"></i></Link>
-                            <Link to={`/admin/supplier/${item.sid}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
-                            <button className='btn btn-outline-danger' onClick={(e) => deleteSubCategory(e,item.sid)}><i className="fa-solid fa-trash"></i></button>
-                        </td>
-                      </tr>
-                  )
-                })}
-                  
-                </tbody>
-              </table>
-            </div>
+          
+          <div className="card-body">
+
+          {
+            supplier.length == 0 || supplier.length > 0 ?
+            <Table supplier={supplier} amountSort={amountSort} titleSort={titleSort} sortData={sortData} search={search} serchHandle={serchHandle} checkBoxDueHandle={checkBoxDueHandle} checkBoxTopHandle={checkBoxTopHandle} deleteSubCategory={deleteSubCategory} />:<Loading />
+            }
             <ToastContainer />
           </div>
         </div>

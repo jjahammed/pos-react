@@ -264,7 +264,6 @@ const New = () => {
 
   return (
     <div className="container-fluid page-header" style={{ marginBottom: '500px' }}>
-      <form encType='multipart/form-data' onSubmit={submitForm}>
 
         <div className="row">
           <div className="col-sm-12 col-xl-12">
@@ -298,6 +297,7 @@ const New = () => {
             </div>
           </div>
         </div>
+      <form encType='multipart/form-data' onSubmit={submitForm}>
         <div className="row">
           <div className="col-sm-12 col-xl-12">
             <div className="row">

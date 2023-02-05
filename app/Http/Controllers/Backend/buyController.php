@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Backend;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\ApiController;
-use App\Models\Stock;
-use App\Models\Stocktranction;
-use App\Models\Saleproduct;
+use Validator;
 use App\Models\Buy;
 use App\Models\User;
-use Validator;
+use App\Models\Stock;
+use App\Models\Supplier;
+use App\Models\Saleproduct;
+use Illuminate\Http\Request;
+use App\Models\Stocktranction;
+use App\Http\Controllers\ApiController;
 
 class buyController extends ApiController
 {
@@ -47,24 +48,10 @@ class buyController extends ApiController
      */
     public function store(Request $request)
     {
-        
         $products = json_decode($request->products);
-
-        return response()->json([
-            'status' => 403,
-            'data' => $products->count(),
-            'message' => 'Paid amount can not grater than total amount'
-        ]);
-
         if($request->paid > $request->total){
-            return response()->json([
-            'status' => 403,
-            'data' => $request->all(),
-            'message' => 'Paid amount can not grater than total amount'
-        ]);
+            return $this->error(403,null,'Paid amount can not grater than total amount');
         }
-
-        
         $validation = Validator::make($request->all(),[
             'invoice' => 'required |unique:buys',
             'paymentOption' => 'required',
@@ -75,8 +62,21 @@ class buyController extends ApiController
         ]);
 
         if($validation->fails()){
-            return $this->error(500,$validation->messages(),'Something Went Wrong');
+            return $this->error(500,$validation->messages(),'nothing Went Wrong');
         }else{
+
+            $supplier = Supplier::where('id',$request->supplier)->first();
+                if($request->paid <= $supplier->due){
+                    $paid = ($supplier->due - $request->paid + $supplier->paid) - $request->due ;
+                    $due = $supplier->due - $request->paid - $request->due;
+                }else{
+                    $paid = $supplier->paid - ($request->paid - $supplier->due + $request->due);
+                    $due = 0 - $request->due;
+                }
+            $supplier->total = $supplier->total - $request->total;
+            $supplier->paid = $paid;
+            $supplier->due = $due;
+            $supplier->save();
 
             $buy = new Buy();
             $buy->invoice = $request->invoice;

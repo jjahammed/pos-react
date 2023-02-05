@@ -21,7 +21,7 @@ class productController extends ApiController
     {
         return response()->json([
             'status' => 200,
-            'data' => Product::all()
+            'data' => Product::with('stockk')->get()
         ]);
     }
 
@@ -62,8 +62,8 @@ class productController extends ApiController
             'salePrice' => 'required | numeric',
             'discount' => 'required | numeric',
             'tax' => 'required | numeric',
-            'color' => 'required',
-            'size' => 'required',
+            // 'color' => 'required',
+            // 'size' => 'required',
             'image' => 'required | image',
         ],[
             'pid.required' => 'product id is required',
@@ -99,6 +99,7 @@ class productController extends ApiController
                 'color' => $request->color,
                 'size' => $request->size,
                 'note' => $request->note,
+                'alertQty' => $request->alertQty,
                 'summery' => $request->summery,
                 'description' => $request->description,
                 'image' => $request->hasFile('image') ? 'resources/backend/images/product/'.$fileName : 'not Found',
@@ -154,7 +155,7 @@ class productController extends ApiController
     {
         // return response()->json([
         //     'status' => 200,
-        //     'data' => 'joney'
+        //     'data' => $request->all()
         // ]);
 
         $product = Product::where('slug',$slug)->first();
@@ -169,8 +170,8 @@ class productController extends ApiController
             'salePrice' => 'required | numeric',
             'discount' => 'required | numeric',
             'tax' => 'required | numeric',
-            'color' => 'required',
-            'size' => 'required',
+            // 'color' => 'required',
+            // 'size' => 'required',
         ],[
             'category_id.required' => 'category is required',
             'subcategory_id.required' => 'subcategory is required',
@@ -204,6 +205,7 @@ class productController extends ApiController
             $product->tax = $request->tax; 
             $product->color = $request->color; 
             $product->size = $request->size; 
+            $product->alertQty = $request->alertQty; 
             $product->summery = $request->summery; 
             $product->description = $request->description; 
             $product->note = $request->note; 
@@ -234,4 +236,25 @@ class productController extends ApiController
             return $this->error(500,'Something Went Wrong','Something Went Wrong');
         }
     }
+
+    public function disable($slug){
+        $product = Product::where('slug',$slug)->first();
+        $product->status = 0;
+        if($product->save()){
+            return $this->success(200,null,$product,'Product disable successfully');
+        }else{
+            return $this->error(500,'Something Went Wrong','Something Went Wrong');
+        }
+    }
+    public function enable($slug){
+        $product = Product::where('slug',$slug)->first();
+        $product->status = 1;
+        if($product->save()){
+            return $this->success(200,null,$product,'Product enable successfully');
+        }else{
+            return $this->error(500,'Something Went Wrong','Something Went Wrong');
+        }
+    }
+
+
 }

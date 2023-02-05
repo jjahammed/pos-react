@@ -13,10 +13,13 @@ const List = () => {
   const [list, setList] = useState([])
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('')
+  const [enable, setEnable] = useState(1)
   const [product, setProduct] = useState([])
   const [loading, setLoading] = useState(true)
   const [amountSort, setAmountSort] = useState('amountAsc')
   const [titleSort, setTitleSort] = useState('titleAsc')
+  const [disable, setDisable] = useState('')
+  const [alert, setAlert] = useState('')
 
     
   useEffect(() => {
@@ -27,7 +30,53 @@ const List = () => {
       setLoading(false);
       localStorage.removeItem('success')
       localStorage.removeItem('update')
-  }, [])
+  }, [enable])
+
+  const disableProduct = (e,item) => {
+    axios.get(`/api/disable-product/${item}`).then( res => {
+      if(res.data.status === 200){
+        setEnable(!enable)
+        Swal.fire('success',res.data.message,'success')
+      }else{
+        
+        Swal.fire('error',res.data.message,'decline')
+      }
+    })
+  }
+
+  const checkBoxDisableHandle = (e) => {
+    if(e.target.type == 'checkbox'){
+      if(e.target.checked == true){
+        setDisable(e.target.value);
+      }else{
+        setDisable('')
+      }
+  }else{
+    setDisable('')
+  }
+  }
+  const checkBoxAlertHandle = (e) => {
+    if(e.target.type == 'checkbox'){
+      if(e.target.checked == true){
+        setAlert(e.target.value);
+      }else{
+        setAlert('')
+      }
+  }else{
+    setAlert('')
+  }
+  }
+
+  const enableProduct = (e,item) => {
+    axios.get(`/api/enable-product/${item}`).then( res => {
+      if(res.data.status === 200){
+        setEnable(!enable)
+        Swal.fire('success',res.data.message,'success')
+      }else{
+        Swal.fire('error',res.data.message,'decline')
+      }
+    })
+  }
 
   const sortData = (e) => {
     if(e.target.id == 'amountAsc'){
@@ -150,12 +199,24 @@ const List = () => {
      
     }
 
+    
+    if(disable == 'disable'){
+      updatedData = updatedData.filter( (item) => 
+      item.status == 0 
+    )
+    }
+    if(alert == 'alert'){
+      updatedData = updatedData.filter( (item) => 
+      item.alertQty > item.stockk.quantity 
+    )
+    }
+
     setProduct(updatedData);
   }
 
   useEffect(() => {
     filterData();
-  }, [search,sort])
+  }, [search,sort,disable,alert])
  
 
   if(loading){
@@ -176,7 +237,7 @@ const List = () => {
           <div className="card-body">
             {
             product.length == 0 || product.length > 0 ?
-            <Table product={product} deleteProduct={deleteProduct} amountSort={amountSort} titleSort={titleSort} sortData={sortData} search={search} serchHandle={serchHandle} />:<Loading />
+            <Table product={product} deleteProduct={deleteProduct} amountSort={amountSort} titleSort={titleSort} sortData={sortData} search={search} serchHandle={serchHandle} disableProduct={disableProduct} enableProduct = {enableProduct} checkBoxAlertHandle={checkBoxAlertHandle} checkBoxDisableHandle={checkBoxDisableHandle} />:<Loading />
             }
             <ToastContainer />
           </div>

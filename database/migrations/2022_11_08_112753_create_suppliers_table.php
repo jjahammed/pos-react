@@ -24,6 +24,9 @@ return new class extends Migration
             $table->text('contact_person')->nullable();
             $table->text('contact_person_phone')->nullable();
             $table->longText('note')->nullable();
+            $table->double('total')->default(0);
+            $table->double('paid')->default(0);
+            $table->double('due')->default(0);
             $table->timestamps();
         });
     }

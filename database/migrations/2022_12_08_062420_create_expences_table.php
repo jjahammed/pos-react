@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('expences', function (Blueprint $table) {
             $table->id();
+            $table->string('trxId');
+            $table->dateTime('payment_date');
+            $table->double('amount');
+            $table->longText('purpose');
             $table->timestamps();
         });
     }

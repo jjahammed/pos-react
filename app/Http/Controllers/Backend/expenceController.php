@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
+use App\Models\Expence;
+use Validator;
 
-class expenceController extends Controller
+class expenceController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +17,10 @@ class expenceController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => Expence::all()
+        ]);
     }
 
     /**
@@ -35,7 +41,27 @@ class expenceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return response()->json([
+        //     'status' => 200,
+        //     'data' => $request->all()
+        // ]);
+        $validation = Validator::make($request->all(),[
+            'amount' => 'required',
+            'date' => 'required',
+            'purpose' => 'required',
+        ]);
+
+        if($validation->fails()){
+            return $this->error(500,$validation->messages(),'Something Went Wrong');
+        }else{
+            $expence = Expence::create([
+                'trxId' => uniqid(),
+                'amount' => $request->amount,
+                'payment_date' => $request->date,
+                'purpose' => $request->purpose,
+            ]);
+            return $this->success(200,null,$expence,'expence added successfully');
+        }
     }
 
     /**
@@ -44,7 +70,7 @@ class expenceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($trxId)
     {
         //
     }
@@ -55,9 +81,14 @@ class expenceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($trxId)
     {
-        //
+        $expence = Expence::where('trxId',$trxId)->first();
+        if($expence){
+            return $this->success(200,null,$expence,'expence found');
+        }else{
+            return $this->error(500,'expence not found','expence not found');
+        }
     }
 
     /**
@@ -67,9 +98,28 @@ class expenceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $trxId)
     {
-        //
+        // return response()->json([
+        //         'status' => 200,
+        //         'data' => $request->all()
+        //     ]);
+        $expence = Expence::where('trxId',$trxId)->first();
+        $validation = Validator::make($request->all(),[
+            'amount' => 'required',
+            'date' => 'required',
+            'purpose' => 'required',
+        ]);
+
+        if($validation->fails()){
+            return $this->error(500,$validation->messages(),'Something Went Wrong');
+        }else{
+            $expence->amount = $request->amount;
+            $expence->payment_date = $request->date;
+            $expence->purpose = $request->purpose;
+            $expence->save();
+            return $this->success(200,null,$expence,'expence added successfully');
+        }
     }
 
     /**
@@ -78,8 +128,13 @@ class expenceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($trxId)
     {
-        //
+        $expence = Expence::where('trxId',$trxId)->first();
+        if($expence->delete()){
+            return $this->success(200,null,$expence,'expence deleted successfully');
+        }else{
+            return $this->error(500,'Something Went Wrong','Something Went Wrong');
+        }
     }
 }

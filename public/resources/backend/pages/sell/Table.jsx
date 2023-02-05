@@ -29,12 +29,17 @@ const Table = ({stock,amountSort,titleSort,sortData,search,serchHandle}) => {
 
   return (
     <div>
-      <div className="mb-3 m-form__group pull-right">
-                <div className="input-group">
-                    <span className="input-group-text"><i className="fa-solid fa-magnifying-glass"></i></span>
+      <div className='row'>
+            <div className="col-md-4"></div>
+            <div className="col-md-4"></div>
+            <div className="col-md-4">
+              <div className="input-group mb-5">
+              <span className="input-group-text"><i className="fa-solid fa-magnifying-glass"></i></span>
                     <input id='search' type="text" className="form-control" plactholder='search...' value={search} onChange={(e) => { dispSearchPage(); serchHandle(e); }}/>
                 </div>
+              </div>
             </div>
+
             <div className="table-responsive text-center user-status">
               <table className="table ">
                 <thead>
@@ -70,6 +75,7 @@ const Table = ({stock,amountSort,titleSort,sortData,search,serchHandle}) => {
                         <td scope="col" className='text-center'>
                             <Link to={`/admin/sell-product/${item.invoice}`} className='btn btn-outline-info mr-2'><i className="fa-solid fa-eye"></i></Link>
                             <Link to={`/admin/sell-product/${item.invoice}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
+                            <Link to={`/admin/sell-product/return/${item.invoice}`} className='btn btn-outline-primary mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
                         </td>
                       </tr>
                   )

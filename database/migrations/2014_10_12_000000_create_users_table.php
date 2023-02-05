@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('uid')->unique();
             $table->integer('role_id');
+            $table->text('role_password');
             $table->string('name');
             $table->text('address');
             $table->string('phone');

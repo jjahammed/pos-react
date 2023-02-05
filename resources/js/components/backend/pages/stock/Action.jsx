@@ -9,11 +9,11 @@ const Action = ({inputValue,inputHandle}) => {
   return (
     <div className="row">
         <div className="col-xl-6 col-12">
-        <Input type='text' name='sub_total' lblText='Sub Total' value={inputValue.sub_total} error={inputValue.error_log.sub_total} handleInput={inputHandle} placeholder='sub Total' className='form-control' />
+        <Input type='text' name='sub_total' lblText='Sub Total' value={inputValue.sub_total} error={inputValue.error_log.sub_total} handleInput={inputHandle} placeholder='sub Total' className='form-control' readOnly/>
         <Input type='text' name='discount' lblText='Discount(%)' value={inputValue.discount} error={inputValue.error_log.discount} handleInput={inputHandle} placeholder='Discount(%)' className='form-control' />
-        <Input type='text' name='total' lblText='Total' value={inputValue.total} error={inputValue.error_log.total} handleInput={inputHandle} placeholder='Total' className='form-control' />
+        <Input type='text' name='total' lblText='Total' value={inputValue.total} error={inputValue.error_log.total} handleInput={inputHandle} placeholder='Total' className='form-control' readOnly/>
         <Input type='text' name='paid' lblText='Paid Amount' value={inputValue.paid} error={inputValue.error_log.paid} handleInput={inputHandle} placeholder='Paid Amount' className='form-control' />
-        <Input type='text' name='due' lblText='Due Amount' value={inputValue.due} error={inputValue.error_log.due} handleInput={inputHandle} placeholder='Due Amount' className='form-control' />
+        <Input type='text' name='due' lblText='Due Amount' value={inputValue.due} error={inputValue.error_log.due} handleInput={inputHandle} placeholder='Due Amount' className='form-control' readOnly/>
         
         </div>
         <div className="col-xl-6 col-12 mt-3">

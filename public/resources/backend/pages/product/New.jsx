@@ -443,7 +443,7 @@ const New = () => {
                                     </div>
                                     <div className="card-body">
                                         <button type='submit' className="d-inline px-4 btn btn-primary mr-2">Add</button>
-                                        <Link to='/admin/product' className="d-inline p-2 btn btn-secondary">Cancel</Link>
+                                        <Link to='/admin/product' className="d-inline px-4 py-2 btn btn-secondary">Cancel</Link>
                                     </div>
                                 </div>
                         </div>

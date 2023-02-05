@@ -10,8 +10,8 @@ import '../assets/css/themify.css'
 import '../assets/css/bootstrap.css'
 import '../assets/css/style.css'
 import '../assets/css/responsive.css'
-import '../assets/js/sidebar-menu.js'
-import '../assets/js/script.js'
+// import '../assets/js/sidebar-menu.js'
+// import '../assets/js/script.js'
 
 import Sidebar from './Sidebar'
 import Sample from '../pages/Sample/Sample'
@@ -27,7 +27,7 @@ const Master = () => {
   const location = useLocation()
   // console.log();
   useEffect(() => {
-    loadjs(['/resources/backend/assets/js/script.js','/resources/backend/assets/js/theme-customizer/customizer.js'], function() {
+    loadjs(['/resources/backend/assets/js/sidebar-menu.js','/resources/backend/assets/js/script.js','/resources/backend/assets/js/theme-customizer/customizer.js'], function() {
       /* foo.js and bar.js loaded */
     });
   }, [])

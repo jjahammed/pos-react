@@ -7,9 +7,10 @@ const Userinfo = ({inputValue,inputHandle,generateUniqueNumber,date,setDateFunct
   return (
     <div className="row" style={{ border:'1px' }}>
     <div className="col-xl-12 col-12">
-        <Input type='hidden' name='user_id' lblText='user_id No' value={inputValue.user_id} error={inputValue.error_log.user_id} onChange={inputHandle} placeholder='user_id' className='form-control' />
+        <Input type='text' name='user_id' lblText='user_id No' value={inputValue.user_id} error={inputValue.error_log.user_id} onChange={inputHandle} placeholder='user_id' className='form-control' />
         <Input type='text' name='invoice' lblText='Invoice No' value={inputValue.invoice} error={inputValue.error_log.invoice} onChange={inputHandle} placeholder='invoice no' className='form-control' onClick={generateUniqueNumber} />
-        <Date name='purcheased_date' lblText='purcheased date' value={date} error={inputValue.error_log.purcheased_date} setDateFunction={setDateFunction} placeholder='purcheased date' className='form-control'/>
+
+        <Date name='purcheased_date' lblText='purcheased date' value={date} error={inputValue.error_log.purcheased_date} setDateFunction={setDateFunction} placeholder='' className='form-control'/>
         {/* <Input type='date' name='purcheased_date' lblText='purcheased date' value={inputValue.purcheased_date} error={inputValue.error_log.purcheased_date} inputHandle={inputHandle} placeholder='purcheased date' className='form-control' /> */}
         <Input type='text' name='uid' lblText='Customer Id' value={inputValue.uid} error={inputValue.error_log.uid}  onChange={inputHandle} placeholder='Customer Id' className='form-control' />
         <Input type='text' name='name' lblText='Customer Name' value={inputValue.name} error={inputValue.error_log.name} onChange={inputHandle}  placeholder='Customer Name' className='form-control' />

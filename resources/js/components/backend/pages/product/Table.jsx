@@ -2,9 +2,11 @@ import React,{useState,useMemo} from 'react'
 import {Link} from 'react-router-dom'
 import Pagination from '@mui/material/Pagination';
 import {usePagination} from '../../../hooks/usePagination'
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
-const Table = ({product,deleteProduct,amountSort,titleSort,sortData,search,serchHandle}) => {
+const Table = ({product,deleteProduct,amountSort,titleSort,sortData,search,serchHandle,disableProduct,enableProduct,checkBoxDisableHandle,checkBoxAlertHandle}) => {
 
   const [pageSize, setPageSize] = useState(10)
   
@@ -32,15 +34,33 @@ const Table = ({product,deleteProduct,amountSort,titleSort,sortData,search,serch
     //   return product.slice(firstPageIndex, lastPageIndex);
     // }, [currentPage,pageSize,search]);
 
+      
 
   return (
     <div>
-      <div className="mb-3 m-form__group pull-right">
-                <div className="input-group">
-                    <span className="input-group-text"><i className="fa-solid fa-magnifying-glass"></i></span>
+
+          <div className='row'>
+            <div className="col-md-4">
+            <div className="form-check checkbox checkbox-primary mb-0 col-md-12">
+              <input className="form-check-input" type="checkbox" title='disable' name="disable" id='disable' value='disable' onChange={checkBoxDisableHandle}/>
+              <label className="form-check-label" htmlFor='disable'>Disable Product List</label>
+              </div>
+            </div>
+            <div className="col-md-4">
+            <div className="form-check checkbox checkbox-primary mb-0 col-md-12">
+              <input className="form-check-input" type="checkbox" title='alert' name="alert" id='alert' value='alert' onChange={checkBoxAlertHandle}/>
+              <label className="form-check-label" htmlFor='alert'>Alert Product Stock</label>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-group mb-5">
+              <span className="input-group-text"><i className="fa-solid fa-magnifying-glass"></i></span>
                     <input id='search' type="text" className="form-control" plactholder='search...' value={search} onChange={(e) => { dispSearchPage(); serchHandle(e); }}/>
                 </div>
+              </div>
             </div>
+
+          
             <div className="table-responsive text-center user-status">
               <table className="table ">
                 <thead>
@@ -60,7 +80,7 @@ const Table = ({product,deleteProduct,amountSort,titleSort,sortData,search,serch
 
                 { tmpData.map((item,index) => {
                   return (
-                      <tr key={item.id}>
+                      <tr key={item.id} className={item.status === 0 ? 'text-secondary' : 'text-dark'}>
                         <td scope="col">{index+1}</td>
                         <td scope="col">{item.title}</td>
                         <td scope="col">{item.category?.name}</td>
@@ -70,6 +90,15 @@ const Table = ({product,deleteProduct,amountSort,titleSort,sortData,search,serch
                         <td scope="col">{item.discount}%</td>
                         <td scope="col">{item.salePrice}</td>
                         <td scope="col" className='text-center'>
+                          
+                            {
+                              item.status === 1 ?
+                              <button className='btn btn-outline-warning' onClick={(e) => disableProduct(e,item.slug)}><i className="fa-solid fa-square-minus"></i></button>
+                              :
+                              <button className='btn btn-outline-warning' onClick={(e) => enableProduct(e,item.slug)}><i className="fa-solid fa-square-plus"></i></button>
+                            }
+                            
+
                             <Link to={`/admin/product/${item.slug}`} className='btn btn-outline-info mr-2'><i className="fa-solid fa-eye"></i></Link>
                             <Link to={`/admin/product/${item.slug}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
                             <button className='btn btn-outline-danger' onClick={(e) => deleteProduct(e,item.slug)}><i className="fa-solid fa-trash"></i></button>

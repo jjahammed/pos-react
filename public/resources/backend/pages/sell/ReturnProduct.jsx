@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import {useParams,Link, useNavigate} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 import Loading from '../extra/Loading';
 import Swal from 'sweetalert2'
 import Table from './Table2'
@@ -7,20 +7,20 @@ import Table from './Table2'
 import '../../assets/css/print.css'
 
 const ReturnProduct = () => {
-    const navigate = useNavigate()
+    
     const {invoice} = useParams();
     const [loading, setLoading] = useState(true)
     const [product, setProduct] = useState([])
+    const [returns, setReturns] = useState([])
     const [sell, setSell] = useState([])
-    const [permission, setPermission] = useState([])
-    const [rowsData, setRowsData] = useState([])
+    
 
     var options = { year: 'numeric', month: 'long', day: 'numeric' };
     useEffect(() => {
         document.title = 'Return Product'
         axios.get(`/api/sell-product-return/${invoice}`).then(res => {
             if(res.data.status == 200){
-                setSell(res.data.sell), setProduct(res.data.product)
+                setSell(res.data.sell), setProduct(res.data.data.products),setReturns(res.data.data.returns)
             }else{
               Swal.fire('error',res.data.message,'error')
             }
@@ -28,73 +28,9 @@ const ReturnProduct = () => {
         setLoading(false);
     }, [])
 
-    const inputHandle = (event,index,item) => {
-        // console.log(item)
-        let target = event.target;
-            if(target.type == 'checkbox'){
-                if(target.checked == true){
-                    setPermission([...permission,target.value ])
-                  setRowsData([...rowsData,{"product_pid":item.pid,"serial_id":item.id,"sell_id":item.sell_id,"product_id":item.product_id,"unit_price":item.unit_price,"quantity" : item.quantity,"total_price":item.total_price} ])
-                  localStorage.setItem('returnSales',JSON.stringify(rowsData))
-                }else{
-                    setPermission(permission.filter((item) => item !== target.value))
-                    const rows = [...rowsData];
-                    rows.splice(index, 1);
-                    setRowsData(rows);
-                    localStorage.setItem('returnSales',JSON.stringify(rows))
-                }
-            }else{
-              setInputValue({
-                ...inputValue,
-                [target.name] : target.value
-              })
-            }
-            console.log(rowsData);
-    }
 
-    const inputTextHandle = (evnt,index,item) => {
-      const checkValue = rowsData.filter(res => res.serial_id == item.id)
-        if(checkValue.length === 0){
-          console.log('if');
-          Swal.fire('decline','You Should select item first','error')
-        }else{
-            const { name, value } = evnt.target;
-                console.log(value)
-                product[index][name] = value;
-                const rowIndex = rowsData.findIndex((element) => element.serial_id == item.id)
-                const rowsInput = [...rowsData];
-                rowsInput[rowIndex][name] = +value;
-                rowsInput[rowIndex]['total_price'] = +value * item.unit_price;
-                setRowsData(rowsInput);
-                localStorage.setItem('returnSales',JSON.stringify(rowsData))
-                console.log(rowsData);
-        }
-      }
 
-    const submitForm = (e) => {
-        e.preventDefault()
-        if(permission.length > 0){
-          let formData = new FormData();
-          formData.append('invoice',invoice);
-          formData.append('products',JSON.stringify(rowsData));
-          axios.post('/api/sell-product-return',formData).then(res=>
-            {if(res.data.status === 200){
-                console.log(res.data.data)
-              localStorage.removeItem('returnSales')
-              localStorage.setItem('success',res.data.message)
-                navigate('/admin/sell-product');
-            }else{
-              setInputValue( {
-                ...inputValue,
-                error_log : res.data.error
-              })
-            }
-          }
-            ).catch(err=>console.log(err))
-        }else{
-          Swal.fire('error','You did not select anything','error');
-        }
-    }
+    
 
     if(loading){
         return <Loading />
@@ -167,16 +103,15 @@ const ReturnProduct = () => {
                                 </div>
                                 {/*End Invoice Mid*/}
                                 <div>
-                                {product.length > 0 ? <Table product={product} rowsData={rowsData} inputHandle={inputHandle} inputTextHandle={inputTextHandle} /> : <Loading />}
+                                {product.length > 0 ? 
+                                
+                                  <Table product={product} returns={returns} invoice={invoice} sell={sell}/>
+                                 : 
+                                <Loading />}
                                 </div>
                                 {/*End InvoiceBot*/}
                             </div>
-                            <form className="theme-form" onSubmit={submitForm}>
-                            <div className="col-sm-12 text-center mt-3 actionButton">
-                                <button type="submit" className="btn btn btn-primary me-2">Return</button>
-                                <Link to='/admin/sell-product' className="btn btn-secondary">Cancel</Link>
-                            </div>
-                            </form>
+                           
                             {/*End Invoice*/}
                             </div>
                             {/* End Invoice Holder*/}

@@ -10,7 +10,7 @@ class Product extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-    protected $with = ['category','subcategory','brand','unit','location'];
+    // protected $with = ['category','subcategory','brand','unit','location'];
 
     public function category(){
         return $this->belongsTo(Category::Class);
@@ -29,5 +29,8 @@ class Product extends Model
     }
     public function stockk(){
         return $this->hasOne(Stock::Class);
+    }
+    public function saleProduct(){
+        return $this->hasMany(Saleproduct::Class);
     }
 }

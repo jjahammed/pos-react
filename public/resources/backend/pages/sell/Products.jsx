@@ -7,7 +7,7 @@ const Products = ({product,addTableRows,calculation}) => {
     {product.length == 0 ? <Loading /> :
     product.map(item => {
       return (
-      item.stockk.quantity > 0 ? 
+      item?.stockk?.quantity > 0 ? 
         <div className="col-sm-2 col-6" key={item.id} style={{cursor:'pointer'}}>
           <div className="card height-equal equal-height-lg">
             <div className="blog-box blog-grid text-center">

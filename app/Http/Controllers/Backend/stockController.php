@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Backend;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\ApiController;
-use App\Models\Stock;
-use App\Models\Stocktranction;
-use App\Models\Product;
-use App\Models\Buy;
 use Validator;
+use App\Models\Buy;
+use App\Models\Stock;
+use App\Models\Product;
+use App\Models\Supplier;
+use Illuminate\Http\Request;
+use App\Models\Stocktranction;
+use App\Http\Controllers\ApiController;
 
 class stockController extends ApiController
 {
@@ -73,27 +74,13 @@ class stockController extends ApiController
      */
     public function store(Request $request)
     {
-
         $products = json_decode($request->products);
-
-
         if(count($products) == 0){
-            return response()->json([
-            'status' => 403,
-            'data' => $request->all(),
-            'message' => 'You did not add any product'
-        ]);
+            return $this->error(500,null,'You did not add any product');
         }
-
         if($request->paid > $request->total){
-            return response()->json([
-            'status' => 403,
-            'data' => $request->all(),
-            'message' => 'Paid amount can not grater than total amount'
-        ]);
+            return $this->error(500,null,'Paid amount can not grater than total amount');
         }
-
-        
         $validation = Validator::make($request->all(),[
             'invoice' => 'required |unique:buys',
             'supplier' => 'required',
@@ -121,6 +108,12 @@ class stockController extends ApiController
             $buy->status = 'Add';
             $buy->save();
 
+            $supplier = Supplier::where('id',$request->supplier)->first();
+            $supplier->total = $supplier->total + $request->total;
+            $supplier->paid = $supplier->paid + $request->paid;
+            $supplier->due = $supplier->due + $request->due;
+            $supplier->save();
+
             foreach($products as $prd){
                 $stocktranction = new Stocktranction();
                 $stocktranction->trxId= $request->invoice;
@@ -138,7 +131,6 @@ class stockController extends ApiController
                 }
 
             }
-          
             return $this->success(200,null,$request->all(),'Stock Added successfully');
         }
 
@@ -183,20 +175,8 @@ class stockController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        if($request->paid > $request->total){
-            return response()->json([
-            'status' => 403,
-            'data' => $request->all(),
-            'message' => 'Pain amount can not grater than total amount'
-        ]);
-        }
         $buy = Buy::where('invoice',$id)->first();
-        // return response()->json([
-        //     'status' => 200,
-        //     'data' => $request->all()
-        // ]);
-        $products = json_decode($request->products);
-        
+
         $validation = Validator::make($request->all(),[
             'invoice' => 'required | unique:buys,invoice,'.$buy->id,
             'supplier' => 'required',
@@ -205,10 +185,27 @@ class stockController extends ApiController
         ],[
             'supplier.required' => 'You should select a Supplier',
         ]);
-
         if($validation->fails()){
             return $this->error(500,$validation->messages(),'Something Went Wrong');
         }else{
+
+            if($request->paid > $request->total){
+                return $this->error(403,'Paid amount can not grater than total amount','Paid amount can not grater than total amount');
+            }
+            $editSupplier = Supplier::where('id',$buy->supplier_id)->first();
+                    if($editSupplier) {
+                        $editSupplier->total = $editSupplier->total - $buy->total;
+                        $editSupplier->paid = $editSupplier->paid - $buy->paid;
+                        $editSupplier->due = $editSupplier->due - $buy->due;
+                        $editSupplier->save();
+                    }
+            $supplier = Supplier::where('id',$request->supplier)->first();
+            $supplier->total = $supplier->total + $request->total;
+            $supplier->paid = $supplier->paid + $request->paid;
+            $supplier->due = $supplier->due + $request->due;
+            $supplier->save();
+            $products = json_decode($request->products);
+
             $buy->invoice = $request->invoice;
             $buy->supplier_id = $request->supplier;
             $buy->purcheased_date = $request->purcheased_date;
@@ -249,6 +246,15 @@ class stockController extends ApiController
             }
             return $this->success(200,null,$request->all(),'Stock Updated successfully');
         }
+    }
+
+
+    public function stock_alert(){
+        $stock = Stock::all();
+        $data = $stock->filter(function($item){
+            return $item->quantity < $item->product->alertQty;
+        });
+        return $this->success(200,null,$data,'Stock alert retrive successfully');
     }
 
     /**

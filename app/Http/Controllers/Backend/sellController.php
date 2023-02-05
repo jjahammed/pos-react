@@ -52,11 +52,12 @@ class sellController extends ApiController
     public function return($invoice){
         $sell = Sell::with('user')->where('invoice',$invoice)->first();
         if($sell){
-            $products = Saleproduct::with('product')->where('invoice',$invoice)->where('status',1)->get();
+            $data['products'] = Saleproduct::with('product')->where('invoice',$invoice)->where('status',1)->get();
+            $data['returns'] = Saleproduct::with('product')->where('invoice',$invoice)->where('status',0)->get();
             return response()->json([
                 'status' => 200,
                 'sell' => $sell,
-                'product' => $products,
+                'data' => $data,
                 'message' => 'Selleing product found'
             ]);
         }else{
@@ -69,19 +70,46 @@ class sellController extends ApiController
 
     public function returnStore(Request $request){
         $products = json_decode($request->products);
+
         // return response()->json([
         //     'status' => 200,
-        //     'data' => $request->all()
+        //     'data' => $request->invoice
         // ]);
+        // sell table
+        $sell = Sell::where('invoice',$request->invoice)->first();
+        // user table
+        $user = User::where('uid',$sell->uid)->first();
+        
+        $user->total = $user->total - $request->returnTotal;
+        $user->paid = $user->due < $request->returnTotal ? $user->paid - ($request->returnTotal - $user->due) : $user->paid;
+        $user->due = $user->due < $request->returnTotal ? 0 : $user->due - $request->returnTotal;
+        $user->save();
+
+        $sell->sub_total = $sell->sub_total - $request->returnBuyPrice;
+        $sell->total = $sell->total - $request->returnTotal;
+        $sell->paid = $sell->due < $request->returnTotal ? $sell->paid - ($request->returnTotal - $sell->due) : $sell->paid;
+        $sell->due = $sell->due < $request->returnTotal ? 0 : $sell->due - $request->returnTotal;
+        $sell->save();
+
+
+        // return response()->json([
+        //     'status' => 200,
+        //     'data' => $products
+        // ]);
+
+        
         foreach($products as $prd){
             $product = new Saleproduct();
             $product->sell_id= $prd->sell_id;
             $product->invoice= $request->invoice;
             $product->product_id=$prd->product_id;
             $product->pid=$prd->product_pid;
+            $product->buy_price='-'.$prd->buy_price;
             $product->unit_price='-'.$prd->unit_price;
-            $product->quantity='-'.$prd->quantity;
+            $product->quantity='-'.$prd->returnQuantity;
             $product->total_price='-'.$prd->total_price;
+            $product->total_price_after_discount='-'.$prd->total_price_after_discount;
+            $product->profit = $prd->profit < 0 ? abs($prd->profit) : '-'.$prd->profit;
             $product->status=0;
             $product->save();
 
@@ -107,6 +135,10 @@ class sellController extends ApiController
     public function store(Request $request)
     {
         $products = json_decode($request->products);
+        // return response()->json([
+        //     'status' => 200,
+        //     'data' => $products
+        // ]);
 
         if(count($products) == 0){
             return response()->json([
@@ -142,28 +174,39 @@ class sellController extends ApiController
         }else{
 
             $user = User::where('uid',$request->uid)->where('phone',$request->phone)->first();
-            if(!$user){
-                $userNew = new User();
-                $userNew->uid = $request->uid;
-                $userNew->role_id = 3;
-                $userNew->name = $request->name;
-                $userNew->phone = $request->phone;
-                $userNew->address = $request->address;
-                $userNew->email = $request->email;
-                $userNew->password = bcrypt($request->phone);
-                $userNew->total = $request->total;
-                $userNew->paid = $request->paid;
-                $userNew->due = $request->due;
-                $userNew->save();
-            }else{
+            if($user){
                 $user->total = $user->total + $request->total;
                 $user->paid = $user->paid + $request->paid;
                 $user->due = $user->due + $request->due;
                 $user->save();
+                
+            }else{
+
+                $userCheck = User::where(function($result) use ($request){
+                $result->where('uid',$request->uid)
+                        ->orWhere('phone',$request->phone);
+                })->first();
+                    if($userCheck){
+                        return $this->error(405,'user id or phone number has been taken','user id or phone number has been taken');
+                    }else{
+                        $userNew = new User();
+                        $userNew->uid = $request->uid;
+                        $userNew->role_id = 3;
+                        $userNew->name = $request->name;
+                        $userNew->phone = $request->phone;
+                        $userNew->address = $request->address;
+                        $userNew->email = $request->email;
+                        $userNew->password = bcrypt($request->phone);
+                        $userNew->total = $request->total;
+                        $userNew->paid = $request->paid;
+                        $userNew->due = $request->due;
+                        $userNew->save();
+                    }
             }
 
             $sell = new Sell();
             $sell->invoice = $request->invoice;
+            $sell->uid = $request->uid;
             $sell->user_id = $request->user_id ? $request->user_id : User::orderBy('id','desc')->first()->id;
             $sell->purcheased_date = $request->purcheased_date;
             $sell->note = $request->note;
@@ -182,9 +225,13 @@ class sellController extends ApiController
                 $product->paymentOption= $request->paymentOption;
                 $product->product_id=$prd->product_id;
                 $product->pid=$prd->product_pid;
+                $product->modelNumber=$prd->modelNumber != '' ? $prd->modelNumber : '';
+                $product->buy_price=$prd->buy_price;
                 $product->unit_price=$prd->product_price;
                 $product->quantity=$prd->product_qty;
                 $product->total_price=$prd->total_price;
+                $product->total_price_after_discount= $prd->total_price - ($prd->total_price * $request->discount/100);
+                $product->profit= $prd->total_price- ($prd->total_price * $request->discount/100) -  ($prd->buy_price*$prd->product_qty);
                 $product->save();
 
                 $stock = Stock::where('product_id',$prd->product_id)->first();
@@ -247,7 +294,7 @@ class sellController extends ApiController
     {
         $sell = Sell::with('user')->where('invoice',$invoice)->first();
         if($sell){
-            $products = Saleproduct::with('product')->select(['product_id','quantity'])->where('invoice',$invoice)->get();
+            $products = Saleproduct::with('product')->where('invoice',$invoice)->get();
             return response()->json([
                 'status' => 200,
                 'sell' => $sell,
@@ -271,21 +318,6 @@ class sellController extends ApiController
      */
     public function update(Request $request, $invoice)
     {
-        // return response()->json([
-        //     'status' => 200,
-        //     'data' => $request->all()
-        // ]);
-
-        if($request->paid > $request->total){
-            return response()->json([
-            'status' => 403,
-            'data' => $request->all(),
-            'message' => 'Paid amount can not grater than total amount'
-        ]);
-        }
-
-        $products = json_decode($request->products);
-        
         $validation = Validator::make($request->all(),[
             'uid' => 'required',
             'name' => 'required',
@@ -297,10 +329,24 @@ class sellController extends ApiController
             'uid.required' => 'The User Id field is required.',
         ]);
 
+        
+
         if($validation->fails()){
             return $this->error(500,$validation->messages(),'Something Went Wrong');
         }else{
+            if($request->paid > $request->total){
+                return $this->error(403,'Paid amount can not grater than total amount','Paid amount can not grater than total amount');
+            }
+            $products = json_decode($request->products);
 
+            $sell = Sell::where('invoice',$invoice)->first();
+            $editUser = User::where('uid',$sell->uid)->first();
+                if($editUser) {
+                    $editUser->total = $editUser->total - $sell->total;
+                    $editUser->paid = $editUser->paid - $sell->paid;
+                    $editUser->due = $editUser->due - $sell->due;
+                    $editUser->save();
+                }
             $user = User::where('uid',$request->uid)->where('phone',$request->phone)->first();
             if(!$user){
                 $userNew = new User();
@@ -323,9 +369,6 @@ class sellController extends ApiController
                 $user->save();
             }
 
-
-
-            $sell = Sell::where('invoice',$invoice)->first();
             $deleteSaleProduct = SaleProduct::where('invoice',$invoice)->delete();
             $stockupdates = Stocktranction::where('trxId',$invoice)->get();
             foreach($stockupdates as $prd){
@@ -337,7 +380,8 @@ class sellController extends ApiController
             }
             $stockdelete = Stocktranction::where('trxId',$invoice)->delete();
 
-            $sell->invoice = $request->invoice;
+            // $sell->invoice = $request->invoice;
+            $sell->uid = $request->uid;
             $sell->user_id = $request->user_id ? $request->user_id : User::orderBy('id','desc')->first()->id;
             $sell->purcheased_date = $request->purcheased_date;
             $sell->note = $request->note;
@@ -352,13 +396,19 @@ class sellController extends ApiController
                 $product = new Saleproduct();
                 $product->sell_id= Sell::orderBy('id','desc')->first()->id;
                 $product->invoice= $request->invoice;
+                $product->paymentOption=$request->paymentOption;
                 $product->product_id=$prd->product_id;
                 $product->pid=$prd->product_pid;
+                $product->modelNumber=$prd->modelNumber != '' ? $prd->modelNumber : '';
+                $product->buy_price=$prd->buy_price;
                 $product->unit_price=$prd->product_price;
                 $product->quantity=$prd->product_qty;
                 $product->total_price=$prd->total_price;
-                $product->paymentOption=$request->paymentOption;
+                $product->total_price_after_discount= $prd->total_price - ($prd->total_price * $request->discount/100);
+                $product->profit= $prd->total_price- ($prd->total_price * $request->discount/100) -  ($prd->buy_price*$prd->product_qty);
                 $product->save();
+
+                
 
                 $stock = Stock::where('product_id',$prd->product_id)->first();
                 if($stock){

@@ -13,11 +13,13 @@ const New = () => {
   const navigate = useNavigate()
   const [date, setDate] = useState(new Date())
   const [product, setProduct] = useState([])
+  const [stock, setStock] = useState([])
   const [supplier, setSupplier] = useState([])
   const [selectedSupplier, setSelectedSupplier] = useState()
   const [selectedProduct, setSelectedProduct] = useState()
 
   const [inputValue, setInputValue] = useState({
+    paymentOption: '',
     invoice: '',
     supplier: '',
     purcheased_date: '',
@@ -123,11 +125,26 @@ const New = () => {
   }
 
   const variationHandle = (e) => {
-    setRowsInput({
-      ...rowsInput,
-      product_qty : e.target.value,
-      total_price : e.target.value * rowsInput.product_price
-    })
+    if(rowsInput.product_price == ''){
+      Swal.fire('decline','You should select product first' ,'error')
+    }else{
+      const stock_quantity = stock.filter(item => 
+        item.product_id == rowsInput.product_id ? item : 0)
+     if(stock_quantity[0].quantity < e.target.value){
+       Swal.fire('decline','You Can Only Return ' + stock_quantity[0].quantity + ' item' ,'error')
+       setRowsInput({
+         ...rowsInput,
+         product_qty : stock_quantity[0].quantity,
+         total_price : stock_quantity[0].quantity * rowsInput.product_price
+       })
+     }else{
+       setRowsInput({
+         ...rowsInput,
+         product_qty : e.target.value,
+         total_price : e.target.value * rowsInput.product_price
+       })
+     }
+    }
     console.log(rowsInput.product_qty);
   }
 
@@ -209,13 +226,19 @@ const New = () => {
       await axios.get('/api/product').then((res) => {
         let result = res.data.data;
         result.map((item) => {
-          return arr.push({ value: item.id, label: item.title, product_pid: item.pid, product_image : item.image, product_price : item.salePrice });
+          return arr.push({ value: item.id, label: item.title, product_pid: item.pid, product_image : item.image, product_price : item.buyPrice });
         });
         setProduct(arr)
       });
     };
+    const getStock = async () => {
+      await axios.get('/api/stock').then((res) => {
+        setStock(res.data.data)
+      });
+    };
     getProduct();
     getSupplier();
+    getStock();
   }, [])
 
   useEffect(() => {
@@ -232,6 +255,7 @@ const New = () => {
     let formData = new FormData();
     formData.append('products',JSON.stringify(rowsData));
     formData.append('invoice',inputValue.invoice);
+    formData.append('paymentOption',inputValue.paymentOption);
     formData.append('supplier',inputValue.supplier);
     formData.append('purcheased_date',new Date(date).toLocaleDateString('en-CA'));
     formData.append('note',inputValue.note);
@@ -247,7 +271,7 @@ const New = () => {
         localStorage.setItem('success', res.data.message)
         localStorage.removeItem('returnData')
         location.pathname == '/admin/purcheased-product/return/new' ? navigate(`/admin/purcheased-product/return`) : navigate(`/admin/purcheased-product`)
-      } else if(res.data.status === 500){
+      } else if(res.data.status === 403){
         Swal.fire('decline',res.data.message,'error')
       }else {
         setInputValue({

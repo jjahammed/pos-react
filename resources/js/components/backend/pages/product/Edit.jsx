@@ -129,6 +129,9 @@ const Edit = () => {
         axios.get('/api/category').then(res => 
           setCategory(res.data.data));
 
+        axios.get('/api/sub-category').then(res => 
+          setSubCategory(res.data.data));
+
         axios.get('/api/brand').then(res => 
           setBrand(res.data.data));
 
@@ -163,6 +166,7 @@ const Edit = () => {
                 note : res.data.data.note,
                 image : res.data.data.image
               })
+              setLoading(false);
             }else{
               toast.error(res.data.error, {
                 theme: "colored",
@@ -170,7 +174,7 @@ const Edit = () => {
             }
           }
           );
-          setLoading(false);
+          
       }, [])
 
      
@@ -192,6 +196,7 @@ const Edit = () => {
           }
       }
 
+      console.log(subcategory)
 
       const submitForm = (e) => {
         e.preventDefault();
@@ -219,7 +224,7 @@ const Edit = () => {
 
         axios.post(`/api/product/${slug}`,formData).then(res => {
           if(res.data.status === 200){
-            // console.log(res.data.data)
+            console.log(res.data.data)
             localStorage.setItem('success',res.data.message)
             navigate('/admin/product');
           }else{

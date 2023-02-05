@@ -99,13 +99,19 @@ const List = () => {
             <Link to='/admin/sub-category/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
             
           </div>
-          <div className="card-body">
-          <div className="mb-3 m-form__group pull-right">
-                <div className="input-group">
-                    <span className="input-group-text"><i className="fa-solid fa-magnifying-glass"></i></span>
+          <div className='row'>
+            <div className="col-md-4"></div>
+            <div className="col-md-4"></div>
+            <div className="col-md-4">
+              <div className="input-group mt-3">
+              <span className="input-group-text"><i className="fa-solid fa-magnifying-glass"></i></span>
                     <input type="text" className="form-control" plactholder='search...' value={search} onChange={serchHandle}/>
                 </div>
+              </div>
             </div>
+
+          <div className="card-body">
+          
             <div className="table-responsive text-center user-status">
               <table className="table ">
                 <thead>

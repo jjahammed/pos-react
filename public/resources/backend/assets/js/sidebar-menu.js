@@ -4,6 +4,7 @@ $(document).ready(function() {
     var animationSpeed = 300,
     subMenuSelector = '.sidebar-submenu';
     var $this = $(this);
+    console.log($this);
     var checkElement = $this.next();
     if (checkElement.is(subMenuSelector) && checkElement.is(':visible')) {
       checkElement.slideUp(animationSpeed, function() {

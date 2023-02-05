@@ -9,7 +9,7 @@ import '../assets/css/responsive.css'
 
 
 import '../assets/js/jquery-3.2.1.min.js'
-import '../assets/js/bootstrap/bootstrap.bundle.min.js'
+import '../assets/js/bootstrap.bundle.min.js'
 import '../assets/js/sidebar-menu.js'
 import '../assets/js/script.js'
 import '../assets/js/theme-customizer/customizer.js'
@@ -25,14 +25,15 @@ const Header = ({menuSidebar}) => {
   const logout = () => {
     axios.post(`/api/logout`).then(res => {
       if(res.data.status === 200){
-         localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_token');
         localStorage.removeItem('user');
+        // navigate('/')
+        window.location.href = '/'
         Swal.fire(
           'See u soon!',
           res.data.message,
           'success'
         )
-        navigate('/')
       }
     });
   }
@@ -71,7 +72,7 @@ const Header = ({menuSidebar}) => {
       </div>
       <div className="nav-right col">
         <ul className={`nav-menus ${menuOpen}`}>
-          <li>
+          {/* <li>
             <form className="form-inline search-form">
               <div className="form-group">
                 <label className="sr-only">Email</label>
@@ -79,7 +80,7 @@ const Header = ({menuSidebar}) => {
                 <span className="d-sm-none mobile-search"> </span>
               </div>
             </form>
-          </li>
+          </li> */}
           {/* <li>
             <Link to="#!" onClick="javascript:toggleFullScreen()" className="text-dark">
               <img className="align-self-center pull-right me-2" src="/resources/backend/assets/images/dashboard/browser.png" alt="header-browser" />
@@ -88,12 +89,34 @@ const Header = ({menuSidebar}) => {
           
 
           <li>
-            <Link to="#" className="main-theme-layout darkLayout" theme-layout="main-theme-layout-4" title="Dark Layout"><i className="fa-solid fa-moon" /></Link>
-            <Link to="#" className="main-theme-layout lightLayout" theme-layout="main-theme-layout-5" title="Light Layout"><i className="fa-solid fa-sun" /></Link>
+          <Link to="/admin/purcheased-product/new">
+          <i className="fa-solid fa-cart-shopping"></i> New Purcheased
+          </Link>
           </li>
-          <li className="onhover-dropdown">
+          <li>
+          <Link to="/admin/sell-product/new">
+          <i className="fa-brands fa-sellsy"></i> New Sale
+          </Link>
+          </li>
+          <li>
+          <Link to="/admin/product/new">
+          <i className="fa-brands fa-product-hunt"></i> Add Product
+          </Link>
+          </li>
+          <li>
+          <Link to="/admin/system">
+          <i className="fa-solid fa-gear"></i> System
+          </Link>
+          </li>
+          
+
+          <li>
+            <Link to="#" className="main-theme-layout darkLayout" theme-layout="main-theme-layout-4" title="Dark Layout"><i className="fa-solid fa-moon" /> Change Mode </Link>
+            <Link to="#" className="main-theme-layout lightLayout" theme-layout="main-theme-layout-5" title="Light Layout"><i className="fa-solid fa-sun" />Change Mode</Link>
+          </li>
+          {/* <li className="onhover-dropdown">
             <Link to="#!" className="txt-dark">
-              <img className="align-self-center pull-right me-2" src="/resources/backend/assets/images/dashboard/notification.png" alt="header-notification" />
+              <i className="fa-regular fa-bell"></i>
               <span className="badge rounded-pill badge-primary notification">3</span>
             </Link>
             <ul className="notification-dropdown onhover-show-div">
@@ -145,7 +168,7 @@ const Header = ({menuSidebar}) => {
                 You have Check <Link to="#">all</Link> notification
               </li>
             </ul>
-          </li>
+          </li> */}
           <li className="onhover-dropdown">
             <div className="d-flex align-items-center">
               <img className="align-self-center pull-right flex-shrink-0 me-2" src={"/"+ JSON.parse(localStorage.getItem('user')).image} alt="header-user" style={{height:'35px',width:'35px',borderRadius:'50%'}} />
