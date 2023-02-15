@@ -27,6 +27,7 @@ return new class extends Migration
             $table->double('total')->default(0);
             $table->double('paid')->default(0);
             $table->double('due')->default(0);
+            $table->string('operate_by')->nullable();
             $table->timestamps();
         });
     }

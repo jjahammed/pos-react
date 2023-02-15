@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2'
 import Loading from '../extra/Loading';
 import Table from './Table';
+import Header from './Header';
 
 const List = () => {
   const [search, setSearch] = useState('')
@@ -182,18 +183,18 @@ const checkBoxTopHandle = (e) => {
   return (
     <div className="container-fluid page-header" >
 
-<div className="row">
+    <div className="row">
       <div className="col-xl-12 col-md-12 col-sm-12">
         <div className="card">
-          <div className="card-header">
-            <h5 className='d-inline'>Supplier List </h5>
-            <span className='d-inline badge btn-primary text-light'>{supplier.length}</span>
-            <Link to='/admin/supplier/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
+            <div className="card-header">
+              <h3 className='d-inline'>Supplier List </h3>
+              <Link to='/admin/supplier/new' className='btn btn-primary pull-right'><i className="fa-regular fa-plus text-bold text-light"></i></Link>
+            </div>
           </div>
+        <Header supplier={supplier}/>
 
-          
+      <div className="card">          
           <div className="card-body">
-
           {
             supplier.length == 0 || supplier.length > 0 ?
             <Table supplier={supplier} amountSort={amountSort} titleSort={titleSort} sortData={sortData} search={search} serchHandle={serchHandle} checkBoxDueHandle={checkBoxDueHandle} checkBoxTopHandle={checkBoxTopHandle} deleteSubCategory={deleteSubCategory} />:<Loading />

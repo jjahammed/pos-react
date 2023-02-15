@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Models\Stocktranction;
+use App\Models\Activities;
 use App\Http\Controllers\ApiController;
 
 class stockController extends ApiController
@@ -54,7 +55,10 @@ class stockController extends ApiController
             $stocktranction->quantity=$request->qty;
             $stocktranction->status=$request->reason;
             $stocktranction->note=$request->note;
+            $stocktranction->operate_by=auth()->user()->uid;
             $stocktranction->save();
+
+            Activities::act(Stocktranction::orderBy('id','desc')->first()->id,'Stocktranction','Product added to stock');
 
             $check = Stock::where('product_id',$request->product_id)->first();
             if($check) {
@@ -105,8 +109,11 @@ class stockController extends ApiController
             $buy->paid = $request->paid;
             $buy->due = $request->due;
             $buy->paymentOption = $request->paymentOption;
+            $buy->operate_by = auth()->user()->uid;
             $buy->status = 'Add';
             $buy->save();
+
+            Activities::act(Buy::orderBy('id','desc')->first()->id,'Buy','Product purcheased from supplier');
 
             $supplier = Supplier::where('id',$request->supplier)->first();
             $supplier->total = $supplier->total + $request->total;
@@ -122,7 +129,10 @@ class stockController extends ApiController
                 $stocktranction->quantity=$prd->product_qty;
                 $stocktranction->status='Buy';
                 $stocktranction->note=$request->note;
+                $stocktranction->operate_by=auth()->user()->uid;
                 $stocktranction->save();
+
+                Activities::act(Stocktranction::orderBy('id','desc')->first()->id,'Stocktranction','Product added to stock');
 
                 $check = Stock::where('product_id',$prd->product_id)->first();
                 if($check) {
@@ -236,7 +246,10 @@ class stockController extends ApiController
                 $stocktranction->quantity=$prd->product_qty;
                 $stocktranction->status='Buy';
                 $stocktranction->note=$request->note;
+                $stocktranction->operate_by=auth()->user()->uid;
                 $stocktranction->save();
+
+                Activities::act(Stocktranction::orderBy('id','desc')->first()->id,'Stocktranction','Product stock modifying');
 
                 $check = Stock::where('product_id',$prd->product_id)->first();
                 if($check) {

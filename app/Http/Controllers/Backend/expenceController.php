@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Models\Expence;
+use App\Models\Activities;
 use Validator;
 
 class expenceController extends ApiController
@@ -59,7 +60,9 @@ class expenceController extends ApiController
                 'amount' => $request->amount,
                 'payment_date' => $request->date,
                 'purpose' => $request->purpose,
+                'operate_by' => auth()->user()->uid,
             ]);
+            Activities::act(Expence::orderBy('id','desc')->first()->id,'Expence','create a new Expence');
             return $this->success(200,null,$expence,'expence added successfully');
         }
     }
@@ -117,7 +120,10 @@ class expenceController extends ApiController
             $expence->amount = $request->amount;
             $expence->payment_date = $request->date;
             $expence->purpose = $request->purpose;
+            $expence->operate_by = auth()->user()->uid;
             $expence->save();
+            Activities::act($expence->id,'Expence','Modify expences');
+            return $this->success(200,null,user,'admin stored successfully');
             return $this->success(200,null,$expence,'expence added successfully');
         }
     }
@@ -132,6 +138,7 @@ class expenceController extends ApiController
     {
         $expence = Expence::where('trxId',$trxId)->first();
         if($expence->delete()){
+            Activities::act($expence->id,'Expence','delete expences');
             return $this->success(200,null,$expence,'expence deleted successfully');
         }else{
             return $this->error(500,'Something Went Wrong','Something Went Wrong');

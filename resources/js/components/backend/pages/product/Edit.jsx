@@ -65,7 +65,6 @@ const Edit = () => {
         buyPrice : 0,
         setPrice : 0,
         discount : 0,
-        tax : 0,
         salePrice : 0,
         alertQty : '',
         color : '',
@@ -75,26 +74,15 @@ const Edit = () => {
       const handleInput = (e) => {
         if(e.target.name == 'discount'){
           let dis = inputValue.setPrice * e.target.value / 100;
-          let taxx = inputValue.setPrice * inputValue.tax / 100;
-          let sprice = parseFloat(inputValue.setPrice) + parseFloat(taxx) - parseFloat(dis);
-          setInputValue( {
-            ...inputValue,
-            [e.target.name] : e.target.value,
-            salePrice : sprice
-          })
-        }else if(e.target.name == 'tax'){
-          let taxx = inputValue.setPrice * e.target.value / 100;
-          let dis = inputValue.setPrice * inputValue.discount / 100;
-          let sprice = parseFloat(inputValue.setPrice) + parseFloat(taxx) - parseFloat(dis);
+          let sprice = parseFloat(inputValue.setPrice) - parseFloat(dis);
           setInputValue( {
             ...inputValue,
             [e.target.name] : e.target.value,
             salePrice : sprice
           })
         }else if(e.target.name == 'setPrice'){
-          let taxx = e.target.value * inputValue.tax / 100;
           let dis = e.target.value * inputValue.discount / 100;
-          let sprice = parseFloat(e.target.value) + parseFloat(taxx) - parseFloat(dis);
+          let sprice = parseFloat(e.target.value) - parseFloat(dis);
           setInputValue( {
             ...inputValue,
             [e.target.name] : e.target.value,
@@ -157,7 +145,6 @@ const Edit = () => {
                 setPrice : res.data.data.setPrice,
                 salePrice : res.data.data.salePrice,
                 discount : res.data.data.discount,
-                tax : res.data.data.tax,
                 alertQty : res.data.data.alertQty,
                 color : res.data.data.color == null ? '' : res.data.data.color,
                 size : res.data.data.size == null ? '' : res.data.data.size,
@@ -216,7 +203,6 @@ const Edit = () => {
         formData.append('setPrice',inputValue.setPrice);
         formData.append('salePrice',inputValue.salePrice);
         formData.append('discount',inputValue.discount);
-        formData.append('tax',inputValue.tax);
         formData.append('alertQty',inputValue.alertQty);
         formData.append('color',inputValue.color);
         formData.append('size',inputValue.size);
@@ -317,8 +303,6 @@ const Edit = () => {
                                             
                                             <Input type='text' name='discount' lblText='discount(%)' value={inputValue.discount} error={inputValue.error_log.discount} onChange={handleInput} placeholder='discount' className='form-control' />
 
-                                            <Input type='text' name='tax' lblText='tax(%)' value={inputValue.tax} error={inputValue.error_log.tax} onChange={handleInput} placeholder='tax' className='form-control' />
-
                                             <Input type='text' name='salePrice' lblText='Selling Price' value={inputValue.salePrice} error={inputValue.error_log.salePrice} onChange={handleInput} placeholder='Selling Price' className='form-control' readOnly/>
 
 
@@ -404,7 +388,9 @@ const Edit = () => {
                                                 dragProps,
                                               }) => (
                                                 // write your building UI
-                                                <div className="upload__image-wrapper">
+                                                <div 
+                                                style={{ marginLeft:'-65px' }}
+                                                className="upload__image-wrapper">
                                                   <button className={Classes.imageStyle} type='button'
                                                     style={isDragging ? { color: 'red' } : undefined}
                                                     onClick={onImageUpload}

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->double('profit');
             $table->integer('paymentOption');
             $table->boolean('status')->default(1);
+            $table->string('operate_by')->nullable();
             $table->timestamps();
         });
     }

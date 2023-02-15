@@ -9,6 +9,7 @@ use App\Models\Stocktranction;
 use App\Models\Saleproduct;
 use App\Models\Sell;
 use App\Models\User;
+use App\Models\Activities;
 use Validator;
 
 class sellController extends ApiController
@@ -91,6 +92,7 @@ class sellController extends ApiController
         $sell->due = $sell->due < $request->returnTotal ? 0 : $sell->due - $request->returnTotal;
         $sell->save();
 
+        Activities::act($sell->id,'Sell','Customer return product');
 
         // return response()->json([
         //     'status' => 200,
@@ -100,6 +102,7 @@ class sellController extends ApiController
         
         foreach($products as $prd){
             $product = new Saleproduct();
+            $product->operate_by= auth()->user()->uid;
             $product->sell_id= $prd->sell_id;
             $product->invoice= $request->invoice;
             $product->product_id=$prd->product_id;
@@ -113,6 +116,8 @@ class sellController extends ApiController
             $product->status=0;
             $product->save();
 
+            Activities::act(Saleproduct::orderBy('id','desc')->first()->id,'Saleproduct','Customer return product');
+
             $stock = Stock::where('product_id',$prd->product_id)->first();
             if($stock){
                 $stock->quantity = $stock->quantity + $prd->quantity;
@@ -124,7 +129,10 @@ class sellController extends ApiController
                 $stocktranction->pid=$prd->product_pid;
                 $stocktranction->quantity=$prd->quantity;
                 $stocktranction->status='Return';
+                $stocktranction->operate_by= auth()->user()->uid;
                 $stocktranction->save();
+
+                Activities::act(Stocktranction::orderBy('id','desc')->first()->id,'Stocktranction','Customer return product');
             }
         }
 
@@ -216,7 +224,10 @@ class sellController extends ApiController
             $sell->paid = $request->paid;
             $sell->due = $request->due;
             $sell->paymentOption = $request->paymentOption;
+            $sell->operate_by = auth()->user()->uid;
             $sell->save();
+
+            Activities::act(Sell::orderBy('id','desc')->first()->id,'Sell','Customer Purcheased product');
 
             foreach($products as $prd){
                 $product = new Saleproduct();
@@ -232,7 +243,10 @@ class sellController extends ApiController
                 $product->total_price=$prd->total_price;
                 $product->total_price_after_discount= $prd->total_price - ($prd->total_price * $request->discount/100);
                 $product->profit= $prd->total_price- ($prd->total_price * $request->discount/100) -  ($prd->buy_price*$prd->product_qty);
+                $product->operate_by = auth()->user()->uid;
                 $product->save();
+
+                Activities::act(Saleproduct::orderBy('id','desc')->first()->id,'Saleproduct','Customer Purcheased product');
 
                 $stock = Stock::where('product_id',$prd->product_id)->first();
                 if($stock){
@@ -246,15 +260,12 @@ class sellController extends ApiController
                     $stocktranction->quantity=$prd->product_qty;
                     $stocktranction->status='Sell';
                     $stocktranction->note=$request->note;
+                    $stocktranction->operate_by = auth()->user()->uid;
                     $stocktranction->save();
 
+                    Activities::act(Stocktranction::orderBy('id','desc')->first()->id,'Stocktranction','Customer Purcheased product');
                 }
             }
-
-
-
-            
-          
             return $this->success(200,null,$request->all(),'Sell added successfully');
     }
 }
@@ -392,6 +403,9 @@ class sellController extends ApiController
             $sell->due = $request->due;
             $sell->save();
 
+            Activities::act($sell->id,'Sell','Modify purcheased product');
+
+
             foreach($products as $prd){
                 $product = new Saleproduct();
                 $product->sell_id= Sell::orderBy('id','desc')->first()->id;
@@ -406,8 +420,10 @@ class sellController extends ApiController
                 $product->total_price=$prd->total_price;
                 $product->total_price_after_discount= $prd->total_price - ($prd->total_price * $request->discount/100);
                 $product->profit= $prd->total_price- ($prd->total_price * $request->discount/100) -  ($prd->buy_price*$prd->product_qty);
+                $product->operate_by = auth()->user()->uid;
                 $product->save();
 
+                Activities::act(Saleproduct::orderBy('id','desc')->first()->id,'Saleproduct','Modify purcheased product');
                 
 
                 $stock = Stock::where('product_id',$prd->product_id)->first();
@@ -422,7 +438,10 @@ class sellController extends ApiController
                     $stocktranction->quantity=$prd->product_qty;
                     $stocktranction->status='Sell';
                     $stocktranction->note=$request->note;
+                    $stocktranction->operate_by = auth()->user()->uid;
                     $stocktranction->save();
+
+                    Activities::act(Stocktranction::orderBy('id','desc')->first()->id,'Stocktranction','Modify purcheased product');
 
                 }
             }

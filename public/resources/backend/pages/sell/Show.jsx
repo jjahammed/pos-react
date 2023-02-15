@@ -61,10 +61,7 @@ const Show = () => {
                         </h3>
                         </div>
                         <div className="col-lg-6">
-                        <ol className="breadcrumb pull-right">
-                            <li className="breadcrumb-item"><a href="#"><i className="fa fa-home" /></a></li>
-                            <li className="breadcrumb-item active">Invoice</li>
-                        </ol>
+                        
                         </div>
                     </div>
                     </div>

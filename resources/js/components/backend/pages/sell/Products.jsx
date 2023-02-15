@@ -5,7 +5,7 @@ const Products = ({product,addTableRows,calculation}) => {
   return (
     <div className="row">
     {product.length == 0 ? <Loading /> :
-    product.map(item => {
+    product.map((item,index) => {
       return (
       item?.stockk?.quantity > 0 ? 
         <div className="col-sm-2 col-6" key={item.id} style={{cursor:'pointer'}}>

@@ -7,6 +7,7 @@ use App\Models\Buy;
 use App\Models\User;
 use App\Models\Stock;
 use App\Models\Supplier;
+use App\Models\Activities;
 use App\Models\Saleproduct;
 use Illuminate\Http\Request;
 use App\Models\Stocktranction;
@@ -89,8 +90,10 @@ class buyController extends ApiController
             $buy->paid = $request->paid;
             $buy->due = $request->due;
             $buy->paymentOption = $request->paymentOption;
+            $buy->operate_by=auth()->user()->uid;
             $buy->status = 'Return';
             $buy->save();
+            Activities::act(Buy::orderBy('id','desc')->first()->id,'Buy','Return Product to Supplier');
 
             foreach($products as $prd){
                 $stocktranction = new Stocktranction();
@@ -100,8 +103,9 @@ class buyController extends ApiController
                 $stocktranction->quantity=$prd->product_qty;
                 $stocktranction->status='Return';
                 $stocktranction->note=$request->note;
+                $stocktranction->operate_by=auth()->user()->uid;
                 $stocktranction->save();
-
+                Activities::act(Stocktranction::orderBy('id','desc')->first()->id,'Stocktranction','Return Product to Supplier');
                 $check = Stock::where('product_id',$prd->product_id)->first();
                 if($check) {
                   $check->quantity = $check->quantity - $prd->product_qty;
@@ -123,10 +127,6 @@ class buyController extends ApiController
      */
     public function show($invoice)
     {
-        // return response()->json([
-        //     'status' => 200,
-        //     'data' => $invoice,
-        // ]);
         $purcheased = Buy::with('supplier')->where('invoice',$invoice)->first();
         if($purcheased){
             $products = Stocktranction::with('product')->where('trxId',$invoice)->get();

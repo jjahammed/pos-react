@@ -135,7 +135,11 @@ const List = () => {
                         <td scope="col">{item.slug}</td>
                         <td className="border-bottom-0" scope="row"><img src={'/' + item.image} style={{ width: '50px',height:'50px',borderRadius:'50%'}}/> </td>
                         <td scope="col">{item.category.name}</td>
-                        <td scope="col"><span className='badge btn btn-primary'>{item.product.length}</span></td>
+
+                        <td scope="col">
+                        <Link to={`/admin/product/sub-category/${item.slug}`} className='btn btn-primary mr-2'>{item.product.length}</Link>
+                        </td>
+
                         <td scope="col" className='text-center'>
                             <Link to={`/admin/sub-category/${item.slug}/edit`} className='btn btn-outline-success mr-2'><i className="fa-regular fa-pen-to-square"></i></Link>
                             <button className='btn btn-outline-danger' onClick={(e) => deleteSubCategory(e,item.slug)}><i className="fa-solid fa-trash"></i></button>

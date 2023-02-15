@@ -27,7 +27,7 @@ const Accounce = ({inputHandle,inputValue}) => {
                     <Radio name="paymentOption" id="radioinline1" lbl="Cash" defaultValue="1" handleInput={inputHandle}   />
                 </div>
                 <div className="col-lg-4 col-12 text-center">
-                    <Radio name="paymentOption" id="radioinline2" lbl="Card / Bank" defaultValue="2" handleInput={inputHandle}  />
+                    <Radio name="paymentOption" id="radioinline2" lbl="Card / Bank /mobile" defaultValue="2" handleInput={inputHandle}  />
                 </div>
                 <div className="col-lg-4 col-12 text-center">
                     <Radio name="paymentOption" id="radioinline3" lbl="Cheque" defaultValue="3" handleInput={inputHandle}  />

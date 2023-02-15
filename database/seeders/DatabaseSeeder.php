@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(1)->create();
+        // \App\Models\User::factory(1)->create();
 
         // \App\Models\Category::factory(5)->create();
         // \App\Models\Subcategory::factory(20)->create();
@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        $this->call(systemSeeder::Class);
+        // $this->call(systemSeeder::Class);
+        $this->call(extraSeeder::Class);
     }
 }

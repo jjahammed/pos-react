@@ -2,7 +2,7 @@ import React from 'react'
 import ImageUploading from 'react-images-uploading';
 import Classes from './form.module.css'
 
-const Image = ({images,onChange,lblText,error}) => {
+const Image = ({images,image,onChange,lblText,error}) => {
   return (
     <div>
         <div className="mb-3 row">
@@ -27,7 +27,7 @@ const Image = ({images,onChange,lblText,error}) => {
                 onClick={onImageUpload}
                 {...dragProps}
                 > 
-                {imageList.length == 1 ? '' : 'Click or Drop image'}
+                {imageList.length == 1 ? '' : <img className={Classes.imgUpload} src={'/'+ image} alt="Click or Drop Image" />}
 
                 {imageList.map((image, index) => (
                 <div key={index} className="image-item">

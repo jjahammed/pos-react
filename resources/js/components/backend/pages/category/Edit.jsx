@@ -44,7 +44,7 @@ const Edit = () => {
             }
           }
           );
-
+          console.log(slug);
       }, [])
 
 

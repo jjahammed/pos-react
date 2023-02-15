@@ -1,7 +1,9 @@
 .imageStyle {
     height: 250px;
-    width: 100%;
+    width: 90%;
     border: none;
+    text-align: center;
+    margin-left: 50px;
     /* background-image: url('/images/upload.png');
     background-repeat: no-repeat;
     background-position: center;
@@ -13,3 +15,10 @@
     width: 200px;
     border-radius: 50%;
 }
+
+@media only screen and (max-width: 600px) {
+    .imageStyle {
+        width: 100%;
+        margin-left: 0px;
+    }
+  }

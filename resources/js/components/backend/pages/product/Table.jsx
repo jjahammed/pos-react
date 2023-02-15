@@ -83,8 +83,12 @@ const Table = ({product,deleteProduct,amountSort,titleSort,sortData,search,serch
                       <tr key={item.id} className={item.status === 0 ? 'text-secondary' : 'text-dark'}>
                         <td scope="col">{index+1}</td>
                         <td scope="col">{item.title}</td>
-                        <td scope="col">{item.category?.name}</td>
-                        <td scope="col">{item.brand?.name}</td>
+                        <td scope="col">
+                        <Link to={`/admin/product/category/${item.category?.slug}`}>{item.category?.name}</Link>
+                        </td>
+                        <td scope="col">
+                        <Link to={`/admin/product/brand/${item.brand?.slug}`}>{item.brand?.name}</Link>
+                        </td>
                         <td className="border-bottom-0" scope="row"><img src={'/' + item.image} style={{ width: '50px',height:'50px',borderRadius:'50%'}}/> </td>
                         <td scope="col">{item.buyPrice}</td>
                         <td scope="col">{item.discount}%</td>

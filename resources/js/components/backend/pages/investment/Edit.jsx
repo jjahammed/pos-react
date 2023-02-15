@@ -32,6 +32,7 @@ const Edit = () => {
         })
       }
       useEffect(() => {
+        console.log(trxId);
         document.title = 'investment update'
           axios.get(`/api/investment/${trxId}/edit`).then((res) => {
             if(res.data.status === 200){

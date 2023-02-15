@@ -68,6 +68,9 @@ const Sidebar = ({mobileMenuSidebar}) => {
             <li>
               <Link to="/admin/investment/new" className={routeName == '/admin/investment/new' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />new investment</Link>
             </li>
+            <li>
+              <Link to="/admin/payment/investment-withdraw" className={routeName == '/admin/payment/investment-withdraw' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" /> Investment Withdraw</Link>
+            </li>
           </ul>
         </li>
         <li>
@@ -167,6 +170,9 @@ const Sidebar = ({mobileMenuSidebar}) => {
             <li>
               <Link to="/admin/supplier/new" className={routeName == '/admin/supplier/new' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />Add Supplier</Link>
             </li>
+            <li>
+              <Link to="/admin/payment/supplier-payment" className={routeName == '/admin/payment/supplier-payment' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" /> Supplier Payment</Link>
+            </li>
           </ul>
         </li>
         <li>
@@ -194,8 +200,18 @@ const Sidebar = ({mobileMenuSidebar}) => {
           </a>
           <ul className="sidebar-submenu">
             <li>
-              <Link to="/admin/create-admin" className={routeName == '/admin/create-admin' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />Create Admin</Link>
+              <Link to="/admin/admin-list" className={routeName == '/admin/admin-list' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />Admin List</Link>
             </li>
+            <li>
+              <Link to="/admin/admin-new" className={routeName == '/admin/admin-new' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />Create Admin</Link>
+            </li>
+            <li>
+              <Link to="/admin/admin-change-password" className={routeName == '/admin/admin-change-password' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />Change Password</Link>
+            </li>
+            <li>
+              <Link to="/admin/admin-activities" className={routeName == '/admin/admin-activities' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />admin activities</Link>
+            </li>
+            
            
           </ul>
         </li>
@@ -211,6 +227,9 @@ const Sidebar = ({mobileMenuSidebar}) => {
             <li>
               <Link to="/admin/employee/new" className={routeName == '/admin/employee/new' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />New Employee</Link>
             </li>
+            <li>
+              <Link to="/admin/payment/employee-salary" className={routeName == '/admin/payment/employee-salary' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" /> Employee Salary </Link>
+            </li>
            
           </ul>
         </li>
@@ -225,6 +244,9 @@ const Sidebar = ({mobileMenuSidebar}) => {
             </li>
             <li>
               <Link to="/admin/due-customer-list" className={routeName == '/admin/due-customer-list' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />Due customer List</Link>
+            </li>
+            <li>
+              <Link to="/admin/payment/customer-payment" className={routeName == '/admin/payment/customer-payment' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" /> customer payment</Link>
             </li>
            
           </ul>
@@ -245,21 +267,24 @@ const Sidebar = ({mobileMenuSidebar}) => {
         </li>
         <li>
           <a href="#" className="sidebar-header">
-          <i className="fa-solid fa-filter"></i> <span>Extra</span>
+          <i className="fa-solid fa-filter"></i> <span>Information</span>
           <i className="fa fa-angle-right pull-right" />
           </a>
           <ul className="sidebar-submenu">
             <li>
-              <Link to="/admin/about" className={routeName == '/admin/about' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />About</Link>
+              <Link to="/admin/information/about" className={routeName == '/admin/information/about' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />About</Link>
             </li>
             <li>
-              <Link to="/admin/contact" className={routeName == '/admin/contact' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />Contact</Link>
+              <Link to="/admin/information/contact" className={routeName == '/admin/information/contact' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />Contact</Link>
             </li>
             <li>
-              <Link to="/admin/terms-condition" className={routeName == '/admin/terms-condition' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />terms and condition</Link>
+              <Link to="/admin/information/privacy" className={routeName == '/admin/information/privacy' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />Privacy</Link>
             </li>
             <li>
-              <Link to="/admin/faq" className={routeName == '/admin/faq' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />FAQ</Link>
+              <Link to="/admin/information/terms-condition" className={routeName == '/admin/information/terms-condition' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />terms and condition</Link>
+            </li>
+            <li>
+              <Link to="/admin/information/faq" className={routeName == '/admin/information/faq' ? 'sidebar-header active' : 'sidebar-header'} onClick={()=>mobileMenuSidebar()}><i className="fa fa-angle-right" />FAQ</Link>
             </li>
           </ul>
         </li>
@@ -274,7 +299,7 @@ const Sidebar = ({mobileMenuSidebar}) => {
         </div>
         <div className="sidebar-widget-bottom p-20 m-20">
           <p>
-            {phone.value}  <br />{email.value} <br /><Link to="#">Visit FAQ</Link>
+            {phone.value}  <br />{email.value} <br /><Link to="/admin/information/faq">Visit FAQ</Link>
           </p>
         </div>
       </div>

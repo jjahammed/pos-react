@@ -25,6 +25,7 @@ return new class extends Migration
             //       ->on('submodules')
             //       ->onUpdate('cascade')
             //       ->onDelete('cascade');
+            $table->string('operate_by')->nullable();
             $table->timestamps();
         });
     }

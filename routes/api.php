@@ -8,12 +8,15 @@ use App\Http\Controllers\Backend\buyController;
 use App\Http\Controllers\Backend\sellController;
 use App\Http\Controllers\Backend\unitController;
 use App\Http\Controllers\Backend\userController;
+use App\Http\Controllers\Backend\adminController;
 use App\Http\Controllers\Backend\brandController;
+use App\Http\Controllers\Backend\extraController;
 use App\Http\Controllers\Backend\stockController;
 use App\Http\Controllers\Backend\moduleController;
 use App\Http\Controllers\Backend\systemController;
 use App\Http\Controllers\Backend\expenceController;
 use App\Http\Controllers\Backend\productController;
+use App\Http\Controllers\Backent\paymentController;
 use App\Http\Controllers\Backend\categoryController;
 use App\Http\Controllers\Backend\customerController;
 use App\Http\Controllers\Backend\locationController;
@@ -37,9 +40,12 @@ Route::post('login',[authController::Class,'login']);
 Route::resource('system',systemController::Class);
 
 
+
+
 Route::middleware('auth:sanctum','admin')->group(function () {
-    Route::get('checkingAuthenticate',[authController::Class,'checkingAuthenticate']);
     Route::resource('category',categoryController::Class);
+    Route::get('checkingAuthenticate',[authController::Class,'checkingAuthenticate']);
+    Route::resource('admin',adminController::Class);
     Route::resource('sub-category',subCategoryController::Class);
     Route::resource('module',moduleController::Class);
     Route::resource('sub-module',subModuleController::Class);
@@ -48,6 +54,16 @@ Route::middleware('auth:sanctum','admin')->group(function () {
     Route::resource('unit',unitController::Class);
     Route::resource('location',locationController::Class);
     Route::resource('product',productController::Class);
+    Route::resource('payment',paymentController::Class);
+    Route::put('change-password',[adminController::Class,'changePassword']);
+    Route::get('user-payment/{trxId}',[paymentController::Class,'userPayment']);
+    Route::get('payment/{trxId}/{invoice}/edit',[paymentController::Class,'editPayment']);
+
+
+    Route::get('saleProduct',[productController::Class,'saleProduct']);
+    Route::get('product/category/{slug}',[productController::Class,'category']);
+    Route::get('product/sub-category/{slug}',[productController::Class,'subCategory']);
+    Route::get('product/brand/{slug}',[productController::Class,'brand']);
     Route::get('saleProduct',[productController::Class,'saleProduct']);
     Route::get('disable-product/{slug}',[productController::Class,'disable']);
     Route::get('enable-product/{slug}',[productController::Class,'enable']);
@@ -59,6 +75,9 @@ Route::middleware('auth:sanctum','admin')->group(function () {
     Route::resource('investment',investmentController::Class);
     Route::resource('employee',employeeController::Class);
     Route::resource('expence',expenceController::Class);
+    Route::get('information/{info}',[extraController::Class,'show']);
+    Route::get('information/{info}/edit',[extraController::Class,'edit']);
+    Route::put('information/{info}',[extraController::Class,'update']);
     
     //dashboard route 
     Route::get('/headingPart',[dashboardController::Class,'headingPart']);

@@ -1,5 +1,6 @@
 import React,{useContext} from 'react'
 import { systemContext } from '../App'
+import {Link} from 'react-router-dom'
 
 const Footer = () => {
     const mySystem = useContext(systemContext)
@@ -15,9 +16,10 @@ const Footer = () => {
                     </div>
                     <div className="col-sm-12  col-md-6 col-xl-6">
                     <ul className="footer-links">
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Privacy</a></li>
-                        <li><a href="#">T&amp;C</a></li>
+                        <li><Link to="/admin/information/about">About</Link></li>
+                        <li><Link to="/admin/information/contact">Contact</Link></li>
+                        <li><Link to="/admin/information/privacy">Privacy</Link></li>
+                        <li><Link to="/admin/information/terms-condition">T&amp;C</Link></li>
                     </ul>
                     </div>
                 </div>

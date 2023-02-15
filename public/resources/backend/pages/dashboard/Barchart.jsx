@@ -54,7 +54,6 @@ const Barchart = ({thisYearBarChart,lastYearBarChart}) => {
             <div className="card">
                 <div className="card-header">
                 <h5>Sales Compare By Years</h5>
-                <span>Contrary to popular belief, Lorem Ipsum is not simply random text.</span>
                 </div>
                 <div className="card-body">
                 <div className="dashboard-chart-container">

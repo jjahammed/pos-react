@@ -113,8 +113,8 @@ class categoryController extends ApiController
                 $file = $request->file('images');
                 $fileName = 'category_'.uniqid().'.jpg';
                 $file->move('resources/backend/images/category/', $fileName);
-                if(File::exists($request->image)){
-                    File::delete($request->image);
+                if(File::exists($category->image)){
+                    File::delete($category->image);
                 }
             }
            

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double('quantity');
             $table->string('status');
             $table->text('note')->nullable();
+            $table->string('operate_by')->nullable();
             $table->timestamps();
         });
     }

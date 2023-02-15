@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('payment_date');
             $table->double('amount');
             $table->longText('purpose');
+            $table->string('operate_by')->nullable();
             $table->timestamps();
         });
     }

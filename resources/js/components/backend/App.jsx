@@ -61,7 +61,8 @@ import UnitEdit from './pages/unit/Edit'
 import LocationList from './pages/location/List'
 import LocationNew from './pages/location/New'
 import LocationEdit from './pages/location/Edit'
-import Sample from './pages/Sample/Sample'
+import InformationList from './pages/information/List'
+import InformationEdit from './pages/information/Edit'
 import Error from './pages/error/Error404'
 
 // import Home from '../fontend/pages/home/Home'
@@ -86,7 +87,7 @@ import CustomerList from './reports/customer/List'
 import CustomerDueList from './reports/customer/Due'
 import CustomerOrder from './reports/customer/Order'
 
-import Test from './pages/Sample/Test'
+import Test from './pages/information/Test'
 import Loading from './pages/extra/Loading'
 import Dashboard from './pages/dashboard/Dashboard'
 import Dashboard2 from './pages/dashboard/Dashboard2'
@@ -98,6 +99,20 @@ import InvestmentEdit from './pages/investment/Edit'
 import ExpenceList from './pages/expence/List'
 import ExpenceNew from './pages/expence/New'
 import ExpenceEdit from './pages/expence/Edit'
+
+import PaymentList from './pages/payment/List'
+import PaymentNew from './pages/payment/New'
+import PaymentEdit from './pages/payment/Edit'
+
+import EmployeeList from './pages/employee/List'
+import EmployeeNew from './pages/employee/New'
+import EmployeeEdit from './pages/employee/Edit'
+
+import AdminList from './pages/admin/List'
+import AdminNew from './pages/admin/New'
+import AdminEdit from './pages/admin/Edit'
+import AdminChangePassword from './pages/admin/ChangePassword'
+import AdminActivities from './pages/admin/Activities'
 
 
 // axios.defaults.baseURL = 'http://127.0.0.1:8000/';
@@ -167,11 +182,13 @@ const App = () => {
                   <Navigate to='/login' />
                 }>
                   <Route path='*' element={<Error/>} />
-                  <Route path='sample' element={<Sample/>} />
                   <Route path='dashboard' element={
                     bcrypt.compareSync('1219',roleId) ? <Dashboard/> : <Dashboard2/>
                   } />
                   <Route path='product' element={<ProductList/>} />
+                  <Route path='product/category/:slug' element={<ProductList/>} />
+                  <Route path='product/sub-category/:slug' element={<ProductList/>} />
+                  <Route path='product/brand/:slug' element={<ProductList/>} />
                   <Route path='product/new' element={<ProductNew/>} />
                   <Route path='product/:slug/edit' element={<ProductEdit/>} />
                   <Route name='stock' path='stock' element={<StockList/>} />
@@ -245,6 +262,28 @@ const App = () => {
                   <Route path='expence' element={<ExpenceList/>} />
                   <Route path='expence/new' element={<ExpenceNew/>} />
                   <Route path='expence/:trxId/edit' element={<ExpenceEdit/>} />
+
+                  {/* //payment */}
+                  <Route path='payment/:trxId' element={<PaymentList/>} />
+                  <Route path='payment/:trxId/new' element={<PaymentNew/>} />
+                  <Route path='payment/:trxId/:invoice/edit' element={<PaymentEdit/>} />
+
+                  {/* admin */}
+                  <Route path='admin-activities' element={<AdminActivities/>} />
+                  <Route path='admin-activities/:id/:model' element={<AdminList/>} />
+                  <Route path='admin-list' element={<AdminList/>} />
+                  <Route path='admin-new' element={<AdminNew/>} />
+                  <Route path='admin-edit/:adminId' element={<AdminEdit/>} />
+                  <Route path='admin-change-password' element={<AdminChangePassword/>} />
+
+                  {/* employee */}
+                  <Route path='employee' element={<EmployeeList/>} />
+                  <Route path='employee/new' element={<EmployeeNew/>} />
+                  <Route path='employee/:empId/edit' element={<EmployeeEdit/>} />
+
+                  {/* information */}
+                  <Route path='information/:page' element={<InformationList/>} />
+                  <Route path='information/:page/edit' element={<InformationEdit/>} />
 
                 </Route> 
             </Routes>

@@ -12,29 +12,29 @@ const Stats = ({title,today,yesterday,thisMonth,lastMonth,thisYear,lastYear}) =>
     <div className="card-footer row">
       <div className="col-4 col-sm-4">
         <h6 className="dashboard-card text-dark">Today</h6>
-        <span className="text-primary">{today} tk</span>
+        <span className="text-primary">{parseFloat(today).toFixed(0)} tk</span>
       </div>
       <div className="col-4 col-sm-4">
         <h6 className="dashboard-card text-dark">Yesterday</h6>
-        <span className="text-primary">{yesterday} tk</span>
+        <span className="text-primary">{parseFloat(yesterday).toFixed(0)} tk</span>
       </div>
       <div className="col-4 col-sm-4">
         <h6 className="dashboard-card text-dark">this Month</h6>
-        <span className="text-primary">{thisMonth} tk</span>
+        <span className="text-primary">{parseFloat(thisMonth).toFixed(0)} tk</span>
       </div>
     </div>
     <div className="card-footer row">
       <div className="col-4 col-sm-4">
         <h6 className="dashboard-card text-dark">this year</h6>
-        <span className="text-primary">{thisYear} tk</span>
+        <span className="text-primary">{parseFloat(thisYear).toFixed(0)} tk</span>
       </div>
       <div className="col-4 col-sm-4">
         <h6 className="dashboard-card text-dark">Last year</h6>
-        <span className="text-primary">{lastYear} tk</span>
+        <span className="text-primary">{parseFloat(lastYear).toFixed(0)} tk</span>
       </div>
       <div className="col-4 col-sm-4">
         <h6 className="dashboard-card text-dark">last Month</h6>
-        <span className="text-primary">{lastMonth} tk</span>
+        <span className="text-primary">{parseFloat(lastMonth).toFixed(0)} tk</span>
       </div>
     </div>
   </div>

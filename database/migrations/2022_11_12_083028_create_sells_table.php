@@ -27,6 +27,7 @@ return new class extends Migration
             $table->integer('paymentOption');
             $table->longText('note')->nullable();
             $table->string('status')->nullable();
+            $table->string('operate_by')->nullable();
             $table->timestamps();
         });
     }

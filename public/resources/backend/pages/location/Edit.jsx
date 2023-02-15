@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import {Link, useNavigate,useParams} from 'react-router-dom'
-import Input from '../../form/Input'
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios from 'axios';
 
 
@@ -12,12 +13,13 @@ const Edit = () => {
         error_log : []
       })
 
-    const handleInput = (e) => {
+    const handleInput = (e,editor) => {
       setInputValue( {
         ...inputValue,
-        [e.target.name] : e.target.value
+        [editor.name] : editor.getData()
       })
     }
+
       useEffect(() => {
         document.title = 'location Edit'
           axios.get(`/api/location/${slug}/edit`).then((res) => {
@@ -68,7 +70,7 @@ const Edit = () => {
                                     </div>
                                     <div className="card-body">
 
-                                            <Input type='text' name='name' lblText='location Name' value={inputValue.name} error={inputValue.error_log.name} onChange={handleInput} placeholder='location Name' className='form-control' />
+                                            <CKEditor name = 'name' data={inputValue.name} editor={ ClassicEditor } onReady={ editor => { editor.name = 'name'} } onChange={ handleInput } />
 
                                     </div>
                                     <div className="card-footer">

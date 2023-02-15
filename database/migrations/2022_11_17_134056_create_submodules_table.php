@@ -24,6 +24,7 @@ return new class extends Migration
                   ->on('modules')
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
+            $table->string('operate_by')->nullable();
             $table->timestamps();
         });
     }

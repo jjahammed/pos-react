@@ -31,13 +31,13 @@ const Table = ({supplier,amountSort,titleSort,sortData,search,serchHandle,checkB
 
         <div className='row my-5'>
             <div className="col-md-4">
-            <div className="form-check checkbox checkbox-primary mb-0 col-md-12 text-center">
+            <div className="form-check checkbox checkbox-primary mb-0 col-md-12 text-center" style={{ border:'1px solid #dee3e8' }}>
               <input className="form-check-input" type="checkbox" title='due' name="due" id='due' value='due' onChange={checkBoxDueHandle}/>
               <label className="form-check-label" htmlFor='due'>Due Supplier List</label>
               </div>
             </div>
             <div className="col-md-4">
-            <div className="form-check checkbox checkbox-primary mb-0 col-md-12 text-center">
+            <div className="form-check checkbox checkbox-primary mb-0 col-md-12 text-center" style={{ border:'1px solid #dee3e8' }}>
               <input className="form-check-input" type="checkbox" title='buy' name="buy" id='buy' value='buy' onChange={checkBoxTopHandle}/>
               <label className="form-check-label" htmlFor='buy'>Top Buying Supplier</label>
               </div>

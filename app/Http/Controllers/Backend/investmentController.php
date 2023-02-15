@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Models\Investment;
+use App\Models\Activities;
 use Validator;
 
 class investmentController extends ApiController
@@ -59,7 +60,9 @@ class investmentController extends ApiController
                 'amount' => $request->amount,
                 'payment_date' => $request->date,
                 'purpose' => $request->purpose,
+                'operate_by' => auth()->user()->uid,
             ]);
+            Activities::act(Investment::orderBy('id','desc')->first()->id,'Investment','create a new investment');
             return $this->success(200,null,$investment,'investment added successfully');
         }
     }
@@ -117,7 +120,9 @@ class investmentController extends ApiController
             $investment->amount = $request->amount;
             $investment->payment_date = $request->date;
             $investment->purpose = $request->purpose;
+            $investment->operate_by = auth()->user()->uid;
             $investment->save();
+            Activities::act($investment->id,'Investment','Modify Investment');
             return $this->success(200,null,$investment,'investment added successfully');
         }
     }
@@ -132,6 +137,7 @@ class investmentController extends ApiController
     {
         $investment = Investment::where('trxId',$trxId)->first();
         if($investment->delete()){
+            Activities::act($investment->id,'Investment','Delete Investment');
             return $this->success(200,null,$investment,'investment deleted successfully');
         }else{
             return $this->error(500,'Something Went Wrong','Something Went Wrong');

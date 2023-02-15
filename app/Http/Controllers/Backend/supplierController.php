@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Supplier;
+use App\Models\Activities;
 use Validator;
 
 class supplierController extends ApiController
@@ -47,7 +48,7 @@ class supplierController extends ApiController
             'sid' => 'required | unique:suppliers',
             'name' => 'required',
             'address' => 'required',
-            'phone' => 'required | max:11 | min:11',        
+            'phone' => 'required | max:11 | min:11 | unique:suppliers',        
             'contact_persion_phone' => 'max:11 | min:11',        
         ]);
 
@@ -66,10 +67,12 @@ class supplierController extends ApiController
                 'address' => $request->address,
                 'note' => $request->note,
                 'phone' => $request->phone,
+                'operate_by' => auth()->user()->uid,
                 'contact_person' => $request->contact_person,
                 'contact_person_phone' => $request->contact_person_phone,
                 'image' => $request->hasFile('image') ? 'resources/backend/images/supplier/'.$fileName : 'not Found',
             ]);
+            Activities::act(Supplier::orderBy('id','desc')->first()->id,'Supplier','create a new Supplier');
             return $this->success(200,null,$supplier,'Supplier added successfully');
         }
     }
@@ -125,8 +128,8 @@ class supplierController extends ApiController
                 $file = $request->file('images');
                 $fileName = 'supplier_'.uniqid().'.jpg';
                 $file->move('resources/backend/images/supplier/', $fileName);
-                if(File::exists($request->image)){
-                    File::delete($request->image);
+                if(File::exists($supplier->image)){
+                    File::delete($supplier->image);
                 }
             }
            
@@ -138,7 +141,10 @@ class supplierController extends ApiController
             $supplier->contact_person = $request->contact_person;
             $supplier->contact_person_phone = $request->contact_person_phone;
             $supplier->image = $request->hasFile('images') ? 'resources/backend/images/supplier/'.$fileName : $supplier->image;
+            $supplier->operate_by = auth()->user()->uid;
             $supplier->save();
+            Activities::act($supplier->id,'Supplier','Update supplier Info');
+
             return $this->success(200,null,$supplier,'Supplier Updated successfully');
         }
     }
@@ -157,6 +163,7 @@ class supplierController extends ApiController
             if(File::exists($supplier->image)){
                 File::delete($supplier->image);
             }
+            Activities::act($supplier->id,'Supplier','Delete supplier Info');
             return $this->success(200,null,$supplier,'Supplier deleted successfully');
         }else{
             return $this->error(500,'Something Went Wrong','Something Went Wrong');

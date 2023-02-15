@@ -67,11 +67,18 @@ const Sell = () => {
       // console.log(rowsInput[index]['product_price']);
     }
 
-    const addTableRows = async (item) => {
+    const addTableRows = async (item,index) => {
 
-      const duplicate = rowsData.filter( prd => prd.product_id == item.id);
+      const duplicate = rowsData.filter( (prd) => prd.product_id == item.id);
       if(duplicate.length > 0) {
-        Swal.fire('success','Product already in the table.','success')
+        const rowindex = rowsData.findIndex(x => x.product_id == duplicate[0].product_id);
+        console.log(rowindex);
+        const rowsInput = [...rowsData];
+        rowsInput[rowindex]['product_qty'] = rowsInput[rowindex]['product_qty'] + 1
+        rowsInput[rowindex]['total_price'] = rowsInput[rowindex]['product_price'] * rowsInput[rowindex]['product_qty']
+        setRowsData(rowsInput);
+        localStorage.setItem('sales',JSON.stringify(rowsInput))
+        // Swal.fire('success','Product already in the table.','success')
       }else{
         await setRowsInput({
           ...rowsInput,
@@ -119,10 +126,6 @@ const Sell = () => {
         })
       }
     }
-
-    // const setDateFunction = (val) => {
-    //     setDate(val);
-    // }
 
     const setDateFunction = (newValue) => {
       setDate(newValue);
@@ -226,16 +229,6 @@ const Sell = () => {
         setList(res.data.data)
       });
 
-      // const arr = [];
-      // await axios.get('/api/saleProduct').then((res) => {
-      //   let result = res.data.data;
-      //   result = result.map((item) => {
-      //      item.stockk.quantity > 0
-      //   });
-      //   setProduct(result)
-      //   setList(result)
-      // });
-
     };
 
     getUser();
@@ -255,23 +248,6 @@ const Sell = () => {
         invoice : uniqueNumber
       })
     }
-
-    // const findUser = (e) => {
-    //   let activeUser = ''
-    //    user.filter(item => {item.uid == e.target.value ?  activeUser = item : ''});
-    //   if(activeUser) {
-    //     console.log(activeUser.name);
-    //       setInputValue({
-    //         ...inputValue,
-    //         name : 'activeUser.name',
-    //         address : activeUser.address,
-    //         phone : activeUser.phone,
-    //       })
-    //     }else{
-
-    //     }
-    // }
-
     const serchHandle = (e) => {
       setSearch(e.target.value);
   }
@@ -284,9 +260,6 @@ const Sell = () => {
 
   const filterData = () => {
     let updatedData = list;
-
-    // updatedData = updatedData.slice(firstPageIndex, lastPageIndex);
-
     updatedData = updatedData.filter( (item) => 
               keys.some((key) => item[key].toLowerCase().includes(search.toLowerCase())) ||
               item.category.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -299,32 +272,6 @@ const Sell = () => {
               item.category.name.toLowerCase().includes(cat.toLowerCase())
           );
           }
-   
-
-    // if(sort == 1){
-    //   // asecendring 
-    //   updatedData = updatedData.slice(0).sort((a, b) => {
-    //     if(b.title.toLowerCase() < a.title.toLowerCase()) return 1
-    //     if(b.title.toLowerCase() > a.title.toLowerCase()) return -1
-    //     return 0
-    //   });
-    // }else if(sort == 2){
-    //   // desecendring 
-    //   updatedData = updatedData.slice(0).sort((a, b) => {
-    //     if(a.title.toLowerCase() < b.title.toLowerCase()) return 1
-    //     if(a.title.toLowerCase() > b.title.toLowerCase()) return -1
-    //     return 0
-    //   });
-    // }else if(sort == 3){
-    //    // asecendring 
-    //    updatedData = updatedData.slice(0).sort((a, b) => {return a.salePrice - b.salePrice});
-    // }else if(sort == 4){
-    //    // desecendring 
-    //    updatedData = updatedData.slice(0).sort((a, b) => {return b.salePrice - a.salePrice});
-    // }else{
-     
-    // }
-
     setProduct(updatedData);
   }
   useEffect(() => {

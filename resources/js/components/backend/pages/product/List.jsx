@@ -1,5 +1,5 @@
 import React,{useEffect,useState,useMemo} from 'react'
-import {Link,useNavigate } from 'react-router-dom'
+import {Link,useNavigate,useParams } from 'react-router-dom'
 import Table from './Table';
 
 
@@ -7,9 +7,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2'
 import Loading from '../extra/Loading';
+import useFindLocation from '../../../hooks/useFindLocation'
 
 const List = () => {
   const navigate = useNavigate();
+  const {slug} = useParams();
   const [list, setList] = useState([])
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('')
@@ -20,17 +22,33 @@ const List = () => {
   const [titleSort, setTitleSort] = useState('titleAsc')
   const [disable, setDisable] = useState('')
   const [alert, setAlert] = useState('')
-
+  const findLocation = useFindLocation()
     
   useEffect(() => {
       document.title = 'Product List'
+      
+
+      let url = 'product';
+      if(findLocation == '-admin-product-category-:slug')
+      { url = `product/category/${slug}`}
+      else if(findLocation == '-admin-product-brand-:slug')
+      {url = `product/brand/${slug}`}
+      // else if('-admin-product-sub-category-:slug')
+      // {url = `product/sub-category/${slug}`}
+      else if('-admin-product')
+      {url = 'product'}
+      else
+      {url = 'product'}
+
+      console.log('url', url);
+
       localStorage.getItem('success') ? toast.success(localStorage.getItem('success'), {theme: "colored"}) : ''
       localStorage.getItem('update') ? Swal.fire('success',localStorage.getItem('update'),'success') : ''
-      axios.get('/api/product').then(res => {setProduct(res.data.data), setList(res.data.data)});
+      axios.get(`/api/${url}`).then(res => {setProduct(res.data.data), setList(res.data.data)});
       setLoading(false);
       localStorage.removeItem('success')
       localStorage.removeItem('update')
-  }, [enable])
+  }, [enable,findLocation])
 
   const disableProduct = (e,item) => {
     axios.get(`/api/disable-product/${item}`).then( res => {
@@ -167,12 +185,11 @@ const List = () => {
 
   const filterData = () => {
     let updatedData = list;
-
     // updatedData = updatedData.slice(firstPageIndex, lastPageIndex);
-
     updatedData = updatedData.filter( (item) => 
               keys.some((key) => item[key].toLowerCase().includes(search.toLowerCase())) ||
-              item.category.name.toLowerCase().includes(search.toLowerCase())
+              item.category.name.toLowerCase().includes(search.toLowerCase()) ||
+              item.brand.name.toLowerCase().includes(search.toLowerCase())
           );
 
     if(sort == 1){

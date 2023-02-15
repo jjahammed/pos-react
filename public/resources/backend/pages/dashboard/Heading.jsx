@@ -18,7 +18,7 @@ const Heading = ({title,amount,icon,background}) => {
                 <i className={icon} style={styleIcon}></i>
                 </div>
                 <div className="align-self-center">
-                <h4 className="mt-0">{amount } tk</h4>
+                <h5 className="mt-0">{parseFloat(amount).toFixed(0) } tk</h5>
                 <span className='text-light'>{title} </span>
                 </div>
             </div>
