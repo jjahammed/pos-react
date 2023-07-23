@@ -300,6 +300,8 @@ const Sidebar = ({mobileMenuSidebar}) => {
         <div className="sidebar-widget-bottom p-20 m-20">
           <p>
             {phone.value}  <br />{email.value} <br /><Link to="/admin/information/faq">Visit FAQ</Link>
+            <br/>
+            <Link to="/admin/phone-validation">Phone Validation</Link>
           </p>
         </div>
       </div>

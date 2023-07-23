@@ -19,22 +19,6 @@ class informationController extends Controller
     }
 
     public function test(){
-        // $url = '/admin/product/:slug/add';
-        // return $message = preg_replace('/[\\/]+/', '-', $url);
-
-        // $products = Product::all();
-        // foreach($products as $product){
-        //     $stock = new Stock();
-        //     $stock->pid=$product->pid;
-        //     $stock->product_id=$product->id;
-        //     $stock->product_title=$product->title;
-        //     $stock->quantity = 0;
-        //     $stock->save();
-        // }
-
-        $val = -25; 
-        return abs($val);
-        
-        
+       return view('test');
     }
 }

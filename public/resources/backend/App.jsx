@@ -114,6 +114,8 @@ import AdminEdit from './pages/admin/Edit'
 import AdminChangePassword from './pages/admin/ChangePassword'
 import AdminActivities from './pages/admin/Activities'
 
+import PhoneValidation from './pages/extra/PhoneValidation'
+
 
 // axios.defaults.baseURL = 'http://127.0.0.1:8000/';
 axios.defaults.headers.post['Accept'] = 'application/json'
@@ -157,7 +159,7 @@ const App = () => {
                 <Route path='/register' element={<Register />}/>
                 <Route path='/forget-password' element={<ForgetPassword />}/> */}
         
-
+                {/* <Route path='/' element= {<Login />} /> */}
                 <Route path='/' element= {localStorage.getItem('auth_token') ? <Navigate to='/admin/dashboard' /> : <Auth />}>
                 <Route path='/' element= {localStorage.getItem('auth_token') ? <Navigate to='/admin/dashboard' /> : <Login />} />
                   <Route path='/register'  element= {localStorage.getItem('auth_token') ? <Navigate to='/admin/dashboard' /> : <Register />}   />
@@ -183,7 +185,7 @@ const App = () => {
                 }>
                   <Route path='*' element={<Error/>} />
                   <Route path='dashboard' element={
-                    bcrypt.compareSync('1219',roleId) ? <Dashboard/> : <Dashboard2/>
+                    bcrypt.compareSync('1219',roleId) ? <Dashboard/> : <Dashboard/>
                   } />
                   <Route path='product' element={<ProductList/>} />
                   <Route path='product/category/:slug' element={<ProductList/>} />
@@ -284,7 +286,8 @@ const App = () => {
                   {/* information */}
                   <Route path='information/:page' element={<InformationList/>} />
                   <Route path='information/:page/edit' element={<InformationEdit/>} />
-
+                  {/* extra */}
+                  <Route path='phone-validation' element={<PhoneValidation/>} />
                 </Route> 
             </Routes>
         </Router>
