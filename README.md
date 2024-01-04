@@ -1,4 +1,4 @@
-noki<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+kinoki<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
 <a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
@@ -69,3 +69,26 @@ https://chat.openai.com/share/bc212ff8-b5a4-4600-b9e3-af36fb954fcf
 https://chat.openai.com/share/bc212ff8-b5a4-4600-b9e3-af36fb954fcf
 
 https://chat.openai.com/share/bc212ff8-b5a4-4600-b9e3-af36fb954fcf
+https://chat.openai.com/share/bc212ff8-b5a4-4600-b9e3-af36fb954fcf
+
+<template>
+  <div>
+    <h1>{{ title }}</h1>
+    <ul>
+      <li v-for="post in posts" :key="post.id">{{ post.title }}</li>
+    </ul>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+
+const title = ref('Nuxt 3 Server-Side API Rendering');
+const posts = ref([]);
+
+onMounted(async () => {
+  // Fetch data from your API
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+  posts.value = await response.json();
+});
+</script>
